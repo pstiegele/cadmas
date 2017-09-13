@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
+    "\\.ebextensions",
     "\\public"
   ],
-  "SelectedNode": "\\README.md",
+  "SelectedNode": "\\app.js",
   "PreviewInSolutionExplorer": false
 }
