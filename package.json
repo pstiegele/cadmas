@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "express": "latest",
-    "socket.io": "latest"
+   
   },
   "scripts": {
     "start": "node app.js"
