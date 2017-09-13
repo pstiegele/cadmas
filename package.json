@@ -1,8 +1,10 @@
 {
-  "name": "Node-Webiste-EB-Sample-App",
+  "name": "CADMAS",
   "version": "0.0.1",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "express": "latest"
+  },
   "scripts": {
     "start": "node app.js"
   }
