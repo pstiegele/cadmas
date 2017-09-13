@@ -1,10 +1,10 @@
-var app = require('express')();
-var http = require('http').Server(app);
+var express = require('express');
+var app = express();
 
 app.get('/', function (req, res) {
-    res.send('<h1>Hey Guys!</h1>');
+    res.send('Hello World, Paul!');
 });
 
-http.listen(80, function () {
-    console.log('listening on *:80');
-})
+app.listen(80, function () {
+    console.log('Example app on port 80');
+});
