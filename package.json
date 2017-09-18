@@ -4,7 +4,8 @@
   "private": true,
   "dependencies": {
     "express": "latest",
-    "socket.io": "latest"
+    "socket.io": "latest",
+    "mysql": "latest"
   },
   "scripts": {
     "start": "node app.js"
