@@ -7,8 +7,8 @@ set Path=%NodePackagesPath%\node_modules\.bin;%PATH%
 set Path=%NodePackagesPath%;%PATH%
 
 set NODE_PATH=%NodePackagesPath%\node_modules;%NODE_PATH%
-set NODE_ENV=production
-
+set NODE_ENV=debug
+set PORT=80
 
 
 

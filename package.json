@@ -5,7 +5,8 @@
   "dependencies": {
     "express": "latest",
     "socket.io": "latest",
-    "mysql": "latest"
+    "mysql": "latest",
+    "morgan": "latest"
   },
   "scripts": {
     "start": "node app.js"
