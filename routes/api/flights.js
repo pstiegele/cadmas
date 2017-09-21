@@ -25,13 +25,19 @@ router.get('/', function(req, res, next) {
   var queryResult = 'error';
   connection.query('Select name FROM Flight', function (err, result) {
     if (err) throw err;
-      queryResult = result[0].name;
+      queryResult = result[result.length-1].name;
       res.render('index', { title: 'api flights. DB Query: '+queryResult });
   });
 });
 
 router.post('/', function(req,res,next){
-  res.render('index',{ title: 'api flights post'});
+  var name=req.query.name;
+  if(name != ""){
+      connection.query('INSERT INTO Flight (missionID, droneID, name, state) VALUES (\'1\',\'1\',\''+name+'\',\'1\')');
+      res.render('index',{ title: 'api flights post: inserted successful'});
+  }else{
+    res.render('index',{ title: 'api flights post: nothing inserted'});
+  }
 });
 
 module.exports = router;
