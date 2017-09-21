@@ -26,7 +26,7 @@ router.get('/', function(req, res, next) {
   connection.query('Select name FROM Flight', function (err, result) {
     if (err) throw err;
       queryResult = result[result.length-1].name;
-      res.render('index', { title: 'api flights. DB Query: '+queryResult });
+      res.render('index', { title: 'api flights. Last Flight: '+queryResult });
   });
 });
 
