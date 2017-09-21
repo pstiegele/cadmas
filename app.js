@@ -1,116 +1,93 @@
+//required modules
 var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+
+
+//website modules
+var index = require('./routes/index');
+var register = require('./routes/register');
+var dashboard = require('./routes/dashboard');
+var newMission = require('./routes/newMission');
+var missions = require('./routes/missions');
+var mission = require('./routes/mission');
+var flights = require('./routes/flights');
+var flight = require('./routes/flight');
+var drones = require('./routes/drones');
+var drone = require('./routes/drone');
+var user = require('./routes/user');
+var settings = require('./routes/settings');
+
+//api modules
+var api_flights = require('./routes/api/flights');
+var api_missions = require('./routes/api/missions');
+var api_user = require('./routes/api/user');
+var api_drones = require('./routes/api/drones');
+var api_payloadDevices = require('./routes/api/payloadDevices');
+var api_logs = require('./routes/api/logs');
+
+
+//create app
 var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var mysql = require('mysql');
-var cors = require('cors');
-var errorhandler = require('errorhandler');
 
 
 
-var isProduction = process.env.NODE_ENV === 'production';
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 
-//express config
-app.use(require('morgan')('dev'));
-app.use(cors());
-app.use(require('method-override')());
-//app.use(express.static(__dirname + '/public'));
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+//website routes
+app.use('/', index);
+app.use('/register', register);
+app.use('/dashboard', dashboard);
+app.use('/newMission', newMission);
+app.use('/missions', missions);
+app.use('/mission', mission);
+app.use('/flights', flights);
+app.use('/flight', flight);
+app.use('/drones', drones);
+app.use('/drone', drone);
+app.use('/user', user);
+app.use('/settings', settings);
 
 
-if (isProduction) {
-    //different db
-    app.use(errorhandler());
-} else {
-    //local db
-}
+
+//api routes
+app.use('/api/flights', api_flights);
+app.use('/api/missions', api_missions);
+app.use('/api/user', api_user);
+app.use('/api/drones', api_drones);
+app.use('/api/payloadDevices', api_payloadDevices);
+app.use('/api/logs', api_logs);
 
 
-//load custom modules
-require('./models/Flight');
-
-
-//define routes
-app.use(require('./routes'));
-
-
-
-//catch 404
-app.use(function (req, res, next) {
-    var err = new Error('Not found');
-    err.status = 404;
-    next(err);
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
-//debug error handler
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-if (!isProduction) {
-    app.use(function (err, req, res, next) {
-        console.log(err.stack);
-        res.status(err.status || 500);
-        res.json({
-            'errors': {
-                message: err.message,
-                error: err
-            }
-        });
-    });
-}
-
-//production eror handler
-app.use(function(err,req,res,next){
-  res.status(err.status || 500),
-  res.json({'errors': {
-    message: err.message,
-    error: {}
-  }});
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
 });
 
-
-var connection = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
-    database: process.env.DB_DB
-});
-
-
-connection.connect(function (err) {
-    if (err) {
-        console.error('Database connection failed: ' + err.stack);
-        return;
-    }
-    //console.log('Connected to database');
-});
-
-
-
-
-
-// app.get('/', function (req, res) {
-//     res.sendFile(__dirname + '/public/index.html');
-// });
-
-
-// io.on('connection', function (socket) {
-//     console.log('a user connected');
-//     socket.on('disconnect', function () {
-//         console.log('user disconnected');
-//     });
-//     socket.on('chat message', function (msg) {
-//         var res = 'error';
-//         connection.query('Select name FROM Flight', function (err, result) {
-//             if (err) throw err;
-//             res = result[0].name;
-//             io.emit('chat message', res + ' ||| ' + msg);
-//         });
-//
-//     });
-// });
-
-app.listen(process.env.PORT || 3000, function () {
-    console.log('');
-    console.log('### CADMAS ###');
-    console.log('');
-    console.log('listening on *:'+(process.env.PORT || 3000));
-});
+module.exports = app;

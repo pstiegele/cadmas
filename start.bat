@@ -1,7 +1,6 @@
 @echo off
 echo.
-taskkill /IM cmd.exe /FI "WINDOWTITLE eq Cadmas Launcher"
-title Cadmas Launcher
+taskkill /IM cmd.exe /FI "WINDOWTITLE eq npm"
 cls
 set NodePackagesPath=C:\Program Files\nodejs
 
@@ -19,5 +18,5 @@ set DB_DB=cadmas
 
 
 
-node app.js
+npm run dev
 pause

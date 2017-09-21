@@ -1,17 +1,19 @@
 {
-  "name": "CADMAS",
+  "name": "cadmas",
   "version": "0.0.1",
   "private": true,
-  "dependencies": {
-    "express": "latest",
-    "socket.io": "latest",
-    "mysql": "latest",
-    "morgan": "latest",
-    "cors": "latest",
-    "method-override": "latest",
-    "errorhandler": "latest"
-  },
   "scripts": {
-    "start": "node app.js"
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.17.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.3",
+    "express": "~4.15.2",
+    "morgan": "~1.8.1",
+    "pug": "~2.0.0-beta11",
+    "serve-favicon": "~2.4.2",
+    "mysql":"latest"
   }
 }

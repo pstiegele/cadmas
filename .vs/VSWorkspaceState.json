@@ -2,11 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\.ebextensions",
-    "\\models",
     "\\public",
-    "\\routes",
-    "\\routes\\api"
+    "\\routes"
   ],
-  "SelectedNode": "\\routes\\api\\index.js",
+  "SelectedNode": "\\.gitignore",
   "PreviewInSolutionExplorer": false
 }
