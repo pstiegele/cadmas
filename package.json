@@ -6,7 +6,10 @@
     "express": "latest",
     "socket.io": "latest",
     "mysql": "latest",
-    "morgan": "latest"
+    "morgan": "latest",
+    "cors": "latest",
+    "method-override": "latest",
+    "errorhandler": "latest"
   },
   "scripts": {
     "start": "node app.js"

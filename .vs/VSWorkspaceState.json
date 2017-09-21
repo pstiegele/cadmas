@@ -2,8 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\.ebextensions",
-    "\\public"
+    "\\models",
+    "\\public",
+    "\\routes",
+    "\\routes\\api"
   ],
-  "SelectedNode": "\\app.js",
+  "SelectedNode": "\\routes\\api\\index.js",
   "PreviewInSolutionExplorer": false
 }
