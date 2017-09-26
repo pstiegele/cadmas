@@ -26,14 +26,14 @@ router.get('/', function(req, res, next) {
   connection.query('Select name FROM Flight', function (err, result) {
     if (err) throw err;
       queryResult = result[result.length-1].name;
-      res.render('index', { title: 'api flights. Last Flight: '+queryResult });
+      res.render('index', { title: 'Flights', headline: 'Last Flight: '+queryResult });
   });
 });
 
 router.post('/', function(req,res,next){
-  var name=req.query.name;
+  var name=sanitizer.sanitize(req.query.name);
   if(name != ""){
-      connection.query('INSERT INTO Flight (missionID, droneID, name, state) VALUES (\'1\',\'1\',\''+name+'\',\'1\')');
+      connection.query('INSERT INTO Flight (missionID, droneID, name, state) VALUES (\'1\',\'1\',\'?\',\'1\')', name);
       res.render('index',{ title: 'api flights post: inserted successful'});
   }else{
     res.render('index',{ title: 'api flights post: nothing inserted'});

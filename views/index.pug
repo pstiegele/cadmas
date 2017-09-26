@@ -1,5 +1,100 @@
-extends layout
-
-block content
-  h1= title
-  p Welcome to #{title}
+doctype html
+html
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    title #{title} - CADMAS
+    link(href='https://fonts.googleapis.com/css?family=Open+Sans', rel='stylesheet')
+    link(href='https://fonts.googleapis.com/css?family=Quicksand', rel='stylesheet')
+    link(rel='stylesheet', href='http://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    header
+      h2
+        a(href='#'): img(src='/images/logo.png')
+      nav
+        li
+          a(href='#') Home
+        li
+          a(href='#') About
+        li
+          a(href='#') Contacts
+        li
+          a(href='#' class='btn btn-success' role="button") Log-In
+    section.start
+      .background-image(style='background-image: url(/images/background2.jpg);')
+      h1 #{headline}
+      h3 Manage your drone.
+      a(href='register' class='btn btn-success') Register now
+    section.idea
+      h3.title The idea behind CADMAS
+      p
+        | Automate your drone, let them perform scheduled missions fully autonomously and monitor live telemetry. After the flight you can download the collected data conveniently by browser.
+      hr
+      ul.grid
+        li.small(style='background-image: url(/images/dashboard.png);')
+        li.large(style='background-image: url(/images/drones.png);')
+        li.large(style='background-image: url(/images/flight.png);')
+        li.small(style='background-image: url(/images/drone.jpg);')
+    section.features
+      h3.title Features and services
+      p
+        | The Web Dashboard is the cornerstone of our service. We also offer connectors for different vehicle systems such as conventional airplanes, multirotors, and helicopters and even boats.
+      hr
+      ul.grid
+        li
+          i.fa.fa-camera-retro
+          h4 Live Camera View
+          p
+            | In real-time, see what's going on around the drone and intervene in time in potential danger situations to ensure a safe flight.
+        li
+          i.fa.fa-plane
+          h4 Fully autonomous flight
+          p
+            | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id felis et ipsum bibendum ultrices vitae pulvinar velit.
+        li
+          i.fa.fa-database
+          h4 Use your individual payload
+          p
+            | Use their special payload and feed them into our connector to use them in CADMAS.
+    section.reviews
+      h3.title What others say:
+      p.quote
+        | Mauris sit amet mauris a arcu eleifend ultricies eget ut dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+      p.author — Patrick Farrell
+      p.quote
+        | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id felis et ipsum bibendum ultrices. Morbi vitae pulvinar velit. Sed aliquam dictum sapien, id sagittis augue malesuada eu.
+      p.author — George Smith
+      p.quote
+        | Donec commodo dolor augue, vitae faucibus tortor tincidunt in. Aliquam vitae leo quis mi pulvinar ornare. Integer eu iaculis metus.
+      p.author — Kevin Blake
+    section.contact
+      h3.title Join our newsletter
+      p
+        | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam id felis et ipsum bibendum ultrices. Morbi vitae pulvinar velit. Sed aliquam dictum sapien, id sagittis augue malesuada eu.
+      hr
+      form
+        input(type='email', placeholder='Email')
+        a.btn(href='#') Subscribe now
+    footer
+      ul
+        li
+          a(href='#')
+            i.fa.fa-twitter-square
+        li
+          a(href='#')
+            i.fa.fa-facebook-square
+        li
+          a(href='#')
+            i.fa.fa-snapchat-square
+        li
+          a(href='#')
+            i.fa.fa-pinterest-square
+        li
+          a(href='#')
+            i.fa.fa-github-square
+      p
+        | Made by&nbsp;
+        a(href='http://tutorialzine.com/', target='_blank') Maximilian Bührer & Paul Stiegele
