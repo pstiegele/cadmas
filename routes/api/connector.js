@@ -4,23 +4,21 @@ module.exports = function(io){
 
   io.on('connection', function(socket){
     console.log("Client connected");
-    socket.emit('test', { hello: 'world' });
+    socket.emit('ps','gude');
+socket.on('disconnect', function(){
+  console.log('Client disconnected')
+});
+
+    socket.on('ps', function(msg){
+      console.log('message: ' + msg);
+    });
 
   });
 
-  io.on('foo', function (data) {
-    console.log(data);
-  });
 
-  //
-  // router.get('/', function(req, res, next) {
-  //   // io.on('connection', function(socket){
-  //   //   console.log('user connected');
-  //   // });
-  //
-  //
-  //   res.send('<html><head></head><body><script src=\"/socket.io/socket.io.js\"></script><script>var socket = io();</script></body></html>');
-  // });
+  router.get('/', function(req, res, next) {
+      res.send('<html><head></head><body><script src=\"/socket.io/socket.io.js\"></script><script>var socket = io();</script></body></html>');
+  });
 
 
   return router;
