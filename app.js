@@ -29,7 +29,8 @@ var api_user = require('./routes/api/user');
 var api_drones = require('./routes/api/drones');
 var api_payloadDevices = require('./routes/api/payloadDevices');
 var api_logs = require('./routes/api/logs');
-var connector = require('./routes/api/connector')(io);
+
+var connector = require('./connector/main')(io);
 
 
 //create app
@@ -71,7 +72,7 @@ app.use('/api/user', api_user);
 app.use('/api/drones', api_drones);
 app.use('/api/payloadDevices', api_payloadDevices);
 app.use('/api/logs', api_logs);
-app.use('/api/connector', connector);
+
 
 
 // catch 404 and forward to error handler
