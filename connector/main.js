@@ -3,10 +3,10 @@ module.exports = function(io) {
 var disconnect = require('./disconnect');
 var heartbeat = require('./heartbeat');
 var test = require('./test');
-var receive_mission = require('./receive_mission');
+var receive_route = require('./receive_route');
 var arm = require('./arm');
 var disarm = require('./disarm');
-var start_mission = require('./start_mission');
+var start_route = require('./start_route');
 
 
   io.on('connection', function(socket) {
@@ -15,10 +15,10 @@ var start_mission = require('./start_mission');
     heartbeat(socket);
     disconnect(socket);
     test(socket);
-    receive_mission(socket);
+    receive_route(socket);
     arm(socket);
     disarm(socket);
-    start_mission(socket);
+    start_route(socket);
 
   });
 }

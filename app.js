@@ -12,9 +12,9 @@ var io = require('socket.io')();
 var index = require('./routes/index');
 var register = require('./routes/register');
 var dashboard = require('./routes/dashboard');
-var newMission = require('./routes/newMission');
-var missions = require('./routes/missions');
-var mission = require('./routes/mission');
+var newRoute = require('./routes/newRoute');
+var routes = require('./routes/routes');
+var route = require('./routes/route');
 var flights = require('./routes/flights');
 var flight = require('./routes/flight');
 var drones = require('./routes/drones');
@@ -24,7 +24,7 @@ var settings = require('./routes/settings');
 
 //api modules
 var api_flights = require('./routes/api/flights');
-var api_missions = require('./routes/api/missions');
+var api_routes = require('./routes/api/routes');
 var api_user = require('./routes/api/user');
 var api_drones = require('./routes/api/drones');
 var api_payloadDevices = require('./routes/api/payloadDevices');
@@ -53,9 +53,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/register', register);
 app.use('/dashboard', dashboard);
-app.use('/newMission', newMission);
-app.use('/missions', missions);
-app.use('/mission', mission);
+app.use('/newRoute', newRoute);
+app.use('/routes', routes);
+app.use('/route', route);
 app.use('/flights', flights);
 app.use('/flight', flight);
 app.use('/drones', drones);
@@ -67,7 +67,7 @@ app.use('/settings', settings);
 
 //api routes
 app.use('/api/flights', api_flights);
-app.use('/api/missions', api_missions);
+app.use('/api/routes', api_routes);
 app.use('/api/user', api_user);
 app.use('/api/drones', api_drones);
 app.use('/api/payloadDevices', api_payloadDevices);
