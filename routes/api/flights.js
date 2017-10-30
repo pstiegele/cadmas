@@ -1,17 +1,10 @@
 var express = require('express');
 var router = express.Router();
-var mysql = require('mysql');
 var sanitizer = require('sanitizer');
 
 /* GET home page. */
 
-var connection = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
-    database: process.env.DB_DB
-});
+
 
 
 connection.connect(function (err) {
