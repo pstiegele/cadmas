@@ -10,6 +10,7 @@ set Path=%NodePackagesPath%;%PATH%
 set NODE_PATH=%NodePackagesPath%\node_modules;%NODE_PATH%
 set NODE_ENV=debug
 set PORT=443
+set HTTPPORT=80
 set DB_HOST=cadmas.cegpb2uou7a1.eu-west-1.rds.amazonaws.com
 set DB_USER=server_user
 set DB_PASSWORD=eua100DPME

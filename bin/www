@@ -17,8 +17,9 @@ var httpApp = express();
  */
 
 var port = normalizePort(process.env.PORT || '443');
+var httpPort = normalizePort(process.env.HTTPPORT || '80');
 app.set('port', port);
-httpApp.set('port', '80');
+httpApp.set('port', httpPort);
 
 /**
  * Create HTTP server.
