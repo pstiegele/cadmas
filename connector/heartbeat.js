@@ -1,15 +1,14 @@
 var db = require('../tools/db')();
 var util = require("util");
+
+
 module.exports = function(socket) {
   socket.on('heartbeat', function(msg, callback) {
-
-    console.log('heartbeat received: ' + util.inspect(msg))
-
-    //var query = 'INSERT INTO Telemetry (flightID, position, altitude, voltage, autopilot_connected, autopilot_mode, armed, routeVersion, airspeed, groundspeed, vsi, heading, active_waypointID, waypointsleft) VALUES '+
-    //'(\'?\',ST_GeomFromText(\'POINT(1 1)\'),\'1\',\'1\',\'1\',\'1\',\'1\',\'1\',\'1\',\'1\',\'1\',\'1\',\'1\',\'1\')';
-    //  console.log(query);
+    console.log('heartbeat received: ' + util.inspect(msg));
+    //analyze telemetry parameter in heartbeat
     var val = buildTelemetry(msg);
-    var query = 'INSERT INTO Telemetry (' + val.col + ') VALUES (';
+    //build sql query to insert telemetry parameter
+    var query = 'INSERT INTO Telemetry (' + val.names + ') VALUES (';
     for (i = 0; i < val.values.length; i++) {
       if (i != 0) {
         query += ',';
@@ -22,18 +21,30 @@ module.exports = function(socket) {
 
     }
     query += ')';
-    console.log(query);
+
     db.query(query, val.values, function(err, results) {
-      console.log(err);
-      console.log(results);
+      var successful = false;
+      if(err === null){
+        successful = true;
+      }else{
+        console.log(err);
+        successful = false;
+      }
+      var callback_data = {
+        'time': new Date().getTime(),
+        'successful': successful
+      };
+      callback(callback_data);
     });
-    var callback_data = {
-      'time': new Date().getTime()
-    };
-    callback(callback_data);
+
   });
 }
 
+//inserts defined telemetry params name in columns, belonging values in values
+//and return them
+//columns[]: array of parameter names
+//names: String of all parameter names
+//values[]: array of all values in parameter names order
 function buildTelemetry(msg) {
   var telemetry = msg.telemetry;
   var columns = [];
@@ -104,7 +115,7 @@ function buildTelemetry(msg) {
 
   return {
     columns: columns,
-    col: columns.length ? columns.join(', ') : '1',
+    names: columns.length ? columns.join(', ') : '1',
     values: values
   }
 }
