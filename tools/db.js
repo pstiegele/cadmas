@@ -2,7 +2,7 @@ var mysql = require('mysql');
 var db;
 module.exports = function() {
   if (!db) {
-    var db = mysql.createConnection({
+      db = mysql.createConnection({
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
