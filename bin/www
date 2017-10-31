@@ -16,8 +16,8 @@ var httpApp = express();
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '443');
-var httpPort = normalizePort(process.env.HTTPPORT || '80');
+var port = normalizePort(process.env.PORT || '4999');
+var httpPort = normalizePort(process.env.HTTPPORT || '5000');
 app.set('port', port);
 httpApp.set('port', httpPort);
 
