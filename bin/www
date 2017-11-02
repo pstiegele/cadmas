@@ -26,7 +26,7 @@ var port = normalizePort(process.env.PORT || '443');
 app.set('port', port);
 
 
-if(process.env.SETUPHTTPSERVER){
+if(process.env.SETUPHTTPSERVER === "true"){
     var http = require('http');
     var httpPort = normalizePort(process.env.HTTPPORT || '80');
     httpApp.set('port', httpPort);
