@@ -6,7 +6,6 @@
 
 var app = require('../app');
 var debug = require('debug')('cadmas:server');
-//var http = require('http');
 var https = require('https');
 var fs = require('fs');
 var express = require('express');
@@ -16,10 +15,29 @@ var httpApp = express();
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '4999');
-//var httpPort = normalizePort(process.env.HTTPPORT || '5000');
+ console.log('');
+ console.log('### CADMAS ###');
+ console.log('');
+
+
+
+var port = normalizePort(process.env.PORT || '443');
+
 app.set('port', port);
-//httpApp.set('port', httpPort);
+
+
+if(process.env.SETUPHTTPSERVER){
+    var http = require('http');
+    var httpPort = normalizePort(process.env.HTTPPORT || '80');
+    httpApp.set('port', httpPort);
+    var httpServer = http.createServer(httpApp).listen(httpApp.get('port'), function(){
+      console.log('HTTP redirect server is listening on port:\t'+ httpApp.get('port'));
+    });
+    httpApp.get('*', function(req,res){
+      res.redirect("https://" + req.headers.host + req.path);
+    });
+}
+
 
 /**
  * Create HTTP server.
@@ -30,14 +48,8 @@ var httpsServerOptions = {
   cert: fs.readFileSync('keys/cert.pem')
 }
 
-//var httpServer = http.createServer(httpApp).listen(httpApp.get('port'), function(){
-//  console.log('Express http server is listening on '+ httpApp.get('port'));
-//});
-//var server = https.createServer(httpsServerOptions, app);
 
-//httpApp.get('*', function(req,res){
-//  res.redirect("https://" + req.headers.host + req.path);
-//});
+var server = https.createServer(httpsServerOptions, app);
 
 /**
  * Socket.io
@@ -53,9 +65,7 @@ io.attach(server);
  */
 
 server.listen(port, function() {
-  console.log('### CADMAS ###');
-  console.log('');
-  console.log('Listening on port ' + port);
+  console.log('HTTPS server is listening on port:\t\t' + port);
 });
 server.on('error', onError);
 server.on('listening', onListening);

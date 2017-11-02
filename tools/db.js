@@ -11,7 +11,7 @@ module.exports = function() {
     });
     db.connect(function(err) {
       if (!err) {
-        console.log('Database is connected.');
+        console.log('successful connected to database:\t\t'+process.env.DB_HOST);
       } else {
         console.log('Error connecting database');
       }
