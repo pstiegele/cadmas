@@ -6,7 +6,7 @@
 
 var app = require('../app');
 var debug = require('debug')('cadmas:server');
-var http = require('http');
+//var http = require('http');
 var https = require('https');
 var fs = require('fs');
 var express = require('express');
@@ -17,9 +17,9 @@ var httpApp = express();
  */
 
 var port = normalizePort(process.env.PORT || '4999');
-var httpPort = normalizePort(process.env.HTTPPORT || '5000');
+//var httpPort = normalizePort(process.env.HTTPPORT || '5000');
 app.set('port', port);
-httpApp.set('port', httpPort);
+//httpApp.set('port', httpPort);
 
 /**
  * Create HTTP server.
@@ -30,14 +30,14 @@ var httpsServerOptions = {
   cert: fs.readFileSync('keys/cert.pem')
 }
 
-var httpServer = http.createServer(httpApp).listen(httpApp.get('port'), function(){
-  console.log('Express http server is listening on '+ httpApp.get('port'));
-});
-var server = https.createServer(httpsServerOptions, app);
+//var httpServer = http.createServer(httpApp).listen(httpApp.get('port'), function(){
+//  console.log('Express http server is listening on '+ httpApp.get('port'));
+//});
+//var server = https.createServer(httpsServerOptions, app);
 
-httpApp.get('*', function(req,res){
-  res.redirect("https://" + req.headers.host + req.path);
-});
+//httpApp.get('*', function(req,res){
+//  res.redirect("https://" + req.headers.host + req.path);
+//});
 
 /**
  * Socket.io
