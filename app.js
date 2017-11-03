@@ -11,6 +11,7 @@ var db = require('./tools/db.js')
 
 //website modules
 var index = require('./routes/index');
+var login = require('./routes/login');
 var register = require('./routes/register');
 var dashboard = require('./routes/dashboard');
 var newRoute = require('./routes/newRoute');
@@ -31,6 +32,7 @@ var api_drones = require('./routes/api/drones');
 var api_payloadDevices = require('./routes/api/payloadDevices');
 var api_logs = require('./routes/api/logs');
 
+//start connector
 var connector = require('./connector/main')(io);
 
 
@@ -52,6 +54,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //website routes
 app.use('/', index);
+app.use('/login', login);
 app.use('/register', register);
 app.use('/dashboard', dashboard);
 app.use('/newRoute', newRoute);
