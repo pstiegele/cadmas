@@ -17,6 +17,7 @@ set DB_PORT=3306
 set DB_DB=cadmas
 set SETUPHTTPSERVER=true
 set HTTPPORT=80
+set JWTSECRET=E1hf7FduVtAm9nQQCYa9
 
 
 

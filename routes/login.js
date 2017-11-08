@@ -3,6 +3,8 @@ var router = express.Router();
 var crypto = require('crypto');
 var qs = require('querystring');
 var bcrypt = require('bcrypt');
+var moment = require('moment');
+var jwt = require('jwt-simple');
 
 
 router.get('/', function(req, res, next) {
@@ -14,14 +16,22 @@ router.post('/', function(req, res, next) {
 
   userAndPasswordisValid(req.body.user, req.body.password, function(authorized) {
     if (authorized) {
+      var expires = moment().add(7, 'days').valueOf();
+      var token = jwt.encode({
+        iss: req.body.user,
+        exp: expires
+      }, process.env.JWTSECRET);
+      res.setHeader('token',token);
+      res.setHeader('token_expires',expires);
+      //res.setHeader('token_user',req.body.user);
       res.render('login', {
-        user: "Welcome, " + req.body.user + "!",
-        password: "Your password is: " + req.body.password
+        user: "Welcome, " + req.body.user + "!"
       });
     } else {
+      //res.json({token: jwt.sign({ email: "user.email", fullName: "user.fullName", _id: "user._id"}, 'RESTFULAPIs')});
       res.render('login', {
-        //user: bcrypt.hashSync('123', 15),
-        user: "I can't find your username, "+req.body.user+"!",
+        //user: bcrypt.hashSync('123', 13),
+        user: "I can't find your username, " + req.body.user + "!",
         password: "Your password " + req.body.password + " is wrong."
       });
     }
@@ -52,7 +62,7 @@ function userAndPasswordisValid(user, password, callback) {
         callback(false);
       }
     });
-  }else{
+  } else {
     callback(false);
   }
 }
