@@ -31,8 +31,8 @@ router.post('/', function(req, res, next) {
       //res.json({token: jwt.sign({ email: "user.email", fullName: "user.fullName", _id: "user._id"}, 'RESTFULAPIs')});
       res.render('login', {
         //user: bcrypt.hashSync('123', 13),
-        user: "I can't find your username, " + req.body.user + "!",
-        password: "Your password " + req.body.password + " is wrong."
+        user: "I can't find you, " + req.body.user + "!",
+        //password: "Your password " + req.body.password + " is wrong."
       });
     }
 
