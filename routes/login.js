@@ -16,22 +16,22 @@ router.post('/', function(req, res, next) {
 
   userAndPasswordisValid(req.body.user, req.body.password, function(authorized) {
     if (authorized) {
-      var expires = moment().add(7, 'days').valueOf();
+      var expires = moment().add(30, 'days').valueOf();
       var token = jwt.encode({
         iss: req.body.user,
         exp: expires
       }, process.env.JWTSECRET);
-      res.setHeader('token',token);
-      res.setHeader('token_expires',expires);
+      res.setHeader('Set-Cookie','x-access-token='+token+'; Expires = '+new Date(expires).toUTCString()+'; Secure');
+      console.log('expires: '+new Date(expires).toUTCString());
       //res.setHeader('token_user',req.body.user);
       res.render('login', {
-        user: "Welcome, " + req.body.user + "!"
+        welcome_message: "Welcome, " + req.body.user + "!"
       });
     } else {
       //res.json({token: jwt.sign({ email: "user.email", fullName: "user.fullName", _id: "user._id"}, 'RESTFULAPIs')});
       res.render('login', {
         //user: bcrypt.hashSync('123', 13),
-        user: "I can't find you, " + req.body.user + "!",
+        welcome_message: "I can't find you, " + req.body.user + "!"
         //password: "Your password " + req.body.password + " is wrong."
       });
     }

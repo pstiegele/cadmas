@@ -54,11 +54,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('', jwtauth);
+
 //website routes
 app.use('/', index);
 app.use('/login', login);
 app.use('/register', register);
-app.use('/dashboard', [bodyParser, jwtauth], dashboard);
+app.use('/dashboard', dashboard);
 app.use('/newRoute', newRoute);
 app.use('/routes', routes);
 app.use('/route', route);

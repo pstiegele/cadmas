@@ -1,0 +1,9 @@
+extends layout.pug
+
+block content
+  section.start
+    .background-image(style='background-image: url(/images/background2.jpg);')
+    h1 #{'Hey, '+headline+'!'}
+    br
+    .form-group
+      button.btn.btn-lg.btn-success.btn-block(name='Submit', value='Log-out', type='Submit') Log-out

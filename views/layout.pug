@@ -1,7 +1,51 @@
 doctype html
 html
   head
-    title= title
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    title #{title} - CADMAS
+    link(href='https://fonts.googleapis.com/css?family=Open+Sans', rel='stylesheet')
+    link(href='https://fonts.googleapis.com/css?family=Quicksand', rel='stylesheet')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
+    block header
+      header
+        h2
+          a(href='/'): img(src='/images/logo.png')
+        nav
+          li
+            a(href='#') Home
+          li
+            a(href='#') About
+          if user
+            li
+              a(href='/user') #{user}
+          else
+            li
+              a(href='login' class='btn btn-success' role="button") Log-In
     block content
+    block footer
+      footer
+        ul
+          li
+            a(href='#')
+              i.fa.fa-twitter-square
+          li
+            a(href='#')
+              i.fa.fa-facebook-square
+          li
+            a(href='#')
+              i.fa.fa-snapchat-square
+          li
+            a(href='#')
+              i.fa.fa-pinterest-square
+          li
+            a(href='#')
+              i.fa.fa-github-square
+        p
+          | Made by&nbsp;
+          a(href='http://tutorialzine.com/', target='_blank') Maximilian Bührer & Paul Stiegele
+          script(src='/socket.io/socket.io.js')
