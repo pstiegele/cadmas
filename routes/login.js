@@ -4,7 +4,7 @@ var crypto = require('crypto');
 var qs = require('querystring');
 var bcrypt = require('bcrypt');
 var moment = require('moment');
-var jwt = require('jwt-simple');
+var jwt = require('jsonwebtoken');
 
 
 router.get('/', function(req, res, next) {
@@ -17,7 +17,7 @@ router.post('/', function(req, res, next) {
   userAndPasswordisValid(req.body.user, req.body.password, function(authorized) {
     if (authorized) {
       var expires = moment().add(30, 'days').valueOf();
-      var token = jwt.encode({
+      var token = jwt.sign({
         iss: req.body.user,
         exp: expires
       }, process.env.JWTSECRET);
@@ -31,7 +31,7 @@ router.post('/', function(req, res, next) {
       //res.json({token: jwt.sign({ email: "user.email", fullName: "user.fullName", _id: "user._id"}, 'RESTFULAPIs')});
       res.render('login', {
         //user: bcrypt.hashSync('123', 13),
-        welcome_message: "I can't find you, " + req.body.user + "!"
+        welcome_message: "I can't find you, " + req.body.user + "!",
         //password: "Your password " + req.body.password + " is wrong."
       });
     }

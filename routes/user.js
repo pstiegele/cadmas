@@ -6,4 +6,8 @@ router.get('/', function(req, res, next) {
   res.render('user', { title: 'User', headline: res.locals.user });
 });
 
+router.post('/', function(req, res, next) {
+  res.render('user', { title: 'User', headline: res.locals.user });
+});
+
 module.exports = router;
