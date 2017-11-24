@@ -9,21 +9,20 @@ var io = require('socket.io')();
 var db = require('./tools/db.js');
 var jwtauth = require('./middleware/jwtauth.js');
 
-
 //website modules
-var index = require('./routes/index');
-var login = require('./routes/login');
-var register = require('./routes/register');
-var dashboard = require('./routes/dashboard');
-var newRoute = require('./routes/newRoute');
-var routes = require('./routes/routes');
-var route = require('./routes/route');
-var flights = require('./routes/flights');
-var flight = require('./routes/flight');
-var drones = require('./routes/drones');
-var drone = require('./routes/drone');
-var user = require('./routes/user');
-var settings = require('./routes/settings');
+//var index = require('./routes/index');
+// var login = require('./routes/login');
+// var register = require('./routes/register');
+// var dashboard = require('./routes/dashboard');
+// var newRoute = require('./routes/newRoute');
+// var routes = require('./routes/routes');
+// var route = require('./routes/route');
+// var flights = require('./routes/flights');
+// var flight = require('./routes/flight');
+// var drones = require('./routes/drones');
+// var drone = require('./routes/drone');
+// var user = require('./routes/user');
+// var settings = require('./routes/settings');
 
 //api modules
 var api_flights = require('./routes/api/flights');
@@ -35,7 +34,6 @@ var api_logs = require('./routes/api/logs');
 
 //start connector
 var connector = require('./connector/main')(io);
-
 
 //create app
 var app = express();
@@ -50,28 +48,26 @@ app.set('jwtTokenSecret', process.env.JWTSECRET);
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('', jwtauth);
 
 //website routes
-app.use('/', index);
-app.use('/login', login);
-app.use('/register', register);
-app.use('/dashboard', dashboard);
-app.use('/newRoute', newRoute);
-app.use('/routes', routes);
-app.use('/route', route);
-app.use('/flights', flights);
-app.use('/flight', flight);
-app.use('/drones', drones);
-app.use('/drone', drone);
-app.use('/user', user);
-app.use('/settings', settings);
-
-
+//app.use('/', index);
+// app.use('/login', login);
+// app.use('/register', register);
+// app.use('/dashboard', dashboard);
+// app.use('/newRoute', newRoute);
+// app.use('/routes', routes);
+// app.use('/route', route);
+// app.use('/flights', flights);
+// app.use('/flight', flight);
+// app.use('/drones', drones);
+// app.use('/drone', drone);
+// app.use('/user', user);
+// app.use('/settings', settings);
 
 //api routes
 app.use('/api/flights', api_flights);
@@ -80,8 +76,6 @@ app.use('/api/user', api_user);
 app.use('/api/drones', api_drones);
 app.use('/api/payloadDevices', api_payloadDevices);
 app.use('/api/logs', api_logs);
-
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -94,7 +88,9 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = req.app.get('env') === 'development'
+    ? err
+    : {};
 
   // render the error page
   res.status(err.status || 500);

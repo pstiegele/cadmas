@@ -9,34 +9,34 @@ var debug = require('debug')('cadmas:server');
 var https = require('https');
 var fs = require('fs');
 var express = require('express');
-var httpApp = express();
+//var httpApp = express();
 
 /**
  * Get port from environment and store in Express.
  */
 
- console.log('');
- console.log('### CADMAS ###');
- console.log('');
+console.log('');
+console.log('### CADMAS ###');
+console.log('');
 
 
 
-var port = normalizePort(process.env.PORT || '443');
+var port = normalizePort(process.env.PORT || '3000');
 
 app.set('port', port);
 
 
-if(process.env.SETUPHTTPSERVER === "true"){
-    var http = require('http');
-    var httpPort = normalizePort(process.env.HTTPPORT || '80');
-    httpApp.set('port', httpPort);
-    var httpServer = http.createServer(httpApp).listen(httpApp.get('port'), function(){
-      console.log('HTTP redirect server is listening on port:\t'+ httpApp.get('port'));
-    });
-    httpApp.get('*', function(req,res){
-      res.redirect("https://" + req.headers.host + req.path);
-    });
-}
+// if(process.env.SETUPHTTPSERVER === "true"){
+//     var http = require('http');
+//     var httpPort = normalizePort(process.env.HTTPPORT || '80');
+//     httpApp.set('port', httpPort);
+//     var httpServer = http.createServer(httpApp).listen(httpApp.get('port'), function(){
+//       console.log('HTTP redirect server is listening on port:\t'+ httpApp.get('port'));
+//     });
+//     httpApp.get('*', function(req,res){
+//       res.redirect("https://" + req.headers.host + req.path);
+//     });
+// }
 
 
 /**
