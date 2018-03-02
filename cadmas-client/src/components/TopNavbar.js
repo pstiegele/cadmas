@@ -4,19 +4,20 @@ import {Link} from 'react-router-dom';
 
 export default class TopNavbar extends Component {
   render() {
-    return (<div className="TopNavbar">
+    return (
+      <div className="TopNavbar">
       <ul className="RightTopMenu">
         <li>
-          <a href="/"><img src={logo} className="Cadmas-logo" alt="Cadmas Logo"/></a>
+          <Link to="/"><img src={logo} className="Cadmas-logo" alt="Cadmas Logo"/></Link>
         </li>
         <li className="right">
-          <a href="/login">Anmelden</a>
+          <Link to="/login">Anmelden</Link>
         </li>
         <li className="right">
-          <a href="/dashboard">Dashboard</a>
+          <Link to="/dashboard">Dashboard</Link>
         </li>
         <li className="right">
-          <a href="/about">Funktionen</a>
+          <Link to="/about">Funktionen</Link>
         </li>
       </ul>
     </div>);
