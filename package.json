@@ -3,11 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
     "dev-apiserver": "nodemon --inspect ./bin/www",
+    "aws-dev-apiserver": "node ./bin/www",
     "dev-webserver": "npm start --prefix ./cadmas-client",
+    "aws-dev-webserver": "npm start --prefix ./cadmas-client",
     "dev": "npm-run-all --parallel dev-apiserver dev-webserver",
-    "aws-dev": "npm-run-all --parallel dev-apiserver dev-webserver"
+    "aws-dev": "npm-run-all --parallel aws-dev-apiserver aws-dev-webserver"
   },
   "dependencies": {
     "bcrypt": "latest",
