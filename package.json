@@ -6,7 +6,8 @@
     "start": "node ./bin/www",
     "dev-apiserver": "nodemon --inspect ./bin/www",
     "dev-webserver": "npm start --prefix ./cadmas-client",
-    "dev": "npm-run-all --parallel dev-apiserver dev-webserver"
+    "dev": "npm-run-all --parallel dev-apiserver dev-webserver",
+    "aws-dev": "npm-run-all --parallel dev-apiserver dev-webserver"
   },
   "dependencies": {
     "bcrypt": "latest",

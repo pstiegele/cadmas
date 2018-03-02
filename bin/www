@@ -21,7 +21,7 @@ console.log('');
 
 
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.APIPORT || '3000');
 
 app.set('port', port);
 
