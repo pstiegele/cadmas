@@ -34,6 +34,7 @@ var api_logs = require('./routes/api/logs');
 
 //start connector
 var connector = require('./connector/main')(io);
+var api = require('./api/main')(io);
 
 //create app
 var app = express();
