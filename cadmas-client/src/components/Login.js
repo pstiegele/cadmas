@@ -5,7 +5,7 @@ export default class Login extends Component {
   render() {
     return (<div className="Login">
     <div className="background-image"></div>
-      <LoginWindow />
+      <LoginWindow style={{maxWidth:'200'}}/>
     </div>);
   }
 }
