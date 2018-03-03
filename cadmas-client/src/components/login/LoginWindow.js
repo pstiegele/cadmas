@@ -42,11 +42,11 @@ export default class LoginWindow extends Component {
  }
 
  handleSubmit(event) {
-   alert('user: ' + this.state.username+"\npass: "+this.state.password);
+  // alert('user: ' + this.state.username+"\npass: "+this.state.password);
    var apiBaseUrl = "https://localhost:3000/api";
-   require('https').globalAgent.options.rejectUnauthorized = false;
 
-   const socket = io(apiBaseUrl);
+   const socket = io.connect(apiBaseUrl, {rejectUnauthorized: false});
+   socket.on('connect', function(){ console.log('connected'); });
   //
   //  var self = this;
   //  var payload={

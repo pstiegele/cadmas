@@ -6,12 +6,13 @@ var fs = require('fs');
 var https = require('https');
 var logger = require('morgan');
 
+
 app.use(logger('dev'));
 
 const port = process.env.HTTPSPORT || 443;
 
 console.log('');
-console.log('### CADMAS CLIENT ###');
+console.log('### CADMAS WEBSERVER ###');
 console.log('');
 
 /**
@@ -30,30 +31,30 @@ console.log('');
  * @param res the response object
  * @param next the next middleware in chain
  */
-// const redirectionFilter = function(req, res, next) {
-//   const theDate = new Date();
-//   const receivedUrl = `${req.protocol}:\/\/${req.hostname}:${port}${req.url}`;
-//
-//   if (req.get('X-Forwarded-Proto') === 'http') {
-//     const redirectTo = `https:\/\/${req.hostname}${req.url}`;
-//     console.log(`${theDate} Redirecting ${receivedUrl} --> ${redirectTo}`);
-//     res.redirect(301, redirectTo);
-//   } else {
-//     next();
-//   }
-// };
+const redirectionFilter = function(req, res, next) {
+  const theDate = new Date();
+  const receivedUrl = `${req.protocol}:\/\/${req.hostname}:${port}${req.url}`;
+
+  if (req.get('X-Forwarded-Proto') === 'http') {
+    const redirectTo = `https:\/\/${req.hostname}${req.url}`;
+    console.log(`${theDate} Redirecting ${receivedUrl} --> ${redirectTo}`);
+    res.redirect(301, redirectTo);
+  } else {
+    next();
+  }
+};
 
 //if (process.env.SETUPHTTPSERVER === "true") {
-var http = require('http');
-var httpApp = express();
-var httpPort = process.env.HTTPPORT || '80';
-httpApp.set('port', httpPort);
-var httpServer = http.createServer(httpApp).listen(httpApp.get('port'), function() {
-  console.log('HTTP redirect server is listening on port:\t' + httpApp.get('port'));
-});
-httpApp.get('*', function(req, res) {
-  res.redirect("https://" + req.headers.host + req.path);
-});
+// var http = require('http');
+// var httpApp = express();
+// var httpPort = process.env.HTTPPORT || '80';
+// httpApp.set('port', httpPort);
+// var httpServer = http.createServer(httpApp).listen(httpApp.get('port'), function() {
+//   console.log('HTTP redirect server is listening on port:\t' + httpApp.get('port'));
+// });
+// httpApp.get('*', function(req, res) {
+//   res.redirect("https://" + req.headers.host + req.path);
+// });
 //}
 
 /**
@@ -101,5 +102,5 @@ var httpsServerOptions = {
 }
 
 https.createServer(httpsServerOptions, app).listen(port, function() {
-  console.log(`Server listening on ${port}...`);
+  console.log(`Cadmas Webserver listening on ${port}...`);
 });

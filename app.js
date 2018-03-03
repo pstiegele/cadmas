@@ -25,12 +25,12 @@ var jwtauth = require('./middleware/jwtauth.js');
 // var settings = require('./routes/settings');
 
 //api modules
-var api_flights = require('./routes/api/flights');
-var api_routes = require('./routes/api/routes');
-var api_user = require('./routes/api/user');
-var api_drones = require('./routes/api/drones');
-var api_payloadDevices = require('./routes/api/payloadDevices');
-var api_logs = require('./routes/api/logs');
+// var api_flights = require('./routes/api/flights');
+// var api_routes = require('./routes/api/routes');
+// var api_user = require('./routes/api/user');
+// var api_drones = require('./routes/api/drones');
+// var api_payloadDevices = require('./routes/api/payloadDevices');
+// var api_logs = require('./routes/api/logs');
 
 //start connector
 var connector = require('./connector/main')(io);
@@ -41,8 +41,8 @@ var app = express();
 app.io = io;
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'pug');
 app.set('jwtTokenSecret', process.env.JWTSECRET);
 
 // uncomment after placing your favicon in /public
@@ -71,12 +71,12 @@ app.use('', jwtauth);
 // app.use('/settings', settings);
 
 //api routes
-app.use('/api/flights', api_flights);
-app.use('/api/routes', api_routes);
-app.use('/api/user', api_user);
-app.use('/api/drones', api_drones);
-app.use('/api/payloadDevices', api_payloadDevices);
-app.use('/api/logs', api_logs);
+// app.use('/api/flights', api_flights);
+// app.use('/api/routes', api_routes);
+// app.use('/api/user', api_user);
+// app.use('/api/drones', api_drones);
+// app.use('/api/payloadDevices', api_payloadDevices);
+// app.use('/api/logs', api_logs);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
