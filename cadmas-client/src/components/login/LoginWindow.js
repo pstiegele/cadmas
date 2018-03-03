@@ -4,8 +4,8 @@ export default class LoginWindow extends Component {
   render() {
     return (
   <div className="LoginWindow">
-    <section class="start">
-      <h3 style={{ textAlign: 'center' }}>Just one more step to the dashboard</h3>
+    <section class="start" >
+      <h3 style={{ textAlign: 'center', color:"white" }}>Just one more step to the dashboard</h3>
       <form action="login" method="post" name="login" class="form-signin">
         <div class="form-group">
           <input id="usr" type="text" placeholder="Username" name="user" required="required" class="form-control"/>
