@@ -43,7 +43,8 @@ export default class LoginWindow extends Component {
 
  handleSubmit(event) {
    alert('user: ' + this.state.username+"\npass: "+this.state.password);
-   var apiBaseUrl = "http://localhost:4000/api/";
+   var apiBaseUrl = "https://localhost:3000/api";
+   require('https').globalAgent.options.rejectUnauthorized = false;
 
    const socket = io(apiBaseUrl);
   //
