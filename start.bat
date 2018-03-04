@@ -22,5 +22,5 @@ set JWTSECRET=E1hf7FduVtAm9nQQCYa9
 
 
 
-npm run dev
+npm run aws-dev
 pause
