@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "npm run build --prefix cadmas-webclient && node ./bin/www",
-    "run-server":"node ./bin/www"
+    "run-server":"node ./bin/www",
+    "run-webclient":"npm start --prefix cadmas-webclient"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
