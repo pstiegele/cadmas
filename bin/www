@@ -9,6 +9,7 @@ var debug = require('debug')('cadmas:server');
 var https = require('https');
 var fs = require('fs');
 var express = require('express');
+var path = require('path');
 //var httpApp = express();
 
 /**
