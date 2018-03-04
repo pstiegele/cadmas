@@ -1,38 +1,45 @@
-var port = process.env.PORT || 3000,
-    http = require('http'),
-    fs = require('fs');
+var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 
-http.createServer(function (req, res) {
-  if (req.url.indexOf('/img') != -1) {
-    var filePath = req.url.split('/img')[1];
-    fs.readFile(__dirname + '/public/img' + filePath, function (err, data) {
-      if (err) console.log(err);
-      res.writeHead(200, {'Content-Type': 'image/svg+xml'});
-      res.write(data);
-      res.end();
-    });
-  } else if (req.url.indexOf('/js') != -1) {
-    var filePath = req.url.split('/js')[1];
-    fs.readFile(__dirname + '/public/js' + filePath, function (err, data) {
-      if (err) console.log(err);
-      res.writeHead(200, {'Content-Type': 'text/javascript'});
-      res.write(data);
-      res.end();
-    });
-  } else if(req.url.indexOf('/css') != -1) {
-    var filePath = req.url.split('/css')[1];
-    fs.readFile(__dirname + '/public/css' + filePath, function (err, data) {
-      if (err) console.log(err);
-      res.writeHead(200, {'Content-Type': 'text/css'});
-      res.write(data);
-      res.end();
-    });
-  } else {
-    fs.readFile(__dirname + '/public/index.html', function (err, data) {
-      if (err) console.log(err);
-      res.writeHead(200, {'Content-Type': 'text/html'});
-      res.write(data);
-      res.end();
-    });
-  }
-}).listen(port, '0.0.0.0');
+var index = require('./routes/index');
+var users = require('./routes/users');
+
+var app = express();
+
+// view engine setup
+app.use(express.static(path.join(__dirname, 'cadmas-webclient','build')));
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, 'cadmas-webclient','build', 'index.html'));
+});
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+ app.use(logger('dev'));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(cookieParser());
+
+
+// catch 404 and forward to error handler
+// app.use(function(req, res, next) {
+//   var err = new Error('Not Found');
+//   err.status = 404;
+//   next(err);
+// });
+//
+// // error handler
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+//
+//   // render the error page
+//   res.status(err.status || 500);
+//   res.render('error');
+// });
+
+module.exports = app;
