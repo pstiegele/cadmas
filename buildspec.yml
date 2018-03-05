@@ -5,6 +5,7 @@ phases:
     commands:
       - npm install
       - npm install --prefix cadmas-webclient
+      - npm run build --prefix cadmas-webclient
   build:
     commands:
       - npm run build --prefix cadmas-webclient
