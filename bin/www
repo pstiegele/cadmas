@@ -36,7 +36,7 @@ var server = https.createServer(app);
  */
 
 server.listen(port, function() {
-  console.log('cadmas server is listening on port:\t\t' + port);
+  console.log(new Date().toLocaleString()+' cadmas server is listening on port:\t\t' + port);
 });
 server.on('error', onError);
 server.on('listening', onListening);
