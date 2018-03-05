@@ -3,14 +3,15 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npm run build --prefix cadmas-webclient && node ./bin/www",
-    "run-server":"node ./bin/www",
-    "run-webclient":"npm start --prefix cadmas-webclient"
+    "start": "npm install && npm install --prefix cadmas-webclient && npm run build --prefix cadmas-webclient && node ./bin/www",
+    "run-server": "node ./bin/www",
+    "run-webclient": "npm start --prefix cadmas-webclient"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
+    "dotenv": "^5.0.1",
     "express": "~4.15.5",
     "jade": "~1.11.0",
     "morgan": "~1.9.0",
