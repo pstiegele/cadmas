@@ -8,7 +8,7 @@
 
 var app = require('../app');
 var debug = require('debug')('cadmas:server');
-var https = require('https');
+var http = require('http');
 var fs = require('fs');
 var path = require('path');
 
@@ -29,7 +29,7 @@ var httpsServerOptions = {
  * Create HTTP server.
  */
 
-var server = https.createServer(httpsServerOptions,app);
+var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
