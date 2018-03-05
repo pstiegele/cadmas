@@ -3,18 +3,22 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const morgan = require('morgan');
 
 var app = express();
 
 // react setup
+app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'cadmas-webclient','build')));
 app.get('/', function (req, res) {
+  console.log("oh, a request! Fantastic.");
+  console.log("mypath: "+path.join(__dirname, 'cadmas-webclient','build', 'index.html'));
   res.sendFile(path.join(__dirname, 'cadmas-webclient','build', 'index.html'));
 });
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
- app.use(logger('dev'));
+ //app.use(logger('dev'));
 // app.use(bodyParser.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(cookieParser());
