@@ -8,3 +8,8 @@ phases:
   build:
     commands:
       - npm run build --prefix cadmas-webclient
+
+artifacts:
+  files:
+    - */**
+  discard-paths: yes
