@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npm install && npm install --prefix cadmas-webclient && npm run build --prefix cadmas-webclient && node ./bin/www",
-    "run-server": "node ./bin/www",
+    "start": "node ./bin/www",
+    "start-local-prod": "npm install && npm install --prefix cadmas-webclient && npm run build --prefix cadmas-webclient && node ./bin/www",
     "run-webclient": "npm start --prefix cadmas-webclient"
   },
   "dependencies": {
