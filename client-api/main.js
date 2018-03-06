@@ -1,12 +1,14 @@
-module.exports = function(io) {
+module.exports = function(wss) {
+  wss.on('connection', function connection(ws, req) {
+    //  const location = url.parse(req.url, true);
+    // You might use location.query.access_token to authenticate or share sessions
+    // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
+    //console.log("client connected: " + JSON.stringify(location));
+    console.log("client connected");
+    ws.on('message', function incoming(message) {
+      console.log('received: %s', message);
+    });
 
-  //var login = require('./login');
-
-  var main = io.of('/client');
-  main.on('connection', function(socket) {
-    console.log("Client to webclient_api connected");
-    io.emit('log', "hey");
-    //  login(socket);
-
+    ws.send('something');
   });
 }
