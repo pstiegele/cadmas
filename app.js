@@ -11,26 +11,46 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 const morgan = require('morgan');
 const WebSocket = require('ws');
-
+const url = require('url');
 var app = express();
 app.use(morgan('dev'));
 
 //init server
 var port;
 var server = initalizeServer();
-const wss = new WebSocket.Server({server});
+const connector_wss = new WebSocket.Server({noServer: true, verifyClient: require('./middleware/checkAuthentication.js')});
+const client_wss = new WebSocket.Server({noServer: true, verifyClient: require('./middleware/checkAuthentication.js')});
+initalizeWebsocket(server);
 
 //connector API
-var connector_api = require('./connector-api/main')(wss);
+var connector_api = require('./connector-api/main')(connector_wss);
 
 //client API
-var client_api = require('./client-api/main')(wss);
+var client_api = require('./client-api/main')(client_wss);
 
 // react setup
 app.use(express.static(path.join(__dirname, 'cadmas-webclient', 'build')));
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, 'cadmas-webclient', 'build', 'index.html'));
 });
+
+function initalizeWebsocket(server) {
+  server.on('upgrade', (request, socket, head) => {
+    const pathname = url.parse(request.url).pathname;
+
+    if (pathname === '/connector') {
+      connector_wss.handleUpgrade(request, socket, head, (ws) => {
+        connector_wss.emit('connection', ws);
+      });
+    } else if (pathname === '/client') {
+      client_wss.handleUpgrade(request, socket, head, (ws) => {
+        client_wss.emit('connection', ws);
+      });
+    } else {
+      socket.destroy();
+    }
+  });
+}
 
 function initalizeServer() {
   /**
@@ -69,6 +89,7 @@ function initalizeServer() {
   server.on('listening', onListening);
   return server;
 }
+
 /**
   * Normalize a port into a number, string, or false.
   */
