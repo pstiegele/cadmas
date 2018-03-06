@@ -30,9 +30,12 @@ var httpsServerOptions = {
  */
 
 var server;
-if (process.env.NODE_ENV === debug) {
-  server = https.createServer(httpsServerOptions, app);
+console.log(process.env.NODE_ENV);
+if (process.env.mode === "debug") {
+  console.log("I'm a http server");
+  server = http.createServer(app);
 } else {
+  console.log("I'm a https server");
   server = https.createServer(httpsServerOptions, app);
 }
 

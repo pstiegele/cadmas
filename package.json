@@ -6,7 +6,8 @@
     "start": "node ./bin/www",
     "build": "npm run build --prefix cadmas-webclient",
     "start-local-prod": "npm install && npm install --prefix cadmas-webclient && npm run build --prefix cadmas-webclient && node ./bin/www",
-    "run-webclient": "npm start --prefix cadmas-webclient"
+    "run-webclient": "npm start --prefix cadmas-webclient",
+    "debug":"nodemon ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
