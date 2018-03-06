@@ -16,7 +16,6 @@ module.exports = function(wss) {
       if (isValidToken(msg.token)) {
         var res = getHandleMethod(msg.method)(msg.payload);
         ws.send(res);
-
       }
     });
 
@@ -29,6 +28,19 @@ module.exports = function(wss) {
 
     ws.send('Welcome stranger!');
   });
+}
+
+function getHandleMethod(method) {
+  switch (method) {
+    case "getDrones":
+      return require('./methods/getDrones.js')
+      break;
+    case "getRoutes":
+      return require('./methods/getRoutes.js')
+      break;
+    default:
+      return require('./methods/invalidMethod.js');
+  }
 }
 
 function isValidToken(token) {

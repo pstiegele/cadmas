@@ -5,10 +5,45 @@ module.exports = function(wss) {
     // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
     //console.log("client connected: " + JSON.stringify(location));
     console.log("connector-client connected");
-    ws.on('authenticate', function incoming(message) {
-      console.log('received: %s', message);
+    ws.on('message', function incoming(raw_msg) {
+      //console.log('received: %s', msg);
+      var msg;
+      try {
+        msg = JSON.parse(raw_msg);
+      } catch (e) {
+        return console.error(e);
+      }
+      if (isValidToken(msg.token)) {
+        var res = getHandleMethod(msg.method)(msg.payload);
+        ws.send(res);
+      }
     });
 
-    ws.send('something');
+    ws.on('close', function(reason) {
+      //TODO: handle close
+    });
+    ws.on('error', function error() {
+      //TODO handle error
+    });
+
+    ws.send('Welcome stranger!');
   });
+}
+
+function getHandleMethod(method) {
+  switch (method) {
+    case "heartbeat":
+      return require('./methods/heartbeat.js')
+      break;
+    case "getRoute":
+      return require('./methods/getRoute.js')
+      break;
+    default:
+      return require('./methods/invalidMethod.js');
+  }
+}
+
+function isValidToken(token) {
+  //TODO: verify token
+  return true;
 }
