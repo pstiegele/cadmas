@@ -10,7 +10,10 @@ var app = express();
 // react setup
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'cadmas-webclient','build')));
-app.get('/', function (req, res) {
+// app.get('/', function(req,res){
+//   res.send('Hello World');
+// });
+app.get('*', function (req, res) {
   console.log("oh, a request! Fantastic.");
   console.log("mypath: "+path.join(__dirname, 'cadmas-webclient','build', 'index.html'));
   res.sendFile(path.join(__dirname, 'cadmas-webclient','build', 'index.html'));
