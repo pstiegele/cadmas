@@ -14,6 +14,8 @@ const WebSocket = require('ws');
 const url = require('url');
 var app = express();
 app.use(morgan('dev'));
+global.db = require('./middleware/db.js')();
+global.appRoot = path.resolve(__dirname);
 
 //init server
 var port;

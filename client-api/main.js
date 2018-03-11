@@ -13,9 +13,10 @@ module.exports = function(wss) {
       } catch (e) {
         return console.error(e);
       }
-      if (isValidToken(msg.token)) {
-        var res = getHandleMethod(msg.method)(msg.payload);
-        ws.send(res);
+      if (msg.method === "authenticate") {
+        require('./methods/authenticate.js')(ws, msg.payload);
+      } else if (isValidToken(msg.token)) {
+        getHandleMethod(msg.method)(ws, msg.payload);
       }
     });
 
@@ -26,7 +27,6 @@ module.exports = function(wss) {
       //TODO handle error
     });
 
-    ws.send('Welcome stranger!');
   });
 }
 

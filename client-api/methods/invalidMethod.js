@@ -1,4 +1,4 @@
-module.exports = function(info) {
+module.exports = function(ws, info) {
   //TODO what to do with invalid method names?
-  return null;
+  ws.send(info);
 }

@@ -1,0 +1,79 @@
+ {
+  font-size: 1.0em;
+}
+.App {
+  text-align: left;
+  font-size: 1.0em;
+}
+
+.Cadmas-logo {
+  padding-left:20px;
+  padding-top: 20px;
+  height: 50px;
+}
+
+/*.TopNavbar {
+  height: 50px;
+}*/
+
+ul.RightTopMenu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  /*background-color: #303030;*/
+}
+
+ul.RightTopMenu li {
+  float: left;
+}
+
+ul.RightTopMenu li a {
+  font-family: 'PT Sans', sans-serif;
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 20px 16px;
+  text-decoration: none;
+}
+
+ul.RightTopMenu li a:hover:not(.active) {
+  color: #cccccc;
+}
+
+ul.RightTopMenu li a.active {
+  background-color: #4CAF50;
+}
+
+ul.RightTopMenu li.right {
+  float: right;
+}
+
+@media screen and (max-width: 600px) {
+  ul.RightTopMenu li.right, ul.RightTopMenu li {
+    float: none;
+  }
+}
+
+.background-image{
+  background-image: url(../img/background.jpg);
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-size: cover;
+	background-color: #2196F3;
+	z-index: -1;
+}
+
+.background-image:after{
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #414a4f;
+	opacity: 0.75;
+}
