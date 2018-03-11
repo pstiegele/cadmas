@@ -32,6 +32,9 @@ module.exports = function(wss) {
 
 function getHandleMethod(method) {
   switch (method) {
+    case "renewToken":
+      return require('./methods/renewToken.js')
+      break;
     case "getDrones":
       return require('./methods/getDrones.js')
       break;

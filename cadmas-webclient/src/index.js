@@ -5,8 +5,12 @@ import './css/index.css';
 import App from './components/App';
 import {BrowserRouter} from 'react-router-dom';
 import registerServiceWorker from './registerServiceWorker';
+import {Provider} from "react-redux";
+import store from "./store";
 
-ReactDOM.render(<BrowserRouter>
-  <App/>
-</BrowserRouter>, document.getElementById('root'));
+ReactDOM.render(<Provider store={store}>
+  <BrowserRouter>
+    <App/>
+  </BrowserRouter>
+</Provider>, document.getElementById('root'));
 registerServiceWorker();
