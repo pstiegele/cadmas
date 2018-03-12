@@ -3,8 +3,6 @@ version: 0.2
 phases:
   install:
     commands:
-      - sudo apt-get update
-      - sudo apt-get install build-essential g++
       - npm install
       - npm install --prefix cadmas-webclient
   build:

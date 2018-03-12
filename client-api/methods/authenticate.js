@@ -1,5 +1,5 @@
 var moment = require('moment');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 module.exports = function(ws, req) {
   var db = global.db;
