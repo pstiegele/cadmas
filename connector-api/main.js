@@ -6,16 +6,17 @@ module.exports = function(wss) {
     //console.log("client connected: " + JSON.stringify(location));
     console.log("connector-client connected");
     ws.on('message', function incoming(raw_msg) {
-      //console.log('received: %s', msg);
+      console.log('received: %s', raw_msg);
       var msg;
       try {
         msg = JSON.parse(raw_msg);
       } catch (e) {
         return console.error(e);
       }
-      if (isValidToken(msg.token)) {
-        var res = getHandleMethod(msg.method)(msg.payload);
-        ws.send(res);
+      if (msg.method === "authenticate") {
+        require('./methods/authenticate.js')(ws, msg.payload);
+      } else if (isValidToken(msg.token)) {
+        getHandleMethod(msg.method)(ws, msg.payload);
       }
     });
 
@@ -26,7 +27,10 @@ module.exports = function(wss) {
       //TODO handle error
     });
 
-    ws.send('Welcome stranger!');
+    res = {
+      "method": "heartbeat"
+    }
+    ws.send(JSON.stringify(res));
   });
 }
 
