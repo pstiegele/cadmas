@@ -9,9 +9,11 @@ module.exports = function(ws, req) {
       var expires = moment().add(30, 'days').valueOf();
       var token = jwt.sign({
         "sub": req.username,
+        "droneID": 1,
         "exp": expires
       }, process.env.JWTSECRET);
       res = {
+        "time": moment().unix(),
         "method": "authenticate",
         "payload": {
           "authenticated": true,
@@ -20,6 +22,7 @@ module.exports = function(ws, req) {
       }
     } else {
       res = {
+        "time": moment().unix(),
         "method": "authenticate",
         "payload": {
           "authenticated": false
