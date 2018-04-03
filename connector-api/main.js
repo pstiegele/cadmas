@@ -50,9 +50,9 @@ function getHandleMethod(method) {
 function isValidAPIKey(apikey) {
   var query = "SELECT id FROM Drone WHERE apikey=?";
   db.query(query, apikey, function(err, results) {
-    if (err === null & results.length = 1) {
+    if (err === null & results.length == 1) {
       return true;
     }
-  }
+  });
   return false;
 }
