@@ -1,7 +1,7 @@
 const moment = require('moment');
 module.exports = function(ws, req) {
   var droneID = 1; //TODO: droneID aus Token auslesen
-  var query = "SELECT Mission.id,UNIX_TIMESTAMP(Mission.dtCreated) as dtCreated,Mission.name,Mission.note,Mission.onConnectionLostMode FROM Drone LEFT JOIN Mission ON Drone.activeMission=Mission.id JOIN DroneMission ON DroneMission.droneID = Drone.id WHERE Drone.id=?";
+  var query = "SELECT Mission.id,Mission.onConnectionLostMode FROM Drone LEFT JOIN Mission ON Drone.activeMission=Mission.id JOIN DroneMission ON DroneMission.droneID = Drone.id WHERE Drone.id=?";
   db.query(query, droneID, function(err, results) {
     if (err === null && results.length == 1) {
       var waypointQuery = "SELECT id, latitude, longitude, altitude, type FROM MissionWaypoints WHERE missionID = ?";
@@ -20,12 +20,9 @@ module.exports = function(ws, req) {
           }
           res = {
             "time": moment().unix(),
-            "method": "newMission",
+            "method": "Mission",
             "payload": {
               "missionID": results[0].id || 0,
-              "dtCreated": results[0].dtCreated || 0,
-              "name": results[0].name || "",
-              "note": results[0].note || "",
               "onConnectionLostMode": results[0].onConnectionLostMode || "RTL",
               "waypoints": waypoints
             }

@@ -13,10 +13,10 @@ module.exports = function(wss) {
       } catch (e) {
         return console.error(e);
       }
-      if (msg.method === "authenticate") {
-        require('./methods/authenticate.js')(ws, msg.payload);
-      } else if (isValidToken(msg.token)) {
+      if (isValidAPIKey(msg.apikey)) {
         getHandleMethod(msg.method)(ws, msg.payload);
+      } else {
+        console.log("Invalid apikey");
       }
     });
 
@@ -37,17 +37,22 @@ module.exports = function(wss) {
 function getHandleMethod(method) {
   switch (method) {
     case "heartbeat":
-      return require('./methods/heartbeat.js')
+      return require('./methods/in/heartbeat.js')
       break;
-    case "getRoute":
-      return require('./methods/getRoute.js')
+    case "getMission":
+      return require('./methods/out/newMission.js')
       break;
     default:
       return require('./methods/invalidMethod.js');
   }
 }
 
-function isValidToken(token) {
-  //TODO: verify token
-  return true;
+function isValidAPIKey(apikey) {
+  var query = "SELECT id FROM Drone WHERE apikey=?";
+  db.query(query, apikey, function(err, results) {
+    if (err === null & results.length = 1) {
+      return true;
+    }
+  }
+  return false;
 }
