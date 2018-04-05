@@ -56,6 +56,7 @@ export default class LoginWindow extends Component {
     console.log("answer" + JSON.stringify(msg));
     var m = JSON.parse(msg);
     localStorage.setItem('token', m.token);
+    this.setState({isLoggedIn: true})
   }
   handleSubmit(event) {
     event.preventDefault();

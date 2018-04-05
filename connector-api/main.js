@@ -13,11 +13,9 @@ module.exports = function(wss) {
       } catch (e) {
         return console.error(e);
       }
-      if (isValidAPIKey(msg.apikey)) {
+      isValidAPIKey(msg.apikey, function() {
         getHandleMethod(msg.method)(ws, msg.payload);
-      } else {
-        console.log("Invalid apikey");
-      }
+      });
     });
 
     ws.on('close', function(reason) {
@@ -26,11 +24,6 @@ module.exports = function(wss) {
     ws.on('error', function error() {
       //TODO handle error
     });
-
-    res = {
-      "method": "heartbeat"
-    }
-    ws.send(JSON.stringify(res));
   });
 }
 
@@ -47,12 +40,15 @@ function getHandleMethod(method) {
   }
 }
 
-function isValidAPIKey(apikey) {
+function isValidAPIKey(apikey, callback) {
   var query = "SELECT id FROM Drone WHERE apikey=?";
+  console.log("apikey: " + apikey);
   db.query(query, apikey, function(err, results) {
-    if (err === null & results.length == 1) {
-      return true;
+    console.log("length: " + results.length);
+    console.log("err: " + err);
+    if (err === null && results.length == 1) {
+      console.log("wird betreten");
+      callback();
     }
   });
-  return false;
 }
