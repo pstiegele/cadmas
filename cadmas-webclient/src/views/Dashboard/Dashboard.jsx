@@ -5,6 +5,7 @@ import {Grid, Row, Col} from 'react-bootstrap';
 import {Card} from 'components/Card/Card.jsx';
 import {StatsCard} from 'components/StatsCard/StatsCard.jsx';
 import {ActivitiesSmall} from 'components/ActivitiesSmall/ActivitiesSmall.jsx';
+import {LastFlight} from 'components/LastFlight/LastFlight.jsx';
 import {
   dataPie,
   legendPie,
@@ -68,14 +69,16 @@ class Dashboard extends Component {
         </Row>
 
         <Row>
-
+          <Col md={3}>
+            <Card title="Last flight" category="Skywalker X-8" stats="10 min ago" statsIcon="fa fa-clock-o" content={<div><LastFlight/></div>}/>
+          </Col>
           <Col md={6}>
             <Card title="Activities" category="The latest activities of all drones" stats="31 missions" statsIcon="fa fa-plane" content={<div className = "table-full-width" > <table className="table">
                 <ActivitiesSmall/>
               </table>
             </div>}/>
           </Col>
-          <Col md={6}>
+          <Col md={3}>
             <Card id="chartActivity" title="Overall flights" category="All flights of all drones of the last year" stats="176 flights" statsIcon="fa fa-check" content={<div className = "ct-chart" > <ChartistGraph data={dataBar} type="Bar" options={optionsBar} responsiveOptions={responsiveBar}/>
             </div>} legend={<div className = "legend" > {
                 this.createLegend(legendBar)
