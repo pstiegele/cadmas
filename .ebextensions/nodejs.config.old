@@ -1,0 +1,7 @@
+<!-- container_commands:
+  11_npm_install:
+    command: 'export PATH=$PATH:$NODE_HOME/bin && npm install'
+  12_npm_install_webclient:
+    command: 'export PATH=$PATH:$NODE_HOME/bin && npm install --prefix cadmas-webclient'
+  13_npm_build:
+    command: 'export PATH=$PATH:$NODE_HOME/bin && npm run build --prefix cadmas-webclient' -->

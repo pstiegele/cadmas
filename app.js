@@ -1,100 +1,153 @@
-//required modules
+const dotenv = require('dotenv').load();
+var debug = require('debug')('cadmas:server');
+var https = require('https');
+var http = require('http');
+var fs = require('fs');
+var path = require('path');
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var io = require('socket.io')();
-var db = require('./tools/db.js');
-var jwtauth = require('./middleware/jwtauth.js');
-
-//website modules
-//var index = require('./routes/index');
-// var login = require('./routes/login');
-// var register = require('./routes/register');
-// var dashboard = require('./routes/dashboard');
-// var newRoute = require('./routes/newRoute');
-// var routes = require('./routes/routes');
-// var route = require('./routes/route');
-// var flights = require('./routes/flights');
-// var flight = require('./routes/flight');
-// var drones = require('./routes/drones');
-// var drone = require('./routes/drone');
-// var user = require('./routes/user');
-// var settings = require('./routes/settings');
-
-//api modules
-var api_flights = require('./routes/api/flights');
-var api_routes = require('./routes/api/routes');
-var api_user = require('./routes/api/user');
-var api_drones = require('./routes/api/drones');
-var api_payloadDevices = require('./routes/api/payloadDevices');
-var api_logs = require('./routes/api/logs');
-
-//start connector
-var connector = require('./connector/main')(io);
-
-//create app
+const morgan = require('morgan');
+const WebSocket = require('ws');
+const url = require('url');
 var app = express();
-app.io = io;
+app.use(morgan('dev'));
+global.db = require('./middleware/db.js')();
+global.appRoot = path.resolve(__dirname);
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-app.set('jwtTokenSecret', process.env.JWTSECRET);
+//init server
+var port;
+var server = initalizeServer();
+const connector_wss = new WebSocket.Server({noServer: true, verifyClient: require('./middleware/checkAuthentication.js')});
+const client_wss = new WebSocket.Server({noServer: true, verifyClient: require('./middleware/checkAuthentication.js')});
+initalizeWebsocket(server);
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+//connector API
+var connector_api = require('./connector-api/main')(connector_wss);
 
-app.use('', jwtauth);
+//client API
+var client_api = require('./client-api/main')(client_wss);
 
-//website routes
-//app.use('/', index);
-// app.use('/login', login);
-// app.use('/register', register);
-// app.use('/dashboard', dashboard);
-// app.use('/newRoute', newRoute);
-// app.use('/routes', routes);
-// app.use('/route', route);
-// app.use('/flights', flights);
-// app.use('/flight', flight);
-// app.use('/drones', drones);
-// app.use('/drone', drone);
-// app.use('/user', user);
-// app.use('/settings', settings);
-
-//api routes
-app.use('/api/flights', api_flights);
-app.use('/api/routes', api_routes);
-app.use('/api/user', api_user);
-app.use('/api/drones', api_drones);
-app.use('/api/payloadDevices', api_payloadDevices);
-app.use('/api/logs', api_logs);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+// react setup
+app.use(express.static(path.join(__dirname, 'cadmas-webclient', 'build')));
+app.get('*', function(req, res) {
+  res.sendFile(path.join(__dirname, 'cadmas-webclient', 'build', 'index.html'));
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development'
-    ? err
-    : {};
+function initalizeWebsocket(server) {
+  server.on('upgrade', (request, socket, head) => {
+    const pathname = url.parse(request.url).pathname;
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+    if (pathname === '/connector') {
+      connector_wss.handleUpgrade(request, socket, head, (ws) => {
+        connector_wss.emit('connection', ws);
+      });
+    } else if (pathname === '/client') {
+      client_wss.handleUpgrade(request, socket, head, (ws) => {
+        client_wss.emit('connection', ws);
+      });
+    } else {
+      socket.destroy();
+    }
+  });
+}
 
-module.exports = app;
+function initalizeServer() {
+  /**
+   * Get port from environment and store in Express.
+   */
+
+  port = normalizePort(process.env.PORT || '3000');
+  app.set('port', port);
+
+  var httpsServerOptions = {
+    key: fs.readFileSync('keys/key.pem'),
+    cert: fs.readFileSync('keys/cert.pem')
+  }
+
+  /**
+   * Create HTTP server.
+   */
+  var server;
+  var servertype;
+  if (process.env.mode === "debug") {
+    servertype = "http";
+    server = http.createServer(app);
+  } else {
+    servertype = "https";
+    server = https.createServer(httpsServerOptions, app);
+  }
+
+  /**
+    * Listen on provided port, on all network interfaces.
+    */
+
+  server.listen(port, function() {
+    console.log(new Date().toLocaleString() + ' cadmas ' + servertype + ' server is listening on port:\t' + port);
+  });
+  server.on('error', onError);
+  server.on('listening', onListening);
+  return server;
+}
+
+/**
+  * Normalize a port into a number, string, or false.
+  */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+  * Event listener for HTTP server "error" event.
+  */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+  * Event listener for HTTP server "listening" event.
+  */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
