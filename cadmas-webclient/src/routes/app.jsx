@@ -1,6 +1,6 @@
 import Dashboard from 'views/Dashboard/Dashboard';
 import UserProfile from 'views/UserProfile/UserProfile';
-import TableList from 'views/TableList/TableList';
+import Activities from 'views/Activities/Activities';
 import Typography from 'views/Typography/Typography';
 import Icons from 'views/Icons/Icons';
 import Maps from 'views/Maps/Maps';
@@ -17,7 +17,7 @@ const appRoutes = [
     path: "/activities",
     name: "Activities",
     icon: "pe-7s-note2",
-    component: TableList
+    component: Activities
   }, {
     path: "/drones",
     name: "Drones",

@@ -4,7 +4,7 @@ import {Grid, Row, Col, Table} from 'react-bootstrap';
 import Card from 'components/Card/Card.jsx';
 import {thArray, tdArray} from 'variables/Variables.jsx';
 
-class TableList extends Component {
+class Activities extends Component {
 
   render() {
     return (<div className="content">
@@ -12,14 +12,14 @@ class TableList extends Component {
         <Row>
           <Col md={12}>
             <Card title="Activities" category="That are your latest flight activities" ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={<Table striped hover > <thead>
-              <tr>
-                {
-                  thArray.map((prop, key) => {
-                    return (<th key={key}>{prop}</th>);
-                  })
-                }
-              </tr>
-            </thead>
+                <tr>
+                  {
+                    thArray.map((prop, key) => {
+                      return (<th key={key}>{prop}</th>);
+                    })
+                  }
+                </tr>
+              </thead>
               <tbody>
                 {
                   tdArray.map((prop, key) => {
@@ -45,4 +45,4 @@ class TableList extends Component {
   }
 }
 
-export default TableList;
+export default Activities;
