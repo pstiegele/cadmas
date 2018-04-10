@@ -1,6 +1,6 @@
 const userReducer = (state = {
-  name: "",
-  isLoggedIn: false
+  name: "Paul",
+  mapIsShown: true
 }, action) => {
   switch (action.type) {
     case "SET_NAME":
@@ -9,13 +9,11 @@ const userReducer = (state = {
         name: action.payload
       };
       break;
-    case "SET_ISLOGGEDIN":
+    case "SET_MAP_IS_SHOWN":
       state = {
         ...state,
-        isLoggedIn: action.payload
+        mapIsShown: action.payload
       };
-      break;
-    default:
       break;
   }
   return state;

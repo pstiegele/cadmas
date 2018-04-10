@@ -17,12 +17,12 @@ const appRoutes = [
     path: "/activities",
     name: "Activities",
     icon: "pe-7s-note2",
-    component: Maps
+    component: TableList
   }, {
     path: "/drones",
     name: "Drones",
     icon: "pe-7s-plane",
-    component: TableList
+    component: Maps
   }, {
     path: "/notifications",
     name: "Notifications",

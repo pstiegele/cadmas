@@ -2,16 +2,44 @@ import React, {Component} from 'react';
 import {Tooltip, OverlayTrigger} from 'react-bootstrap';
 import Button from 'elements/CustomButton/CustomButton.jsx';
 import {NavLink} from 'react-router-dom';
+import {connect} from "react-redux";
+import {setName, setMapIsShown} from "actions/userActions";
 
-export class LastFlight extends Component {
+const mapStateToProps = (state) => {
+  return {user: state.user, mapIsShown: state.mapIsShown};
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setName: (name) => {
+      dispatch(setName(name));
+    },
+    setMapIsShown: (mapIsShown) => {
+      dispatch(setMapIsShown(mapIsShown));
+    }
+  };
+};
+
+class LastFlight extends React.Component {
   constructor(props) {
     super(props);
-    this.handleSeeMoreClick = this.handleSeeMoreClick.bind();
+    this.handleSeeMoreClick = this.handleSeeMoreClick.bind(this);
+    this.showMap = this.showMap.bind(this);
+    this.hideMap = this.hideMap.bind(this);
   }
-  handleSeeMoreClick() {
+  componentDidMount() {
+    this.showMap();
+  }
+  showMap() {
     var c = document.getElementById("myCanvas");
+    c.style.display = "inline-block";
     var ctx = c.getContext("2d");
     ctx.fillStyle = "rgb(139, 195, 74)";
+    ctx.strokeStyle = "#8bc34a";
+    ctx.lineCap = "round";
+    ctx.shadowBlur = 2;
+    ctx.shadowColor = "black";
+    ctx.lineWidth = 3;
     ctx.moveTo(0, 0);
     ctx.lineTo(10, 10);
     ctx.lineTo(11, 16);
@@ -43,61 +71,74 @@ export class LastFlight extends Component {
     ctx.lineTo(0, 0);
     ctx.stroke();
   }
+  hideMap() {
+    var c = document.getElementById("myCanvas");
+    c.style.display = "none";
+  }
+  handleSeeMoreClick(mapIsShown) {
+    if (mapIsShown) {
+      this.hideMap();
+      this.props.setMapIsShown(false);
+    } else {
+      this.showMap();
+      this.props.setMapIsShown(true);
+    }
+
+  }
   render() {
-    var lastFlight = <div className="flex-row">
+    var lastFlight = <div>
+      <div className="row">
+        <div className="col-lg-8">
+          <div>
+            <p>
+              <i className="fa fa-globe"></i>
+              &nbsp;&nbsp;{this.props.user.name}</p>
+          </div>
+          <div>
+            <p>
+              <i className="fa fa-road"></i>
+              &nbsp;&nbsp;17,4 km</p>
+          </div>
 
-      <div className="col-xs-8">
-        <div>
-          <p>
-            <i className="fa fa-globe"></i>
-            &nbsp;&nbsp;Würzburg</p>
+          <div>
+            <p>
+              <i className="fa fa-clock-o"></i>
+              &nbsp;&nbsp;23 min</p>
+          </div>
+
+          <div>
+            <p>
+              <i className="fa fa-battery-half"></i>
+              &nbsp;&nbsp;34 % battery used</p>
+          </div>
+
+          <div>
+            <p>
+              <i className="fa fa-image"></i>
+              &nbsp;&nbsp;87 photos taken</p>
+          </div>
+
+          <div>
+            <p>
+              <i className="fa fa-database"></i>
+              &nbsp;&nbsp;267 MB payload data collected
+            </p>
+          </div>
         </div>
-        <div>
-          <p>
-            <i className="fa fa-road"></i>
-            &nbsp;&nbsp;17,4 km</p>
-        </div>
-
-        <div>
-          <p>
-            <i className="fa fa-clock-o"></i>
-            &nbsp;&nbsp;23 min</p>
-        </div>
-
-        <div>
-          <p>
-            <i className="fa fa-battery-half"></i>
-            &nbsp;&nbsp;34 % battery used</p>
-        </div>
-
-        <div>
-          <p>
-            <i className="fa fa-image"></i>
-            &nbsp;&nbsp;87 photos taken</p>
-        </div>
-
-        <div>
-          <p>
-            <i className="fa fa-database"></i>
-            &nbsp;&nbsp;267 MB payload data collected
-          </p>
-        </div>
-
-        <div>
-          {/* <NavLink to="/activities" className="nav-link" activeClassName="active"> */}
-
-          &nbsp;<br/>&nbsp;
+        <div className="col-lg-4">
+          <canvas id="myCanvas"></canvas>
         </div>
       </div>
-      <div className="col-xs-4">
-        <canvas id="myCanvas" width="102" height="121"></canvas>
-        <Button className="mt-1" bsStyle="default" type="button" bsSize="small" pullRight={true} fill={true} onClick={() => this.handleSeeMoreClick()}>
-          See more
-        </Button>
+      <div className="row">
+        <div className="col-lg-12 text-right">
+          <Button className="pt-1" bsStyle="default" type="button" bsSize="small" pullRight={true} fill={true} onClick={() => this.handleSeeMoreClick(this.props.user.mapIsShown)}>
+            See more
+          </Button>
+        </div>
       </div>
     </div>;
     return (lastFlight);
   }
 }
 
-export default LastFlight;
+export default connect(mapStateToProps, mapDispatchToProps)(LastFlight);

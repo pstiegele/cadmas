@@ -251,25 +251,96 @@ var style = {
 //   For tables
 //
 //
-const thArray = ["ID", "Name", "Salary", "Country", "City"];
+const thArray = [
+  "",
+  "Date",
+  "Name",
+  "distance",
+  "duration",
+  "drone",
+  "payload",
+  "download"
+];
 const tdArray = [
   [
-    "1", "Dakota Rice", "$36,738", "Niger", "Oud-Turnhout"
+    "2h ago",
+    "Uni mapping",
+    "17,4 km",
+    "23 min",
+    "Skywalker X-8",
+    "visual mapping camera"
   ],
   [
-    "2", "Minerva Hooper", "$23,789", "Curaçao", "Sinaai-Waas"
+    "yesterday",
+    "AgraWa IR camera argiculture",
+    "32 km",
+    "41 min",
+    "Skywalker X-8",
+    "IR camera module"
   ],
   [
-    "3", "Sage Rodriguez", "$56,142", "Netherlands", "Baileux"
+    "07.08",
+    "Timelapse golden hour Würzburg",
+    "10,3 km",
+    "19 min",
+    "Pathfinder Hexacopter",
+    "DSLR camera"
   ],
   [
-    "4", "Philip Chaney", "$38,735", "Korea, South", "Overland Park"
+    "30.07",
+    "Testflight new battery",
+    "164 km",
+    "3 hours",
+    "Skywalker X-8",
+    ""
   ],
   [
-    "5", "Doris Greene", "$63,542", "Malawi", "Feldkirchen in Kärnten"
+    "12.07",
+    "Rock am Main security enlightenment",
+    "352 km",
+    "6 hours",
+    "Skywalker X-8",
+    "visual camera, thermal camera"
   ],
   [
-    "6", "Mason Porter", "$78,615", "Chile", "Gloucester"
+    "24.05",
+    "Bau AG construction monitoring",
+    "7,4 km",
+    "14 min",
+    "Pathfinder Hexacopter",
+    "visual camera"
+  ],
+  [
+    "22.05",
+    "L-Mobile inspection cell twoer",
+    "19,2 km",
+    "30 min",
+    "Skywalker X-8",
+    "visual camera"
+  ],
+  [
+    "22.05",
+    "F. Weihler thermal camera housing",
+    "0,9 km",
+    "13 min",
+    "Pathfinder Hexacopter",
+    "thermal camera"
+  ],
+  [
+    "16.04",
+    "Hyperspectral camera test",
+    "12,3 km",
+    "24 min",
+    "Skywalker X-8",
+    "hyperspectral camera"
+  ],
+  [
+    "03.04",
+    "Presentation flight Fa. Graisler",
+    "8,4 km",
+    "15 min",
+    "Skywalker X-8",
+    "visual mapping camera"
   ]
 ];
 
