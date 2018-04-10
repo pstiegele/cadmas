@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Grid, Row, Col, Table} from 'react-bootstrap';
+import {NavLink} from 'react-router-dom';
 
 import Card from 'components/Card/Card.jsx';
 import {thArray, tdArray} from 'variables/Variables.jsx';
@@ -24,15 +25,21 @@ class Activities extends Component {
                 {
                   tdArray.map((prop, key) => {
                     return (<tr key={key}>
+
                       <td key="icon">
-                        <i className="fa fa-fighter-jet"></i>
+                        <NavLink to="/dashboard" className="nav-link" activeClassName="active">
+                          <i className="fa fa-fighter-jet"></i>
+                        </NavLink>
                       </td>{
                         prop.map((prop, key) => {
                           return (<td key={key}>{prop}</td>);
                         })
                       }<td key="download">
-                        <i className="fa fa-cloud-download"></i>
+                        <NavLink to="/dashboard" className="nav-link" activeClassName="active">
+                          <i className="fa fa-cloud-download"></i>
+                        </NavLink>
                       </td>
+
                     </tr>)
                   })
                 }

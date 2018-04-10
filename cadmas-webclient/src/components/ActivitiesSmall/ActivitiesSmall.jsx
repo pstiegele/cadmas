@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {Tooltip, OverlayTrigger} from 'react-bootstrap';
+import React, { Component } from 'react';
+import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import Button from 'elements/CustomButton/CustomButton.jsx';
-import {NavLink} from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 export class ActivitiesSmall extends Component {
   render() {
@@ -32,12 +32,15 @@ export class ActivitiesSmall extends Component {
             <i className="fa fa-calendar"></i>
             &nbsp;today</div>
         </td>
-        <td className="text-right">
+        {!this.props.filterDrone &&
+          <td className="text-right">
 
-          <div className="stats">
-            <i className="fa fa-plane"></i>
-            &nbsp;Skywalker X-8</div>
-        </td>
+            <div className="stats">
+              <i className="fa fa-plane"></i>
+              &nbsp;Skywalker X-8</div>
+          </td>
+        }
+
         <td className="td-actions text-right">
           <OverlayTrigger placement="top" overlay={view}>
             <Button bsStyle="info" simple="simple" type="button" bsSize="xs">
