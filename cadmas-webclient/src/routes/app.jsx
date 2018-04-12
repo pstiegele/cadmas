@@ -7,6 +7,7 @@ import Maps from 'views/Maps/Maps';
 import Notifications from 'views/Notifications/Notifications';
 import Upgrade from 'views/Upgrade/Upgrade';
 import Drones from 'views/Drones/Drones';
+import Missions from 'views/Missions/Missions';
 
 const appRoutes = [
   {
@@ -20,15 +21,20 @@ const appRoutes = [
     icon: "pe-7s-note2",
     component: Activities
   }, {
-    path: "/drones",
-    name: "Drones",
-    icon: "pe-7s-plane",
-    component: Drones
+    path: "/missions",
+    name: "Missions",
+    icon: "pe-7s-arc",
+    component: Missions
   }, {
     path: "/notifications",
     name: "Notifications",
     icon: "pe-7s-bell",
     component: Notifications
+  }, {
+    path: "/drones",
+    name: "Drones",
+    icon: "pe-7s-plane",
+    component: Drones
   }, {
     path: "/payloadDataCenter",
     name: "Payload Data Center",

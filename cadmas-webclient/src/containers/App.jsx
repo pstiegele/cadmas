@@ -1,12 +1,12 @@
-import React, {Component} from 'react';
-import {Route, Switch, Redirect} from 'react-router-dom';
+import React, { Component } from 'react';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import NotificationSystem from 'react-notification-system';
 
 import Header from 'components/Header/Header';
 import Footer from 'components/Footer/Footer';
 import Sidebar from 'components/Sidebar/Sidebar';
 
-import {style} from "variables/Variables.jsx";
+import { style } from "variables/Variables.jsx";
 
 import appRoutes from 'routes/app.jsx';
 
@@ -18,16 +18,67 @@ class App extends Component {
     this.state = {
       _notificationSystem: null
     };
+    var exampleSocket = new WebSocket("ws://localhost/client?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwcyIsImV4cCI6MTUyNjEyOTA0MDI3NCwidXNlcklEIjoxLCJpYXQiOjE1MjM1MzcwNDB9.mxeerMJFSV5ZqQuL0M9DTBvF9wTpq4rb5l4KdH3Bz7g","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwcyIsImV4cCI6MTUyNjEyOTA0MDI3NCwidXNlcklEIjoxLCJpYXQiOjE1MjM1MzcwNDB9.mxeerMJFSV5ZqQuL0M9DTBvF9wTpq4rb5l4KdH3Bz7g");
+    exampleSocket.onmessage = function (event) {
+      var msg = JSON.parse(event.data);
+      switch (msg.method) {
+        case "authentication":
+          if (msg.payload.successful) {
+            localStorage.setItem('token', msg.payload.token);
+            //document.getElementsByClassName("numbers")[0].innerHTML = new Date();
+            console.log("authenticated successfully");
+           
+          } else {
+            console.log("authentication failed");
+          }
+          break;
+        case "another":
+
+          break;
+
+        case "dataUsage":
+
+          break;
+
+        default:
+          break;
+      }
+
+      console.log("ws received: " + event.data);
+    }
+    exampleSocket.onopen = function (event) {
+      var msg = {
+        "method": "authenticate",
+        "payload": {
+          "username": "ps",
+          "password": "123"
+        }
+      };
+      exampleSocket.send(JSON.stringify(msg));
+      console.log("ws dispatched");
+      var msg = {
+        "method": "renewToken",
+        "token": localStorage.getItem('token'),
+        "payload": {
+        }
+      };
+      exampleSocket.send(JSON.stringify(msg));
+      console.log("renewToken dispatched: "+localStorage.getItem('token'));
+      
+
+    };
   }
   handleNotificationClick(position) {
-    this.state._notificationSystem.addNotification({title: (<span data-notify="icon" className="pe-7s-gift"></span>), message: (<div>
-      Welcome to
+    this.state._notificationSystem.addNotification({
+      title: (<span data-notify="icon" className="pe-7s-gift"></span>), message: (<div>
+        Welcome to
       <b>&nbsp;CADMAS&nbsp;</b>
-      - a cloudbased drone management suite.
-    </div>), level: 'warning', position: position, autoDismiss: 15});
+        - a cloudbased drone management suite.
+    </div>), level: 'warning', position: position, autoDismiss: 15
+    });
   }
   componentDidMount() {
-    this.setState({_notificationSystem: this.refs.notificationSystem});
+    this.setState({ _notificationSystem: this.refs.notificationSystem });
     var _notificationSystem = this.refs.notificationSystem;
     // _notificationSystem.addNotification({title: (<span data-notify="icon" className="pe-7s-gift"></span>), message: (<div>
     //   Welcome to
@@ -42,22 +93,22 @@ class App extends Component {
   }
   render() {
     return (<div className="wrapper">
-      <NotificationSystem ref="notificationSystem" style={style}/>
-      <Sidebar {...this.props}/>
+      <NotificationSystem ref="notificationSystem" style={style} />
+      <Sidebar {...this.props} />
       <div id="main-panel" className="main-panel">
-        <Header {...this.props}/>
+        <Header {...this.props} />
         <Switch>
           {
             appRoutes.map((prop, key) => {
-              if (prop.name === "Notifications") 
-                return (<Route path={prop.path} key={key} render={routeProps => <prop.component {...routeProps} handleClick={this.handleNotificationClick}/>}/>);
-              if (prop.redirect) 
-                return (<Redirect from={prop.path} to={prop.to} key={key}/>);
-              return (<Route path={prop.path} component={prop.component} key={key}/>);
+              if (prop.name === "Notifications")
+                return (<Route path={prop.path} key={key} render={routeProps => <prop.component {...routeProps} handleClick={this.handleNotificationClick} />} />);
+              if (prop.redirect)
+                return (<Redirect from={prop.path} to={prop.to} key={key} />);
+              return (<Route path={prop.path} component={prop.component} key={key} />);
             })
           }
         </Switch>
-        <Footer/>
+        <Footer />
       </div>
     </div>);
   }

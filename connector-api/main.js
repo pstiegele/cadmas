@@ -4,7 +4,7 @@ module.exports = function(wss) {
     // You might use location.query.access_token to authenticate or share sessions
     // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
     //console.log("client connected: " + JSON.stringify(location));
-    console.log("connector-client connected");
+    console.log("connector connected");
     ws.on('message', function incoming(raw_msg) {
       console.log('received: %s', raw_msg);
       var msg;

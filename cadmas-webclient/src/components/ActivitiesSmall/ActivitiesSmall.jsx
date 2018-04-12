@@ -43,13 +43,13 @@ export class ActivitiesSmall extends Component {
 
         <td className="td-actions text-right">
           <OverlayTrigger placement="top" overlay={view}>
-            <Button bsStyle="info" simple="simple" type="button" bsSize="xs">
+            <Button bsStyle="info" simple type="button" bsSize="xs">
               <i className="fa fa-search"></i>
             </Button>
           </OverlayTrigger>
 
           <OverlayTrigger placement="top" overlay={remove}>
-            <Button bsStyle="danger" simple="simple" type="button" bsSize="xs">
+            <Button bsStyle="danger" simple type="button" bsSize="xs">
               <i className="fa fa-times"></i>
             </Button>
           </OverlayTrigger>

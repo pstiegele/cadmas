@@ -1,0 +1,10 @@
+import React, {Component} from 'react';
+
+class Missions extends Component {
+  render() {
+    return (<div>Missions</div>);
+  }
+
+}
+
+export default Missions

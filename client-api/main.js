@@ -1,10 +1,12 @@
-module.exports = function(wss) {
+const jwt = require('jsonwebtoken');
+
+module.exports = function (wss) {
   wss.on('connection', function connection(ws, req) {
-    //  const location = url.parse(req.url, true);
-    // You might use location.query.access_token to authenticate or share sessions
-    // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
-    //console.log("client connected: " + JSON.stringify(location));
-    console.log("client-client connected");
+    
+    var userID = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol].userID;
+    var username = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol].username;
+    delete require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol];
+    console.log("client connected. userID: "+userID+" username: "+username);
     ws.on('message', function incoming(raw_msg) {
       //console.log('received: %s', msg);
       var msg;
@@ -14,13 +16,17 @@ module.exports = function(wss) {
         return console.error(e);
       }
       if (msg.method === "authenticate") {
-        require('./methods/authenticate.js')(ws, msg.payload);
+        require('./methods/in/authenticate.js')(ws, msg.payload, function (ws, msg) {
+          msg.time = require('moment')().unix();
+          msg.id = 0;
+          ws.send(JSON.stringify(msg));
+        });
       } else if (isValidToken(msg.token)) {
         getHandleMethod(msg.method)(ws, msg.payload);
       }
     });
 
-    ws.on('close', function(reason) {
+    ws.on('close', function (reason) {
       //TODO: handle close
     });
     ws.on('error', function error() {
@@ -33,13 +39,37 @@ module.exports = function(wss) {
 function getHandleMethod(method) {
   switch (method) {
     case "renewToken":
-      return require('./methods/renewToken.js')
+      return require('./methods/in/renewToken.js')
       break;
-    case "getDrones":
-      return require('./methods/getDrones.js')
+    case "subscribeActivity":
+      return require('./methods/in/subscribeActivity.js')
       break;
-    case "getRoutes":
-      return require('./methods/getRoutes.js')
+    case "unsubscribeActivity":
+      return require('./methods/in/unsubscribeActivity.js')
+      break;
+    case "subscribeMission":
+      return require('./methods/in/subscribeMission.js')
+      break;
+    case "unsubscribeMission":
+      return require('./methods/in/unsubscribeMission.js')
+      break;
+    case "addMission":
+      return require('./methods/in/addMission.js')
+      break;
+    case "updateMission":
+      return require('./methods/in/updateMission.js')
+      break;
+    case "removeMission":
+      return require('./methods/in/removeMission.js')
+      break;
+    case "addMissionWaypoint":
+      return require('./methods/in/addMissionWaypoint.js')
+      break;
+    case "updateMissionWaypoint":
+      return require('./methods/in/updateMissionWaypoint.js')
+      break;
+    case "removeMissionWaypoint":
+      return require('./methods/in/removeMissionWaypoint.js')
       break;
     default:
       return require('./methods/invalidMethod.js');
@@ -47,6 +77,12 @@ function getHandleMethod(method) {
 }
 
 function isValidToken(token) {
-  //TODO: verify token
-  return true;
+ try {
+  var decoded = jwt.verify(token,process.env.JWTSECRET);
+ } catch (error) {
+   console.log(error);
+   
+   return false;
+ }
+  return false;
 }
