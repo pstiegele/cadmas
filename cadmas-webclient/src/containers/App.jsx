@@ -36,7 +36,7 @@ class App extends Component {
             }
             break;
           case "addMissionACK":
-            console.log('addMissionACK');
+            //console.log('addMissionACK');
             
             break;
 
@@ -48,7 +48,7 @@ class App extends Component {
             break;
         }
 
-        console.log("ws received: " + event.data);
+        console.log("ws received: " + msg.method);
       }
       exampleSocket.onopen = function (event) {
         var msg = {

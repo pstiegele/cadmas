@@ -7,6 +7,7 @@ module.exports = function (wss) {
     var username = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol].username;
     delete require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol];
     winston.info("client connected. userID: " + userID + " username: " + username);
+    sendInitalData(ws);
     ws.on('message', function incoming(raw_msg) {
       winston.info("msg from client ("+username+"): "+raw_msg);
       var msg;
@@ -69,4 +70,16 @@ function getHandleMethod(method) {
     default:
       return require('./methods/out/invalidMethod.js');
   }
+}
+
+function send(ws,method,res){
+  res.time = require('moment')().unix();
+  res.id = 0;
+  res.method = method;
+  winston.info("send: "+method+" --> "+res);
+  ws.send(JSON.stringify(res));
+}
+function  sendInitalData(ws){
+  require("./methods/out/activities")(ws, send);
+  require("./methods/out/missions")(ws,send);
 }
