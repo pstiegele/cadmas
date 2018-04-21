@@ -7,12 +7,6 @@ import {StatsCard} from 'components/StatsCard/StatsCard.jsx';
 import {ActivitiesSmall} from 'components/ActivitiesSmall/ActivitiesSmall.jsx';
 import LastFlight from 'components/LastFlight/LastFlight.jsx';
 import {
-  dataPie,
-  legendPie,
-  dataSales,
-  optionsSales,
-  responsiveSales,
-  legendSales,
   dataBar,
   optionsBar,
   responsiveBar,

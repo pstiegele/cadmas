@@ -6,12 +6,12 @@ var fs = require('fs');
 var path = require('path');
 var express = require('express');
 var path = require('path');
-var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 const morgan = require('morgan');
 const WebSocket = require('ws');
 const url = require('url');
+const winston = require('./middleware/logger');
 var app = express();
 app.use(morgan('dev'));
 global.db = require('./middleware/db.js')();
@@ -20,9 +20,9 @@ global.appRoot = path.resolve(__dirname);
 //init server
 var port;
 var server = initalizeServer();
-const connector_wss = new WebSocket.Server({noServer: true, verifyClient: require('./middleware/checkAuthentication.js').checkAuthentication});
-const client_wss = new WebSocket.Server({noServer: true, verifyClient: require('./middleware/checkAuthentication.js').checkAuthentication});
-const auth_wss = new WebSocket.Server({noServer: true});
+const connector_wss = new WebSocket.Server({ noServer: true, verifyClient: require('./middleware/checkAuthentication.js').verifyClient });
+const client_wss = new WebSocket.Server({ noServer: true, verifyClient: require('./middleware/checkAuthentication.js').verifyClient });
+const auth_wss = new WebSocket.Server({ noServer: true });
 initalizeWebsocket(server);
 
 //connector API
@@ -35,15 +35,18 @@ var client_api = require('./client-api/main')(client_wss);
 var auth_api = require('./auth-api/main')(auth_wss);
 
 // react setup
+
+winston.log('debug', 'Setting up express delivering cadmas-webclient');
 app.use(express.static(path.join(__dirname, 'cadmas-webclient', 'build')));
-app.get('*', function(req, res) {
+app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, 'cadmas-webclient', 'build', 'index.html'));
 });
 
+winston.log('debug', 'init websocket handlers');
 function initalizeWebsocket(server) {
   server.on('upgrade', (request, socket, head) => {
     const pathname = url.parse(request.url).pathname;
-    
+
     if (pathname === '/connector') {
       connector_wss.handleUpgrade(request, socket, head, (ws) => {
         connector_wss.emit('connection', ws);
@@ -82,9 +85,11 @@ function initalizeServer() {
   var servertype;
   if (process.env.mode === "debug") {
     servertype = "http";
+    winston.log('debug', 'Setting up a http server');
     server = http.createServer(app);
   } else {
     servertype = "https";
+    winston.log('debug', 'Setting up a https server');
     server = https.createServer(httpsServerOptions, app);
   }
 
@@ -92,8 +97,8 @@ function initalizeServer() {
     * Listen on provided port, on all network interfaces.
     */
 
-  server.listen(port, function() {
-    console.log(new Date().toLocaleString() + ' cadmas ' + servertype + ' server is listening on port:\t' + port);
+  server.listen(port, function () {
+    winston.log('info', 'cadmas ' + servertype + ' server is listening on port:\t' + port);
   });
   server.on('error', onError);
   server.on('listening', onListening);
@@ -126,6 +131,7 @@ function normalizePort(val) {
 
 function onError(error) {
   if (error.syscall !== 'listen') {
+    winston.log('error', 'http server error occured: ' + error);
     throw error;
   }
 
@@ -136,11 +142,11 @@ function onError(error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
+      winston.log('error', bind + ' requires elevated privileges');
       process.exit(1);
       break;
     case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
+      winston.log('error', bind + ' is already in use');
       process.exit(1);
       break;
     default:

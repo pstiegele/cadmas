@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Tooltip, OverlayTrigger} from 'react-bootstrap';
+// import {Tooltip, OverlayTrigger} from 'react-bootstrap';
 import Button from 'elements/CustomButton/CustomButton.jsx';
-import {NavLink} from 'react-router-dom';
+// import {NavLink} from 'react-router-dom';
 import {connect} from "react-redux";
 import {setName, setMapIsShown} from "actions/userActions";
 
@@ -20,7 +20,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-class LastFlight extends React.Component {
+class LastFlight extends Component {
   constructor(props) {
     super(props);
     this.handleSeeMoreClick = this.handleSeeMoreClick.bind(this);

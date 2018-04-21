@@ -15,6 +15,8 @@ const userReducer = (state = {
         mapIsShown: action.payload
       };
       break;
+    default:
+      break;
   }
   return state;
 };

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
+// import { NavLink } from 'react-router-dom';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Card from 'components/Card/Card.jsx';
 import droneImage from "assets/img/drone.png";

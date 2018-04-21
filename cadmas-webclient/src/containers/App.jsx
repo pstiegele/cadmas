@@ -18,55 +18,53 @@ class App extends Component {
     this.state = {
       _notificationSystem: null
     };
-    var exampleSocket = new WebSocket("ws://localhost/client?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwcyIsImV4cCI6MTUyNjEyOTA0MDI3NCwidXNlcklEIjoxLCJpYXQiOjE1MjM1MzcwNDB9.mxeerMJFSV5ZqQuL0M9DTBvF9wTpq4rb5l4KdH3Bz7g","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwcyIsImV4cCI6MTUyNjEyOTA0MDI3NCwidXNlcklEIjoxLCJpYXQiOjE1MjM1MzcwNDB9.mxeerMJFSV5ZqQuL0M9DTBvF9wTpq4rb5l4KdH3Bz7g");
-    exampleSocket.onmessage = function (event) {
-      var msg = JSON.parse(event.data);
-      switch (msg.method) {
-        case "authentication":
-          if (msg.payload.successful) {
-            localStorage.setItem('token', msg.payload.token);
-            //document.getElementsByClassName("numbers")[0].innerHTML = new Date();
-            console.log("authenticated successfully");
-           
-          } else {
-            console.log("authentication failed");
-          }
-          break;
-        case "another":
+    var token = localStorage.getItem("token");
+    if (token) {
 
-          break;
+      var exampleSocket = new WebSocket("ws://localhost/client?token="+token, token);
+      exampleSocket.onmessage = function (event) {
+        var msg = JSON.parse(event.data);
+        switch (msg.method) {
+          case "authentication":
+            if (msg.payload.successful) {
+              localStorage.setItem('token', msg.payload.token);
+              //document.getElementsByClassName("numbers")[0].innerHTML = new Date();
+              console.log("authenticated successfully");
 
-        case "dataUsage":
+            } else {
+              console.log("authentication failed");
+            }
+            break;
+          case "addMissionACK":
+            console.log('addMissionACK');
+            
+            break;
 
-          break;
+          case "dataUsage":
 
-        default:
-          break;
+            break;
+
+          default:
+            break;
+        }
+
+        console.log("ws received: " + event.data);
       }
+      exampleSocket.onopen = function (event) {
+        var msg = {
+          "method": "addMission",
+          "payload": {
+            "name": "MyCadmasMission",
+            "note": "First web Mission",
+            "onConnectionLostMode": "LAND"
+          }
+        };
+        exampleSocket.send(JSON.stringify(msg));
+        console.log("addMission sent");
+        
+      };
 
-      console.log("ws received: " + event.data);
     }
-    exampleSocket.onopen = function (event) {
-      var msg = {
-        "method": "authenticate",
-        "payload": {
-          "username": "ps",
-          "password": "123"
-        }
-      };
-      exampleSocket.send(JSON.stringify(msg));
-      console.log("ws dispatched");
-      var msg = {
-        "method": "renewToken",
-        "token": localStorage.getItem('token'),
-        "payload": {
-        }
-      };
-      exampleSocket.send(JSON.stringify(msg));
-      console.log("renewToken dispatched: "+localStorage.getItem('token'));
-      
-
-    };
   }
   handleNotificationClick(position) {
     this.state._notificationSystem.addNotification({
@@ -79,7 +77,7 @@ class App extends Component {
   }
   componentDidMount() {
     this.setState({ _notificationSystem: this.refs.notificationSystem });
-    var _notificationSystem = this.refs.notificationSystem;
+    //var _notificationSystem = this.refs.notificationSystem;
     // _notificationSystem.addNotification({title: (<span data-notify="icon" className="pe-7s-gift"></span>), message: (<div>
     //   Welcome to
     //   <b>&nbsp;CADMAS&nbsp;</b>

@@ -1,29 +1,27 @@
 const jwt = require('jsonwebtoken');
+const winston = require('../middleware/logger');
 
 module.exports = function (wss) {
   wss.on('connection', function connection(ws, req) {
-    
     var userID = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol].userID;
     var username = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol].username;
     delete require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol];
-    console.log("client connected. userID: "+userID+" username: "+username);
+    winston.info("client connected. userID: " + userID + " username: " + username);
     ws.on('message', function incoming(raw_msg) {
-      //console.log('received: %s', msg);
+      winston.info("msg from client ("+username+"): "+raw_msg);
       var msg;
       try {
         msg = JSON.parse(raw_msg);
       } catch (e) {
         return console.error(e);
       }
-      if (msg.method === "authenticate") {
-        require('./methods/in/authenticate.js')(ws, msg.payload, function (ws, msg) {
-          msg.time = require('moment')().unix();
-          msg.id = 0;
-          ws.send(JSON.stringify(msg));
-        });
-      } else if (isValidToken(msg.token)) {
-        getHandleMethod(msg.method)(ws, msg.payload);
-      }
+
+      getHandleMethod(msg.method)(ws, msg.payload, function (ws, method, res) {
+        res.time = require('moment')().unix();
+        res.id = 0;
+        res.method = method;
+        ws.send(JSON.stringify(res));
+      });
     });
 
     ws.on('close', function (reason) {
@@ -38,9 +36,6 @@ module.exports = function (wss) {
 
 function getHandleMethod(method) {
   switch (method) {
-    case "renewToken":
-      return require('./methods/in/renewToken.js')
-      break;
     case "subscribeActivity":
       return require('./methods/in/subscribeActivity.js')
       break;
@@ -72,17 +67,6 @@ function getHandleMethod(method) {
       return require('./methods/in/removeMissionWaypoint.js')
       break;
     default:
-      return require('./methods/invalidMethod.js');
+      return require('./methods/out/invalidMethod.js');
   }
-}
-
-function isValidToken(token) {
- try {
-  var decoded = jwt.verify(token,process.env.JWTSECRET);
- } catch (error) {
-   console.log(error);
-   
-   return false;
- }
-  return false;
 }
