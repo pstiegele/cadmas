@@ -1,6 +1,6 @@
 const droneReducer = (state = {
     drones:[{
-     'droneID': 0,
+     ['droneID']: 1,
      'name': 'MyDrone',
      'datavolume': '12',
      'note': 'first flight',

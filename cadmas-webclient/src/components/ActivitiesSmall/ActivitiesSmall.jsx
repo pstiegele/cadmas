@@ -1,9 +1,29 @@
 import React, { Component } from 'react';
 import { Tooltip, OverlayTrigger } from 'react-bootstrap';
 import Button from 'elements/CustomButton/CustomButton.jsx';
+import { connect } from "react-redux";
 import { NavLink } from 'react-router-dom';
+import moment from 'moment';
 
-export class ActivitiesSmall extends Component {
+const mapStateToProps = (state) => {
+  return { activity: state.activity, drone: state.drone };
+};
+
+
+
+class ActivitiesSmall extends Component {
+  constructor(props) {
+    super(props);
+    this.getDroneName = this.getDroneName.bind(this);
+    console.log("droneName: " + this.getDroneName(1));
+
+  }
+  getDroneName(droneID) {
+    var result = this.props.drone.drones.filter(function (obj) {
+      return obj.droneID === droneID;
+    });
+    return result[0];
+  }
   render() {
     const view = (<Tooltip id="view_tooltip">View Activity</Tooltip>);
     const remove = (<Tooltip id="remove_tooltip">Remove</Tooltip>);
@@ -16,28 +36,29 @@ export class ActivitiesSmall extends Component {
       'F. Weiler thermal camera housing'
     ];
     var activities = [];
-    for (var i = 0; i < activities_title.length; i++) {
-      activities.push(<tr key={i}>
+    for (var i = this.props.activity.activities.length-1; i >=0&&this.props.activity.activities.length-1-i<8; i--) {
+      activities.push(<tr key={this.props.activity.activities[i].activityID}>
         <td>
           <i className="fa fa-fighter-jet"></i>
         </td>
         <td>
-          <NavLink to="/activities" className="nav-link" activeClassName="active">
-            {activities_title[i]}
+          <NavLink to={"/activities/" + this.props.activity.activities[i].id} className="nav-link" activeClassName="active">
+            {this.props.activity.activities[i].name}
           </NavLink>
         </td>
         <td className="text-right">
 
           <div className="stats">
             <i className="fa fa-calendar"></i>
-            &nbsp;today</div>
+            &nbsp;{moment(this.props.activity.activities[i].dt_created, "YYYY-MM-DDTHH:mm:ss.SSSZ").fromNow()}</div>
         </td>
         {!this.props.filterDrone &&
           <td className="text-right">
 
             <div className="stats">
               <i className="fa fa-plane"></i>
-              &nbsp;Skywalker X-8</div>
+
+              &nbsp;{this.getDroneName(this.props.activity.activities[i].droneID).name}</div>
           </td>
         }
 
@@ -63,4 +84,4 @@ export class ActivitiesSmall extends Component {
   }
 }
 
-export default ActivitiesSmall;
+export default connect(mapStateToProps)(ActivitiesSmall);

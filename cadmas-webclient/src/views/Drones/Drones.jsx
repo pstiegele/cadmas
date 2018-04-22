@@ -4,7 +4,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import Card from 'components/Card/Card.jsx';
 import droneImage from "assets/img/drone.png";
 import copterImage from "assets/img/hexacopter.png";
-import { ActivitiesSmall } from 'components/ActivitiesSmall/ActivitiesSmall.jsx';
+import ActivitiesSmall from 'components/ActivitiesSmall/ActivitiesSmall.jsx';
 import Button from 'elements/CustomButton/CustomButton.jsx';
 
 

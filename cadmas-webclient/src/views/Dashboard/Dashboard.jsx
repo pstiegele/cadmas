@@ -4,7 +4,7 @@ import {Grid, Row, Col} from 'react-bootstrap';
 
 import {Card} from 'components/Card/Card.jsx';
 import {StatsCard} from 'components/StatsCard/StatsCard.jsx';
-import {ActivitiesSmall} from 'components/ActivitiesSmall/ActivitiesSmall.jsx';
+import ActivitiesSmall from 'components/ActivitiesSmall/ActivitiesSmall.jsx';
 import LastFlight from 'components/LastFlight/LastFlight.jsx';
 import {
   dataBar,
