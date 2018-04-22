@@ -3,10 +3,10 @@ const userReducer = (state = {
   mapIsShown: true
 }, action) => {
   switch (action.type) {
-    case "SET_NAME":
+    case "SET_USER":
       state = {
         ...state,
-        name: action.payload
+        name: action.payload.username
       };
       break;
     case "SET_MAP_IS_SHOWN":

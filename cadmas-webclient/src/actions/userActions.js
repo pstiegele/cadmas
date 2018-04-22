@@ -1,5 +1,5 @@
-export function setName(name) {
-  return {type: "SET_NAME", payload: name};
+export function setUser(user) {
+  return {type: "SET_USER", payload: user};
 }
 
 export function setMapIsShown(mapIsShown) {

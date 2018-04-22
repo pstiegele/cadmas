@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import Button from 'elements/CustomButton/CustomButton.jsx';
 // import {NavLink} from 'react-router-dom';
 import {connect} from "react-redux";
-import {setName, setMapIsShown} from "actions/userActions";
+import {setUser, setMapIsShown} from "actions/userActions";
 
 const mapStateToProps = (state) => {
   return {user: state.user, activity: state.activity};
@@ -11,8 +11,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setName: (name) => {
-      dispatch(setName(name));
+    setUser: (user) => {
+      dispatch(setUser(user));
     },
     setMapIsShown: (mapIsShown) => {
       dispatch(setMapIsShown(mapIsShown));
