@@ -11,8 +11,8 @@ import CadmasWS from '../websocket/CadmasWS';
 import { style } from "variables/Variables.jsx";
 
 import appRoutes from 'routes/app.jsx';
-
 class App extends Component {
+  
   constructor(props) {
     super(props);
     this.componentDidMount = this.componentDidMount.bind(this);
@@ -23,6 +23,7 @@ class App extends Component {
     
   }
   handleNotificationClick(position) {
+    this.cadmasWS.addMission("MyCadmasMission","any note","RTL");
     this.state._notificationSystem.addNotification({
       title: (<span data-notify="icon" className="pe-7s-gift"></span>), message: (<div>
         Welcome to
@@ -33,7 +34,7 @@ class App extends Component {
   }
   componentDidMount() {
     this.setState({ _notificationSystem: this.refs.notificationSystem });
-    new CadmasWS();
+    this.cadmasWS = new CadmasWS();
   }
   componentDidUpdate(e) {
     if (window.innerWidth < 993 && e.history.location.pathname !== e.location.pathname && document.documentElement.className.indexOf('nav-open') !== -1) {

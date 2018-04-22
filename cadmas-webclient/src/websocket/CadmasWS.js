@@ -1,9 +1,16 @@
+import {setName} from "actions/userActions";
+import store from "../store";
+import { setActivities } from "../actions/activityActions";
+
+var socket;
+
+
 class CadmasWS{
-    constructor(){
+ 
+    constructor(props){
         this.initWS();
     }
     initWS(){
-        console.log("hey ho");
         var token = localStorage.getItem("token");
         if(!token){
           console.log("authenticate first! "+window.location.hostname);
@@ -41,27 +48,24 @@ class CadmasWS{
         }
         if (token) {
     
-          var socket = new WebSocket("ws://"+window.location.hostname+"/client?token="+token, token);
+          socket = new WebSocket("ws://"+window.location.hostname+"/client?token="+token, token);
           socket.onmessage = function (event) {
             var msg = JSON.parse(event.data);
             switch (msg.method) {
-              case "authentication":
-                if (msg.payload.successful) {
-                  localStorage.setItem('token', msg.payload.token);
-                  //document.getElementsByClassName("numbers")[0].innerHTML = new Date();
-                  console.log("authenticated successfully");
-    
-                } else {
-                  console.log("authentication failed");
-                }
-                break;
               case "addMissionACK":
-                //console.log('addMissionACK');
-                
                 break;
     
               case "activities":
-                console.log("activities: "+JSON.stringify(msg));
+              store.dispatch(setActivities(msg.payload));
+                break;
+              case "missions":
+                break;
+              case "drones":
+                break;
+              case "notifications":
+                break;
+              case "user":
+              store.dispatch(setName(msg.payload.username));
                 break;
     
               default:
@@ -71,20 +75,23 @@ class CadmasWS{
             console.log("ws received: " + msg.method);
           }
           socket.onopen = function (event) {
-            var msg = {
-              "method": "addMission",
-              "payload": {
-                "name": "MyCadmasMission",
-                "note": "First web Mission",
-                "onConnectionLostMode": "LAND"
-              }
-            };
-            socket.send(JSON.stringify(msg));
-            console.log("addMission sent");
+            
             
           };
     
         }
     }
-}
-export default CadmasWS;
+    addMission(name, note, onConnectionLostMode){
+      var msg = {
+        "method": "addMission",
+        "payload": {
+          "name": name,
+          "note": note,
+          "onConnectionLostMode": onConnectionLostMode
+        }
+      };
+      socket.send(JSON.stringify(msg));
+      console.log("addMission ("+name+") sent");
+    }
+  }
+  export default CadmasWS;

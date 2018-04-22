@@ -6,7 +6,7 @@ import {connect} from "react-redux";
 import {setName, setMapIsShown} from "actions/userActions";
 
 const mapStateToProps = (state) => {
-  return {user: state.user, mapIsShown: state.mapIsShown};
+  return {user: state.user, activity: state.activity};
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -92,7 +92,7 @@ class LastFlight extends Component {
           <div>
             <p>
               <i className="fa fa-globe"></i>
-              &nbsp;&nbsp;{this.props.user.name}</p>
+              &nbsp;&nbsp;{this.props.activity.activities[this.props.activity.activities.length-1].name}</p>
           </div>
           <div>
             <p>
@@ -103,7 +103,7 @@ class LastFlight extends Component {
           <div>
             <p>
               <i className="fa fa-clock-o"></i>
-              &nbsp;&nbsp;23 min</p>
+              &nbsp;&nbsp;{this.props.activity.activities[this.props.activity.activities.length-1].duration} min</p>
           </div>
 
           <div>
