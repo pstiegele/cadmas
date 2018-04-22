@@ -8,7 +8,7 @@
     "start-local-prod": "npm install && npm install --prefix cadmas-webclient && npm run build --prefix cadmas-webclient && node ./app.js",
     "webclient": "npm start --prefix cadmas-webclient",
     "debug": "nodemon ./app.js",
-    "run": "npm-run-all --parallel debug webclient "
+    "run": "npm-run-all --parallel \"debug --inspect\" webclient  "
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

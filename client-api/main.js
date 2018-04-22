@@ -1,15 +1,17 @@
 const jwt = require('jsonwebtoken');
 const winston = require('../middleware/logger');
+const util = require('util');
 
 module.exports = function (wss) {
   wss.on('connection', function connection(ws, req) {
-    var userID = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol].userID;
-    var username = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol].username;
+    ws.userID = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol].userID;
+    ws.username = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol].username;
     delete require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol];
-    winston.info("client connected. userID: " + userID + " username: " + username);
+    winston.info("client connected. userID: " + ws.userID + " username: " + ws.username);
     sendInitalData(ws);
+    //winston.info("clients: "+util.inspect(wss.clients));
     ws.on('message', function incoming(raw_msg) {
-      winston.info("msg from client ("+username+"): "+raw_msg);
+      winston.info("msg from client ("+ws.username+"): "+raw_msg);
       var msg;
       try {
         msg = JSON.parse(raw_msg);
@@ -82,4 +84,7 @@ function send(ws,method,res){
 function  sendInitalData(ws){
   require("./methods/out/activities")(ws, send);
   require("./methods/out/missions")(ws,send);
+  require("./methods/out/drones")(ws,send);
+  require("./methods/out/notifications")(ws,send);
+  require("./methods/out/user")(ws,send);
 }

@@ -5,7 +5,6 @@ var pertainInfosThroughConnectionProcess = {};
 
 
 module.exports.checkAuthentication = function (token, saveUserInfos) {
-
   return jwt.verify(token, process.env.JWTSECRET, function (err, decoded) {
     if (err) return false;
 
@@ -21,7 +20,7 @@ module.exports.checkAuthentication = function (token, saveUserInfos) {
 }
 
 module.exports.verifyClient = function (info) {
-  let token = url.parse(info.req.url, true).query.token;
+  let token = url.parse(info.req.url, true).query.token || "";
   return module.exports.checkAuthentication(token, true);
 }
 
