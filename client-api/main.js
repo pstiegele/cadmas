@@ -82,9 +82,10 @@ function send(ws,method,res){
   ws.send(JSON.stringify(res));
 }
 function  sendInitalData(ws){
-  require("./methods/out/activities")(ws, send);
+  
   require("./methods/out/missions")(ws,send);
   require("./methods/out/drones")(ws,send);
+  require("./methods/out/activities")(ws, send);
   require("./methods/out/notifications")(ws,send);
   require("./methods/out/user")(ws,send);
 }

@@ -1,10 +1,10 @@
 const droneReducer = (state = {
     drones:[{
-     ['droneID']: 1,
+     'droneID': 1,
      'name': 'MyDrone',
      'datavolume': '12',
      'note': 'first flight',
-     'dt_created': 6381021024,
+     'dt_created': 1543692476,
      'softwareVersion':'13',
      'vehicleType': 'Drone',
      'manufacturer': 'DJI',

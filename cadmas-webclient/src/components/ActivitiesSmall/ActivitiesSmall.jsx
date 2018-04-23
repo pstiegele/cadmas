@@ -15,8 +15,6 @@ class ActivitiesSmall extends Component {
   constructor(props) {
     super(props);
     this.getDroneName = this.getDroneName.bind(this);
-    console.log("droneName: " + this.getDroneName(1));
-
   }
   getDroneName(droneID) {
     var result = this.props.drone.drones.filter(function (obj) {
@@ -26,15 +24,7 @@ class ActivitiesSmall extends Component {
   }
   render() {
     const view = (<Tooltip id="view_tooltip">View Activity</Tooltip>);
-    const remove = (<Tooltip id="remove_tooltip">Remove</Tooltip>);
-    const activities_title = [
-      'Uni mapping',
-      'Timelapse golden hour Würzburg',
-      'Testflight new battery',
-      'Rock am Main security enlightenment',
-      'L-Mobile inspection cell tower',
-      'F. Weiler thermal camera housing'
-    ];
+    const remove = (<Tooltip id="remove_tooltip">Remove Activity</Tooltip>);
     var activities = [];
     for (var i = this.props.activity.activities.length-1; i >=0&&this.props.activity.activities.length-1-i<8; i--) {
       activities.push(<tr key={this.props.activity.activities[i].activityID}>
@@ -42,22 +32,21 @@ class ActivitiesSmall extends Component {
           <i className="fa fa-fighter-jet"></i>
         </td>
         <td>
-          <NavLink to={"/activities/" + this.props.activity.activities[i].id} className="nav-link" activeClassName="active">
+          <NavLink to={"/activities/" + this.props.activity.activities[i].activityID} className="nav-link" activeClassName="active">
             {this.props.activity.activities[i].name}
           </NavLink>
         </td>
-        <td className="text-right">
+        <td className="text-left">
 
           <div className="stats">
             <i className="fa fa-calendar"></i>
             &nbsp;{moment(this.props.activity.activities[i].dt_created, "YYYY-MM-DDTHH:mm:ss.SSSZ").fromNow()}</div>
         </td>
         {!this.props.filterDrone &&
-          <td className="text-right">
+          <td className="text-left">
 
             <div className="stats">
               <i className="fa fa-plane"></i>
-
               &nbsp;{this.getDroneName(this.props.activity.activities[i].droneID).name}</div>
           </td>
         }

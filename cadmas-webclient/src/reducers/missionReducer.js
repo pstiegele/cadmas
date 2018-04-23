@@ -3,7 +3,7 @@ const missionReducer = (state = {
      'missionID': 2,
      'name': 'MyMission',
      'note': 'first flight',
-     'dt_created': 6381021024,
+     'dt_created': 1503751670,
      'thumbnailpath': 'img/activity0.jpg',
      'onConnectionLostMode':'RTL'
     }]

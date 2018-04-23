@@ -6,6 +6,7 @@ import {Card} from 'components/Card/Card.jsx';
 import {StatsCard} from 'components/StatsCard/StatsCard.jsx';
 import ActivitiesSmall from 'components/ActivitiesSmall/ActivitiesSmall.jsx';
 import LastFlight from 'components/LastFlight/LastFlight.jsx';
+import { connect } from "react-redux";
 import {
   dataBar,
   optionsBar,
@@ -13,7 +14,14 @@ import {
   legendBar
 } from 'variables/Variables.jsx';
 
+const mapStateToProps = (state) => {
+  return {mission: state.mission};
+};
+
 class Dashboard extends Component {
+  constructor(props){
+    super(props);
+  }
   createLegend(json) {
     var legend = [];
     for (var i = 0; i < json["names"].length; i++) {
@@ -24,6 +32,21 @@ class Dashboard extends Component {
     }
     return legend;
   }
+  getNumberOfMissions(){
+    var counter=0;
+    
+    this.props.mission.missions.forEach(element => {
+      var a = Date.now();
+      var b = new Date(element.dt_created*1000);
+      var c = a-b;
+      console.log("now: "+a+" mission date: "+b+" diff: "+c);
+      
+      if(Date.now()-new Date(element.dt_created*1000)<2592000000){
+        counter++;
+      }
+    });
+    return counter;
+  }
   render() {
     return (<div className="content">
       <Grid fluid>
@@ -32,7 +55,7 @@ class Dashboard extends Component {
             <StatsCard bigIcon={<i className = "pe-7s-server text-warning" > </i>} statsText="Data usage this month" statsValue="35GB" statsIcon={<i className = "fa fa-refresh" > </i>} statsIconText="Updated now"/>
           </Col>
           <Col lg={3} sm={6}>
-            <StatsCard bigIcon={<i className = "pe-7s-world text-success" > </i>} statsText="Number of missions" statsValue="27" statsIcon={<i className = "fa fa-calendar-o" > </i>} statsIconText="last 30 days"/>
+            <StatsCard bigIcon={<i className = "pe-7s-world text-success" > </i>} statsText="Number of missions" statsValue={this.getNumberOfMissions()} statsIcon={<i className = "fa fa-calendar-o" > </i>} statsIconText="last 30 days"/>
           </Col>
           <Col lg={3} sm={6}>
             <StatsCard bigIcon={<i className = "fa  fa-exclamation-circle text-danger" > </i>} statsText="Errors" statsValue="2" statsIcon={<i className = "fa fa-clock-o" > </i>} statsIconText="on the last mission"/>
@@ -87,4 +110,4 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+export default connect(mapStateToProps)(Dashboard);
