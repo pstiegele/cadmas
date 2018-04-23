@@ -46,7 +46,7 @@ class ActivitiesSmall extends Component {
           <td className="text-left">
 
             <div className="stats">
-              <i className="fa fa-plane"></i>
+              <i className="fa fa-plane"></i> 
               &nbsp;{this.getDroneName(this.props.activity.activities[i].droneID).name}</div>
           </td>
         }
