@@ -18,6 +18,7 @@ module.exports = function (ws, callback) {
                 'dt_created': element.dt_created,
                 'vehicleType': element.vehicleType,
                 'manufacturer': element.manufacturer,
+                'color':element.color,
                 'activeMission': element.activeMission
             }
             );

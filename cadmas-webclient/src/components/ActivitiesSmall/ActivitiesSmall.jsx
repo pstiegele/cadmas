@@ -16,6 +16,14 @@ class ActivitiesSmall extends Component {
     super(props);
     this.getDroneName = this.getDroneName.bind(this);
   }
+  getSafe(fn, defaultVal) {
+    try {
+        return fn();
+    } catch (e) {
+        return defaultVal;
+    }
+}
+
   getDroneName(droneID) {
     var result = this.props.drone.drones.filter(function (obj) {
       return obj.droneID === droneID;
@@ -40,14 +48,14 @@ class ActivitiesSmall extends Component {
 
           <div className="stats">
             <i className="fa fa-calendar"></i>
-            &nbsp;{moment(this.props.activity.activities[i].dt_created, "YYYY-MM-DDTHH:mm:ss.SSSZ").fromNow()}</div>
+            &nbsp;{moment(this.props.activity.activities[i].dt_created*1000).fromNow()}</div>
         </td>
         {!this.props.filterDrone &&
           <td className="text-left">
 
             <div className="stats">
               <i className="fa fa-plane"></i> 
-              &nbsp;{this.getDroneName(this.props.activity.activities[i].droneID).name}</div>
+              &nbsp;{this.getSafe(() => this.getDroneName(this.props.activity.activities[i].droneID).name,"")}</div>
           </td>
         }
 

@@ -11,7 +11,7 @@ module.exports = function (wss) {
     sendInitalData(ws);
     //winston.info("clients: "+util.inspect(wss.clients));
     ws.on('message', function incoming(raw_msg) {
-      winston.info("msg from client ("+ws.username+"): "+raw_msg);
+      winston.info("msg from client (" + ws.username + "): " + raw_msg);
       var msg;
       try {
         msg = JSON.parse(raw_msg);
@@ -69,23 +69,32 @@ function getHandleMethod(method) {
     case "removeMissionWaypoint":
       return require('./methods/in/removeMissionWaypoint.js')
       break;
+    case "addActivity":
+      return require('./methods/in/addActivity.js')
+      break;
+    case "updateActivity":
+      return require('./methods/in/updateActivity.js')
+      break;
+    case "removeActivity":
+      return require('./methods/in/removeActivity.js')
+      break;
     default:
       return require('./methods/out/invalidMethod.js');
   }
 }
 
-function send(ws,method,res){
+function send(ws, method, res) {
   res.time = require('moment')().unix();
   res.id = 0;
   res.method = method;
-  winston.info("send: "+method+" --> "+res);
+  winston.info("send: " + method + " --> " + res);
   ws.send(JSON.stringify(res));
 }
-function  sendInitalData(ws){
-  
-  require("./methods/out/missions")(ws,send);
-  require("./methods/out/drones")(ws,send);
+function sendInitalData(ws) {
+
+  require("./methods/out/missions")(ws, send);
+  require("./methods/out/drones")(ws, send);
   require("./methods/out/activities")(ws, send);
-  require("./methods/out/notifications")(ws,send);
-  require("./methods/out/user")(ws,send);
+  require("./methods/out/notifications")(ws, send);
+  require("./methods/out/user")(ws, send);
 }

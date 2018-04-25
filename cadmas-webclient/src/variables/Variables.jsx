@@ -653,77 +653,7 @@ var legendSales = {
 };
 
 // Data for Bar Chart
-var dataBar = {
-  labels: [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'Mai',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec'
-  ],
-  series: [
-    [
-      3,
-      7,
-      14,
-      2,
-      31,
-      29,
-      26,
-      36,
-      16,
-      17,
-      5,
-      14
-    ],
-    [
-      12,
-      19,
-      14,
-      11,
-      4,
-      1,
-      3,
-      23,
-      6,
-      9,
-      23,
-      21
-    ]
-  ]
-};
-var optionsBar = {
-  seriesBarDistance: 10,
-  axisX: {
-    showGrid: false
-  },
-  height: "245px"
-};
-var responsiveBar = [
-  [
-    'screen and (max-width: 640px)', {
-      seriesBarDistance: 5,
-      axisX: {
-        labelInterpolationFnc: function(value) {
-          return value[0];
-        }
-      }
-    }
-  ]
-];
-var legendBar = {
-  names: [
-    "Skywalker X-8", "Pathfinder Hexacopter"
-  ],
-  types: ["info", "danger"]
-};
+
 
 module.exports = {
   style, // For notifications (App container and Notifications view)
@@ -735,9 +665,5 @@ module.exports = {
   dataSales,
   optionsSales,
   responsiveSales,
-  legendSales,
-  dataBar,
-  optionsBar,
-  responsiveBar,
-  legendBar // For charts (Dashboard view)
+  legendSales
 };
