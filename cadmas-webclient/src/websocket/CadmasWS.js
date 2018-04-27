@@ -28,7 +28,7 @@ class CadmasWS {
           if (msg.payload.successful) {
             localStorage.setItem('token', msg.payload.token);
             console.log("authenticated successfully");
-            this.initClientAPI();
+            this.initClientAPI(msg.payload.token);
           } else {
             console.log("authentication failed");
           }
