@@ -14,6 +14,7 @@ class CadmasWS {
     this.initWS();
   }
   initAuthAPI(){
+    var that=this;
     console.log("authenticate first! ");
     var authSocket;
     if(window.location.hostname!=="localhost"){
@@ -28,7 +29,7 @@ class CadmasWS {
           if (msg.payload.successful) {
             localStorage.setItem('token', msg.payload.token);
             console.log("authenticated successfully");
-            this.initClientAPI(msg.payload.token);
+            that.initClientAPI(msg.payload.token);
           } else {
             console.log("authentication failed");
           }
