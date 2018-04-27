@@ -566,8 +566,6 @@ var legendSales = {
 
 module.exports = {
   style, // For notifications (App container and Notifications view)
-  thArray,
-  tdArray, // For tables (TableList view)
   iconsArray, // For icons (Icons view)
   dataPie,
   legendPie,

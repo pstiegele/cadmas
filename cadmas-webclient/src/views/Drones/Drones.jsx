@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 // import { NavLink } from 'react-router-dom';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Card from 'components/Card/Card.jsx';
-import droneImage from "assets/img/default_drone.svg";
-import copterImage from "assets/img/default_drone.svg";
 import ActivitiesSmall from 'components/ActivitiesSmall/ActivitiesSmall.jsx';
 import Button from 'elements/CustomButton/CustomButton.jsx';
 import { connect } from "react-redux";
@@ -71,7 +69,7 @@ class Drones extends Component {
       }else{
         res.push(this.getDroneContent(prop));
       }
-      
+      return null;
     });
     return (
       <div className="content">
