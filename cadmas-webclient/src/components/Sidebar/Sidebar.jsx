@@ -52,6 +52,8 @@ class Sidebar extends Component {
           }
           {
             appRoutes.map((prop, key) => {
+              if(!prop.showInSidebar)
+                return null;
               if (!prop.redirect) 
                 return (<li className={prop.upgrade
                     ? "active active-pro"

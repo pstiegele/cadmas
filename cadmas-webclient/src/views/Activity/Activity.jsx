@@ -17,21 +17,21 @@ const mapStateToProps = (state) => {
   return { mission: state.mission, drone: state.drone, activity: state.activity };
 };
 
-class Missions extends Component {
-  constructor(props) {
+class Activity extends Component {
+  constructor(props){
     super(props);
-    this.state = { redirect: false, redirectToMission: 0 };
+    this.state = {redirect: false,redirectToActivity:0};
   }
 
   thArray = [
     "",
     "date",
     "name",
-    "location",
-    "waypoints",
     "distance",
-    "usage",
-    "set to"
+    "duration",
+    "drone",
+    "mission name",
+    "download"
   ];
 
   getRelativeOrAbsoluteDate(date) {
@@ -40,6 +40,18 @@ class Missions extends Component {
     } else {
       return moment(date * 1000).locale("de", localization).format("LL")
     }
+  }
+  getDuration(duration){
+    if(moment.duration(duration,"minutes").asMinutes()>60){
+      if(moment.duration(duration,"minutes").asHours()>24){
+        return Math.round(moment.duration(duration,"minutes").asDays())+" days";
+      }else{
+        return Math.round(moment.duration(duration,"minutes").asHours())+" hours";
+      }
+    }else{
+      return Math.round(moment.duration(duration,"minutes").asMinutes())+" min";
+    }
+    
   }
 
   getSafe(fn, defaultVal) {
@@ -58,7 +70,7 @@ class Missions extends Component {
     });
     return result[0];
   }
-
+  
   getSafeMissionName(missionID) {
     return this.getSafe(() => this.getMissionByID(missionID).name, "")
   }
@@ -69,58 +81,20 @@ class Missions extends Component {
     return result[0];
   }
 
-  getUsage(missionID) {
-    var counter = 0;
-    for(var i=0;i<this.props.activity.activities.length;i++){
-      if (this.props.activity.activities[i].missionID === missionID) {
-        counter++
-      }
-    }
-    if(counter===1){
-      return counter + " time";
-    }else{
-      return counter + " times";
-    }
+  handleClick(that){
+    this.setState({redirect: true, redirectToActivity: that._targetInst.return.key});
   }
-
-  getSetTo(missionID){
-    var res=[]
-    for(var i=0;i<this.props.drone.drones.length;i++){
-      if(this.props.drone.drones[i].activeMission===missionID){
-        res.push(this.props.drone.drones[i].name);
-      }
-    }
-    return res;
-  }
-
-  getLocation(missionID){
-    return "Würzburg";
-  }
-
-  getNumberOfWaypoints(missionID){
-    var counter = 3;
-    if(counter===1){
-      return counter + " item";
-    }else{
-      return counter + " items";
-    }
-    
-  }
-
-  handleClick(that) {
-    this.setState({ redirect: true, redirectToMission: that._targetInst.return.key });
-  }
-
+  
 
   render() {
     if (this.state.redirect) {
-      return <Redirect push to={"/mission/" + this.state.redirectToMission} />;
-    }
+      return <Redirect push to={"/activity/"+this.state.redirectToActivity} />;
+    }  
     return (<div className="content">
       <Grid fluid>
         <Row>
           <Col md={12}>
-            <Card title="Missions" category="That are your missions" ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={<Table striped hover ><thead>
+            <Card title="Activities" category="That are your latest flight activities" ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={<Table striped hover ><thead>
               <tr>
                 {
                   this.thArray.map((prop, key) => {
@@ -131,22 +105,27 @@ class Missions extends Component {
             </thead>
               <tbody>
                 {
-                  this.props.mission.missions.slice(0).reverse().map((prop, key) => {
+                  this.props.activity.activities.slice(0).reverse().map((prop, key) => {
 
-                    return (<tr key={prop.missionID} onClick={this.handleClick.bind(this)}>
+                    return (<tr key={prop.activityID} onClick={this.handleClick.bind(this)}>
 
-                      <td key={prop.missionID + "-icon"}>
+                      <td key={prop.activityID + "-icon"}>
                         <NavLink to="/dashboard" className="nav-link" activeClassName="active">
                           <i className="fa fa-fighter-jet"></i>
                         </NavLink>
                       </td>
-                      <td key={prop.missionID + "-date"}>{this.getRelativeOrAbsoluteDate(prop.dt_created)}</td>
-                      <td key={prop.missionID + "-name"}>{prop.name}</td>
-                      <td key={prop.missionID + "-location"}>{this.getLocation(prop.missionID)}</td>
-                      <td key={prop.missionID + "-waypoints"}>{this.getNumberOfWaypoints(prop.missionID)}</td>
-                      <td key={prop.missionID + "-distance"}>{"12 km"}</td>
-                      <td key={prop.missionID + "-usage"}>{this.getUsage(prop.missionID)}</td>
-                      <td key={prop.missionID + "-setto"}>{this.getSetTo(prop.missionID)}</td>
+                      <td key={prop.activityID + "-date"}>{this.getRelativeOrAbsoluteDate(prop.dt_created)}</td>
+                      <td key={prop.activityID + "-name"}>{prop.name}</td>
+                      <td key={prop.activityID + "-distance"}>{"12 km"}</td>
+                      <td key={prop.activityID + "-duration"}>{this.getDuration(prop.duration)}</td>
+                      <td key={prop.activityID + "-drone"}>{this.getSafeDroneName(prop.droneID)}</td>
+                      <td key={prop.activityID + "-mission"}>{this.getSafeMissionName(prop.missionID)}</td>
+                      <td key={prop.activityID + "-download"}>
+                        <NavLink to="/dashboard" className="nav-link" activeClassName="active">
+                          <i className="fa fa-cloud-download"></i>
+                        </NavLink>
+                      </td>
+
                     </tr>)
                   })
                 }
@@ -158,4 +137,4 @@ class Missions extends Component {
     </div>);
   }
 }
-export default connect(mapStateToProps)(Missions);
+export default connect(mapStateToProps)(Activity);

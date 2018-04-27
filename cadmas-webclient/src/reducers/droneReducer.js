@@ -10,7 +10,7 @@ const droneReducer = (state = {
      'manufacturer': 'DJI',
      'connectorType': 'ArdupilotConnector',
      'color':'00000',
-     'thumbnailpath': 'img/activity0.jpg'
+     'thumbnailpath': ''
     }]
    }, action) => {
      switch (action.type) {

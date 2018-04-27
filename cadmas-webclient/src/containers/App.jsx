@@ -24,18 +24,20 @@ class App extends Component {
   }
   handleNotificationClick(position) {
     this.cadmasWS.addMission("MyCadmasMission","any note","RTL");
-    for(var i=0;i<100;i++){
-      var month = Math.floor(Math.random()*(12-1+1)+1);
-      var drone = Math.floor(Math.random()*(2-1+1)+1);
+    for(var i=0;i<8;i++){
+     // var month = Math.floor(Math.random()*(12-1+1)+1);
+     // var drone = Math.floor(Math.random()*(2-1+1)+1);
+     var month = 4;
+     var drone = 2;
       if(month<10){
         if(month<4){
-          this.cadmasWS.addActivity("11", drone, "Just an activity", "1", "generate some statistics", "2018-0"+month+"-21 19:59:03", "2018-0"+month+"-21 20:36:11");
+          this.cadmasWS.addActivity("22", drone, "Testflight123", "1", "need more activities", "2018-0"+month+"-21 19:59:03", "2018-0"+month+"-21 20:36:11");
         }else{
-          this.cadmasWS.addActivity("11", drone, "Just an activity", "1", "generate some statistics", "2017-0"+month+"-21 19:59:03", "2017-0"+month+"-21 20:36:11");
+          this.cadmasWS.addActivity("22", drone, "Testflight123", "1", "generate some statistics", "2017-0"+month+"-21 19:59:03", "2017-0"+month+"-21 20:36:11");
         }
         
       }else{
-        this.cadmasWS.addActivity("11", drone, "Just an activity", "1", "generate some statistics", "2017-"+month+"-21 19:59:03", "2017-"+month+"-21 20:36:11");
+        this.cadmasWS.addActivity("22", drone, "Testflight123", "1", "generate some statistics", "2017-"+month+"-21 19:59:03", "2017-"+month+"-21 20:36:11");
       }
      
     }

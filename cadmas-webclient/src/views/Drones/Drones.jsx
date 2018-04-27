@@ -2,62 +2,81 @@ import React, { Component } from 'react';
 // import { NavLink } from 'react-router-dom';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Card from 'components/Card/Card.jsx';
-import droneImage from "assets/img/drone.png";
-import copterImage from "assets/img/hexacopter.png";
+import droneImage from "assets/img/default_drone.svg";
+import copterImage from "assets/img/default_drone.svg";
 import ActivitiesSmall from 'components/ActivitiesSmall/ActivitiesSmall.jsx';
 import Button from 'elements/CustomButton/CustomButton.jsx';
+import { connect } from "react-redux";
+import moment from "moment";
 
+
+const mapStateToProps = (state) => {
+  return { drone: state.drone, activity: state.activity };
+};
 
 class Drones extends Component {
 
+  getLastFlightDate(droneID) {
+    console.log("public url: " + process.env.PUBLIC_URL);
+
+    for (var i = this.props.activity.activities.length - 1; i >= 0; i--) {
+      if (this.props.activity.activities[i].droneID === droneID) {
+        return this.props.activity.activities[i].dt_created;
+      }
+    }
+    return "/";
+  }
+
+  getThumbnailPicture(path) {
+    try {
+      return require(`${path}`);
+    } catch (e) {
+      return require("assets/img/default_drone.svg");
+    }
+
+  }
+
+  getDroneContent(prop){
+    return <Col md={6}><Card title={prop.name} category={prop.vehicleType} stats={"last flight: " + moment(this.getLastFlightDate(prop.droneID) * 1000).fromNow()} statsIcon="fa fa-clock-o" content={
+      <div>
+        <div className="row">
+          <div className="col-lg-4"><img width="180px" src={"dronethumbs/" + prop.thumbnailpath} alt={prop.name} /></div>
+          <div className="col-lg-7"><div className="table-full-width" > <table className="table">
+            <ActivitiesSmall filterDrone={true} droneID={prop.droneID} />
+          </table>
+          </div></div>
+        </div>
+        <div className="row">
+          {/* <div className="col-lg-10 h5">Statistics<br />5.4 GB data usage this month</div> */}
+          <div className="col-lg-12 text-right">
+            <Button className="pt-1" bsStyle="info" type="button" bsSize="small" pullRight fill >
+              Settings
+          </Button>&nbsp;
+          <Button className="pt-1" bsStyle="warning" type="button" bsSize="small" pullRight fill >
+              Remove Drone
+          </Button>
+          </div>
+        </div>
+      </div>
+     
+    } />
+      </Col>
+  }
+
   render() {
+    var res=[];
+    this.props.drone.drones.map((prop, key) => {
+      if(key%2!==0){
+        res.push(<Row>{this.getDroneContent(prop)}</Row>);
+      }else{
+        res.push(this.getDroneContent(prop));
+      }
+      
+    });
     return (
       <div className="content">
-        <Grid fluid="fluid">
-          <Row>
-            <Col md={6}>
-              <Card title="Skywalker X-8" category="Airplane" stats="last flight: 2d ago" statsIcon="fa fa-clock-o" content={
-                <div>
-                <div className="row">
-                  <div className="col-lg-4"><img width="180px" src={droneImage} alt="..." /></div>
-                  <div className="col-lg-7"><div className = "table-full-width" > <table className="table">
-                <ActivitiesSmall filterDrone={true}/>
-              </table>
-            </div></div>
-                </div>
-                <div className="row">
-                {/* <div className="col-lg-10 h5">Statistics<br />5.4 GB data usage this month</div> */}
-                  <div className="col-lg-12 text-right">
-                    <Button className="pt-1" bsStyle="warning" type="button" bsSize="small" pullRight fill >
-                      Remove Drone
-                    </Button>
-                  </div>
-                </div>
-                </div>
-                } />
-            </Col>
-            <Col md={6}>
-              <Card title="Pathfinder Hexacopter" category="Quadcopter" stats="last flight: 7d ago" statsIcon="fa fa-clock-o" content={
-               <div>
-               <div className="row">
-                 <div className="col-lg-4"><img width="180px" src={copterImage} alt="..." /></div>
-                 <div className="col-lg-7"><div className = "table-full-width" > <table className="table">
-               <ActivitiesSmall filterDrone={true}/>
-             </table>
-           </div></div>
-               </div>
-               <div className="row">
-               {/* <div className="col-lg-10 h5">Statistics<br />5.4 GB data usage this month</div> */}
-                 <div className="col-lg-12 text-right">
-                   <Button className="pt-1" bsStyle="warning" type="button" bsSize="small" pullRight fill >
-                     Remove Drone
-                   </Button>
-                 </div>
-               </div>
-               </div>
-              } />
-            </Col>
-          </Row>
+        <Grid fluid>
+        {res} 
         </Grid>
       </div>
 
@@ -65,4 +84,4 @@ class Drones extends Component {
   }
 }
 
-export default Drones;
+export default connect(mapStateToProps)(Drones);

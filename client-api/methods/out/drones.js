@@ -12,7 +12,7 @@ module.exports = function (ws, callback) {
                 'droneID': element.id,
                 'name': element.name,
                 'datavolume': element.datavolume,
-                'imagepath': element.imagepath,
+                'thumbnailpath': element.thumbnailpath,
                 'softwareVersion': element.softwareVersion,
                 'note': element.note,
                 'dt_created': element.dt_created,
