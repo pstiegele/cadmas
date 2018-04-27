@@ -48,7 +48,7 @@ class Drones extends Component {
             <Button className="pt-1" bsStyle="info" type="button" bsSize="small" pullRight fill >
               Settings
           </Button>&nbsp;
-          <Button className="pt-1" bsStyle="warning" type="button" bsSize="small" pullRight fill >
+          <Button className="pt-1" bsStyle="danger" type="button" bsSize="small" pullRight fill >
               Remove Drone
           </Button>
           </div>

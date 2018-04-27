@@ -1,7 +1,7 @@
 const winston = require('../../../middleware/logger');
 module.exports = function (ws, callback) {
     var db = global.db;
-    var query = "SELECT id,username,fullname,registrationdate,email,avatarpath FROM User";
+    var query = "SELECT id,username,registrationdate,email,thumbnailpath,firstname,lastname FROM User";
     db.query(query, function (error, results) {
         if (error) winston.error('error in user: ' + error);
         var res;
@@ -11,10 +11,11 @@ module.exports = function (ws, callback) {
             res = {
                 'userID': element.id,
                 'username': element.username,
-                'fullname': element.fullname,
                 'registrationdate': element.registrationdate,
                 'email': element.email,
-                'avatarpath':element.avatarpath
+                'thumbnailpath':element.thumbnailpath,
+                "firstname":element.firstname,
+                "lastname":element.lastname
             };
         }
         callback(ws, "user", {'payload': res});

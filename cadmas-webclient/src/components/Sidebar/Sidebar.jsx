@@ -34,13 +34,13 @@ class Sidebar extends Component {
     return (<div id="sidebar" className="sidebar" data-color="black" data-image={imagine}>
       <div className="sidebar-background" style={sidebarBackground}></div>
       <div className="logo">
-        <a href="https://www.cadmas.com" className="simple-text logo-mini">
+        <a href="/" className="simple-text logo-mini">
           <div className="logo-img">
             <img src={logo} alt="logo_image"/>
           </div>
 
         </a>
-        <a href="https://www.cadmas.com" className="simple-text logo-normal">&nbsp;</a>
+        <a href="/" className="simple-text logo-normal">&nbsp;</a>
 
       </div>
       <div className="sidebar-wrapper">
