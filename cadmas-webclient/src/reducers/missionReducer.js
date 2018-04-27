@@ -1,10 +1,10 @@
 const missionReducer = (state = {
     missions:[{
-     'missionID': 2,
-     'name': 'MyMission',
-     'note': 'first flight',
+     'missionID': 0,
+     'name': 'No Websocket Connection',
+     'note': 'No Websocket Connection established',
      'dt_created': 1503751670,
-     'thumbnailpath': 'img/activity0.jpg',
+     'thumbnailpath': '',
      'onConnectionLostMode':'RTL'
     }]
    }, action) => {

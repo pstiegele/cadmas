@@ -15,8 +15,6 @@ const mapStateToProps = (state) => {
 class Drones extends Component {
 
   getLastFlightDate(droneID) {
-    console.log("public url: " + process.env.PUBLIC_URL);
-
     for (var i = this.props.activity.activities.length - 1; i >= 0; i--) {
       if (this.props.activity.activities[i].droneID === droneID) {
         return this.props.activity.activities[i].dt_created;

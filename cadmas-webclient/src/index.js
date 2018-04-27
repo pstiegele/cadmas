@@ -19,4 +19,5 @@ ReactDOM.render(<Provider store={store}>
     </Switch>
   </HashRouter>
 </Provider>, document.getElementById('root'));
-registerServiceWorker();
+//TODO: include registerServiceWorker again!
+//registerServiceWorker();

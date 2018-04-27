@@ -1,14 +1,14 @@
 const droneReducer = (state = {
     drones:[{
      'droneID': 1,
-     'name': 'MyDrone',
+     'name': 'No Websocket Connection!',
      'datavolume': '12',
-     'note': 'first flight',
+     'note': 'No Websocket Connection established',
      'dt_created': 1543692476,
      'softwareVersion':'13',
-     'vehicleType': 'Drone',
-     'manufacturer': 'DJI',
-     'connectorType': 'ArdupilotConnector',
+     'vehicleType': 'Contact administrator',
+     'manufacturer': '',
+     'connectorType': '',
      'color':'00000',
      'thumbnailpath': ''
     }]

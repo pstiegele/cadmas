@@ -4,8 +4,8 @@ const notificationReducer = (state = {
      'activityID':1,
      'dt_occured':'123423123',
      'type':'1',
-     'title':'My Notification',
-     'description': 'My Notification Description'
+     'title':'No Websocket Connection',
+     'description': 'No Websocket Connection'
     }]
    }, action) => {
      switch (action.type) {

@@ -5,11 +5,11 @@ const activityReducer = (state = {
     'droneID': 1,
     'name': 'No Websocket Connection!',
     'state': 'completed',
-    'note': 'first flight',
+    'note': 'No Websocket Connection established',
     'dt_created': 6381021024,
     'dt_ended':639191291,
     'duration': 10,
-    'thumbnailpath': 'img/activity0.jpg'
+    'thumbnailpath': ''
    }]
   }, action) => {
     switch (action.type) {
