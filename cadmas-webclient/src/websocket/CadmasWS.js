@@ -17,7 +17,7 @@ class CadmasWS {
     var token = localStorage.getItem("token");
     if (!token) {
       console.log("authenticate first! " + window.location.hostname);
-      var authSocket = new WebSocket("ws://" + window.location.hostname + "/auth");
+      var authSocket = new WebSocket("wss://" + window.location.hostname + "/auth");
       authSocket.onmessage = function (event) {
         var msg = JSON.parse(event.data);
         switch (msg.method) {
@@ -52,7 +52,7 @@ class CadmasWS {
     if (token) {
       var hostname = window.location.hostname;
       //var hostname = "cadmasapp.raapvdzcqu.eu-west-1.elasticbeanstalk.com";
-      socket = new WebSocket("ws://" + hostname + "/client?token=" + token, token);
+      socket = new WebSocket("wss://" + hostname + "/client?token=" + token, token);
       socket.onmessage = function (event) {
         var msg = JSON.parse(event.data);
         switch (msg.method) {

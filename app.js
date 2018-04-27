@@ -42,8 +42,9 @@ app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, 'cadmas-webclient', 'build', 'index.html'));
 });
 
-winston.log('debug', 'init websocket handlers');
+
 function initalizeWebsocket(server) {
+  winston.log('debug', 'init websocket handlers');
   server.on('upgrade', (request, socket, head) => {
     const pathname = url.parse(request.url).pathname;
 
