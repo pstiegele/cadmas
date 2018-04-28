@@ -1,12 +1,12 @@
 const winston = require('../middleware/logger');
 const util = require('util');
 
-module.exports = function(wss) {
+module.exports = function (wss) {
   wss.on('connection', function connection(ws, req) {
     ws.droneID = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol].droneID;
     ws.name = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol].name;
     delete require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol];
-    winston.info("connector connected. droneID: " + ws.droneID + " name: "+ws.name);
+    winston.info("connector connected. droneID: " + ws.droneID + " name: " + ws.name);
     ws.on('message', function incoming(raw_msg) {
       console.log('received: %s', raw_msg);
       var msg;
@@ -15,10 +15,15 @@ module.exports = function(wss) {
       } catch (e) {
         return console.error(e);
       }
-     getHandleMethod(msg.method)(ws, msg.payload);
+      getHandleMethod(msg.method)(ws, msg.payload, function (ws, method, res) {
+        res.time = require('moment')().unix();
+        res.id = 0;
+        res.method = method;
+        ws.send(JSON.stringify(res));
+      });
     });
 
-    ws.on('close', function(reason) {
+    ws.on('close', function (reason) {
       //TODO: handle close
     });
     ws.on('error', function error() {
@@ -58,7 +63,7 @@ function getHandleMethod(method) {
 function isValidAPIKey(apikey, callback) {
   var query = "SELECT id FROM Drone WHERE apikey=?";
   console.log("apikey: " + apikey);
-  db.query(query, apikey, function(err, results) {
+  db.query(query, apikey, function (err, results) {
     console.log("length: " + results.length);
     console.log("err: " + err);
     if (err === null && results.length == 1) {

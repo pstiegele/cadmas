@@ -1,10 +1,12 @@
 const ack = require('../out/ack');
 const winston = require('../../../middleware/logger');
+const moment = require("moment");
 
 module.exports = function (ws, payload, callback) {
     var db = global.db;
     var query = "INSERT INTO HeartbeatTelemetry (activityID,timestamp,baseMode,customMode) VALUES (?,?,?,?);";
-    db.query(query, [3, payload.timestamp, payload.baseMode, payload.customMode], function (error) {
+    console.log("timestamp: "+payload.timestamp);
+    db.query(query, [3, moment(payload.timestamp).format('YYYY-MM-DD HH:mm:ss'), payload.baseMode, payload.customMode], function (error) {
         if (error) winston.error('error in heartbeat(connector): ' + error);;
         winston.info('heartbeat(connector) successfully inserted');
         ack('heartbeatACK', 0, ws, callback);
