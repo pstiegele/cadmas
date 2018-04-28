@@ -40,7 +40,7 @@ class UserProfile extends Component {
           drones = drones + prop.name;
         }
       }
-
+      return null;
     });
     return drones;
   }

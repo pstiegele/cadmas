@@ -1,10 +1,12 @@
+const winston = require('../middleware/logger');
+const util = require('util');
+
 module.exports = function(wss) {
   wss.on('connection', function connection(ws, req) {
-    //  const location = url.parse(req.url, true);
-    // You might use location.query.access_token to authenticate or share sessions
-    // or req.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
-    //console.log("client connected: " + JSON.stringify(location));
-    console.log("connector connected");
+    ws.droneID = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol].droneID;
+    ws.name = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol].name;
+    delete require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol];
+    winston.info("connector connected. droneID: " + ws.droneID + " name: "+ws.name);
     ws.on('message', function incoming(raw_msg) {
       console.log('received: %s', raw_msg);
       var msg;
@@ -13,9 +15,7 @@ module.exports = function(wss) {
       } catch (e) {
         return console.error(e);
       }
-      isValidAPIKey(msg.apikey, function() {
-        getHandleMethod(msg.method)(ws, msg.payload);
-      });
+     getHandleMethod(msg.method)(ws, msg.payload);
     });
 
     ws.on('close', function(reason) {
@@ -29,8 +29,23 @@ module.exports = function(wss) {
 
 function getHandleMethod(method) {
   switch (method) {
+    case "attitude":
+      return require('./methods/in/attitude.js')
+      break;
+    case "battery":
+      return require('./methods/in/battery.js')
+      break;
     case "heartbeat":
       return require('./methods/in/heartbeat.js')
+      break;
+    case "missionState":
+      return require('./methods/in/missionState.js')
+      break;
+    case "position":
+      return require('./methods/in/position.js')
+      break;
+    case "velocity":
+      return require('./methods/in/velocity.js')
       break;
     case "getMission":
       return require('./methods/out/newMission.js')

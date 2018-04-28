@@ -6,7 +6,6 @@ const userReducer = (state = {
   switch (action.type) {
     
     case "SET_USER":
-    console.log("user reducer called: "+action.type);
       state = {
         ...state,
         username: action.payload.username,

@@ -33,7 +33,7 @@ class Drones extends Component {
   }
 
   getDroneContent(prop){
-    return <Col md={6}><Card title={prop.name} category={prop.vehicleType} stats={"last flight: " + moment(this.getLastFlightDate(prop.droneID) * 1000).fromNow()} statsIcon="fa fa-clock-o" content={
+    return <Col md={6} key={prop.droneID+"-col"}><Card title={prop.name} category={prop.vehicleType} stats={"last flight: " + moment(this.getLastFlightDate(prop.droneID) * 1000).fromNow()} statsIcon="fa fa-clock-o" content={
       <div>
         <div className="row">
           <div className="col-lg-4"><img width="180px" src={"dronethumbs/" + prop.thumbnailpath} alt={prop.name} /></div>
@@ -63,7 +63,7 @@ class Drones extends Component {
     var res=[];
     this.props.drone.drones.map((prop, key) => {
       if(key%2!==0){
-        res.push(<Row>{this.getDroneContent(prop)}</Row>);
+        res.push(<Row key={prop.droneID+"-row"}>{this.getDroneContent(prop)}</Row>);
       }else{
         res.push(this.getDroneContent(prop));
       }

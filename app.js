@@ -20,7 +20,7 @@ global.appRoot = path.resolve(__dirname);
 //init server
 var port;
 var server = initalizeServer();
-const connector_wss = new WebSocket.Server({ noServer: true, verifyClient: require('./middleware/checkAuthentication.js').verifyClient });
+const connector_wss = new WebSocket.Server({ noServer: true, verifyClient: require('./middleware/checkAuthentication.js').verifyConnector });
 const client_wss = new WebSocket.Server({ noServer: true, verifyClient: require('./middleware/checkAuthentication.js').verifyClient });
 const auth_wss = new WebSocket.Server({ noServer: true });
 initalizeWebsocket(server);
