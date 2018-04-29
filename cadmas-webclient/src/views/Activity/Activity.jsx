@@ -8,6 +8,8 @@ import Card from 'components/Card/Card.jsx';
 import { connect } from "react-redux";
 import moment from 'moment';
 import localization from 'moment/locale/de'
+import Maps from '../Maps/Maps';
+
 //import util from 'util';
 
 
@@ -20,36 +22,41 @@ const mapStateToProps = (state) => {
 class Activity extends Component {
   constructor(props){
     super(props);
-    this.state = {redirect: false,redirectToActivity:0};
+    this.state = {activityID: parseInt(this.props.match.params.activityID, 10)};
+    
   }
 
-  thArray = [
-    "",
-    "date",
-    "name",
-    "distance",
-    "duration",
-    "drone",
-    "mission name",
-    "download"
-  ];
-
+  
   getRelativeOrAbsoluteDate(date) {
     if (new Date() - new Date(date * 1000) < 604800000) {
       return moment(date * 1000).fromNow();
     } else {
-      return moment(date * 1000).locale("de", localization).format("LL")
+      return moment(date * 1000).locale("de", localization).format("LLL");
+    }
+  }
+  getAbsoluteDate(date){
+    return moment(date * 1000).locale("de", localization).format("LLL");
+  }
+  getRelativeDate(date){
+    return moment(date * 1000).fromNow();
+  }
+  getAbsoluteEndDate(start,end){
+    if(moment.duration((end-start)*1000).asDays()>1){
+      return moment(end*1000).format("LLL");
+    }else{
+      return moment(end*1000).format("LT");
     }
   }
   getDuration(duration){
-    if(moment.duration(duration,"minutes").asMinutes()>60){
-      if(moment.duration(duration,"minutes").asHours()>24){
-        return Math.round(moment.duration(duration,"minutes").asDays())+" days";
+    console.log("du: "+duration);
+    if(moment.duration(duration*1000).asMinutes()>60){
+      if(moment.duration(duration*1000).asHours()>24){
+        return Math.round(moment.duration(duration*1000).asDays())+" days";
       }else{
-        return Math.round(moment.duration(duration,"minutes").asHours())+" hours";
+        return Math.round(moment.duration(duration*1000).asHours())+" hours";
       }
     }else{
-      return Math.round(moment.duration(duration,"minutes").asMinutes())+" min";
+      return Math.round(moment.duration(duration*1000).asMinutes())+" min";
     }
     
   }
@@ -80,58 +87,69 @@ class Activity extends Component {
     });
     return result[0];
   }
+  getSafeActivityName(activityID) {
+    return this.getSafe(() => this.getActivityByID(activityID).name, "")
+  }
+  getSafeActivityDtCreated(activityID) {
+    return this.getSafe(() => this.getActivityByID(activityID).dt_created, "")
+  }
+  getSafeActivityDtEnded(activityID) {
+    return this.getSafe(() => this.getActivityByID(activityID).dt_ended, "")
+  }
+  getSafeActivityState(activityID) {
+    return this.getSafe(() => this.getActivityByID(activityID).state, "")
+  }
+  getActivityByID(activityID) {
+    console.log("called "+JSON.stringify(this.props.activity));
+    
+    var result = this.props.activity.activities.filter(function (obj) {
+      return obj.activityID === activityID;
+    });
+    return result[0];
+  }
 
   handleClick(that){
     this.setState({redirect: true, redirectToActivity: that._targetInst.return.key});
   }
-  
 
-  render() {
-    if (this.state.redirect) {
-      return <Redirect push to={"/activity/"+this.state.redirectToActivity} />;
-    }  
+getDate(){
+  var start = parseInt(this.getSafeActivityDtCreated(this.state.activityID),10);
+  var end = parseInt(this.getSafeActivityDtEnded(this.state.activityID),10);
+  console.log("end: "+end);
+  console.log("start: "+start);
+  return this.getAbsoluteDate(start)+" - "+this.getAbsoluteEndDate(start,end)+" ("+this.getRelativeDate(start)+", duration: "+this.getDuration(end-start)+")";
+}
+
+getState(){
+  var state = parseInt(this.getSafeActivityState(this.state.activityID),10);
+  switch (state) {
+    case 0:
+    return <div><i className="fa fa-circle" style={{ color: "grey"}} key={"activityStatus"}></i>{" activity has not started yet."}</div>;
+    
+  
+    case 1:
+      return <div><i className="fa fa-circle" style={{ color: "red"}} key={"activityStatus"}></i>{" activity is currently live"}</div>;
+      
+  
+    case 2:
+    return <div><i className="fa fa-circle" style={{ color: "green"}} key={"activityStatus"}></i>{" activity was successfully completed"}</div>;
+   
+  
+    default:
+      break;
+  }
+}
+
+  render() { 
     return (<div className="content">
       <Grid fluid>
         <Row>
-          <Col md={12}>
-            <Card title="Activities" category="That are your latest flight activities" ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={<Table striped hover ><thead>
-              <tr>
-                {
-                  this.thArray.map((prop, key) => {
-                    return (<th key={key}>{prop}</th>);
-                  })
-                }
-              </tr>
-            </thead>
-              <tbody>
-                {
-                  this.props.activity.activities.slice(0).reverse().map((prop, key) => {
-
-                    return (<tr key={prop.activityID} onClick={this.handleClick.bind(this)}>
-
-                      <td key={prop.activityID + "-icon"}>
-                        <NavLink to="/dashboard" className="nav-link" activeClassName="active">
-                          <i className="fa fa-fighter-jet"></i>
-                        </NavLink>
-                      </td>
-                      <td key={prop.activityID + "-date"}>{this.getRelativeOrAbsoluteDate(prop.dt_created)}</td>
-                      <td key={prop.activityID + "-name"}>{prop.name}</td>
-                      <td key={prop.activityID + "-distance"}>{"12 km"}</td>
-                      <td key={prop.activityID + "-duration"}>{this.getDuration(prop.duration)}</td>
-                      <td key={prop.activityID + "-drone"}>{this.getSafeDroneName(prop.droneID)}</td>
-                      <td key={prop.activityID + "-mission"}>{this.getSafeMissionName(prop.missionID)}</td>
-                      <td key={prop.activityID + "-download"}>
-                        <NavLink to="/dashboard" className="nav-link" activeClassName="active">
-                          <i className="fa fa-cloud-download"></i>
-                        </NavLink>
-                      </td>
-
-                    </tr>)
-                  })
-                }
-              </tbody>
-            </Table>} />
+          <Col md={8}>
+            <Card title={this.getSafeActivityName(this.state.activityID)} category={<div>{this.getDate()}<br />{this.getState()}</div>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
+              <Maps />
+            } />
           </Col>
+          <Col md={4}></Col>
         </Row>
       </Grid>
     </div>);

@@ -6,7 +6,7 @@ class Maps extends Component {
     return (<div id="map">
       <Map style={{
           width: '100%',
-          height: '100%',
+          height: '60%',
           position: 'relative'
       }} google={this.props.google} initialCenter={{
           lat: 49.781641,
