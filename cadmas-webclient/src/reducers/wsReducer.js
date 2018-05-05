@@ -1,14 +1,8 @@
 const wsReducer = (state = {
-  ws: "Ws"
+  ws: undefined
 }, action) => {
   switch (action.type) {
     case "SET_WS":
-      state = {
-        ...state,
-        ws: action.payload
-      };
-      break;
-    case "SET_WS2":
       state = {
         ...state,
         ws: action.payload

@@ -4,6 +4,8 @@ import { setMissions } from "../actions/missionActions";
 import { setDrones } from "../actions/droneActions";
 import { setNotifications } from "../actions/notificationActions";
 import { setUser } from "actions/userActions";
+import { setPayloads } from "actions/payloadActions";
+import { setPayloadDevices } from "actions/payloadDeviceActions";
 
 var socket;
 
@@ -83,6 +85,12 @@ class CadmasWS {
         case "user":
           store.dispatch(setUser(msg.payload));
           break;
+        case "payloads":
+          store.dispatch(setPayloads(msg.payload));
+          break;
+        case "payloadDevices":
+          store.dispatch(setPayloadDevices(msg.payload));
+          break;
 
         default:
           break;
@@ -91,9 +99,31 @@ class CadmasWS {
       console.log("ws received: " + msg.method);
     }
     socket.onopen = function (event) {
-
-
-    };
+      console.log("onOpen called: "+ JSON.stringify(this));
+    //   for (var i = 0; i < 350; i++) {
+    //     var activityID = Math.floor(Math.random() * (296 - 1 + 1) + 1);
+    //     while (activityID < 119 && activityID > 17) {
+    //       activityID = Math.floor(Math.random() * (296 - 1 + 1) + 1);
+    //     }
+    //     var payloadDevice = Math.floor(Math.random() * (10 - 1 + 1) + 1);
+    //     var size = Math.floor(Math.random() * (1073741824 - 1 + 1) + 1);
+        
+        
+    //     var msg = {
+    //       method: "addPayloadData",
+    //       payload: {
+    //         activityID: activityID,
+    //         payloadDeviceID: payloadDevice,
+    //         type: "0",
+    //         filepath: "",
+    //         size: size
+    //       }
+    //     };
+    //     socket.send(JSON.stringify(msg));
+    //     console.log("addPayloadData sent");
+    
+    //   }
+     };
 
   }
 
@@ -132,6 +162,20 @@ class CadmasWS {
     };
     socket.send(JSON.stringify(msg));
     console.log("addActivity (" + name + ") sent");
+  }
+  addPayloadData(activityID, payloadDeviceID, type, filepath, size) {
+    var msg = {
+      method: "addPayloadData",
+      payload: {
+        activityID: activityID,
+        payloadDeviceID: payloadDeviceID,
+        type: type,
+        filepath: filepath,
+        size: size
+      }
+    };
+    socket.send(JSON.stringify(msg));
+    console.log("addPayloadData sent");
   }
 }
 export default CadmasWS;

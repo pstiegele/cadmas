@@ -10,6 +10,8 @@ import Drones from 'views/Drones/Drones';
 import Missions from 'views/Missions/Missions';
 import Mission from 'views/Mission/Mission';
 import Activity from 'views/Activity/Activity';
+import Notification from 'views/Notification/Notification';
+import PayloadDataCenter from 'views/PayloadDataCenter/PayloadDataCenter';
 
 const appRoutes = [
   {
@@ -46,7 +48,7 @@ const appRoutes = [
     path: "/payloadDataCenter",
     name: "Payload Data Center",
     icon: "pe-7s-server",
-    component: Typography,
+    component: PayloadDataCenter,
     showInSidebar: true
   }, {
     path: "/getDroneConnector",
@@ -72,6 +74,12 @@ const appRoutes = [
     name: "Mission",
     icon: "pe-7s-plane",
     component: Mission,
+    showInSidebar: false
+  },{
+    path: "/notification/:notificationID",
+    name: "Notification",
+    icon: "pe-7s-bell",
+    component: Notification,
     showInSidebar: false
   },
    { upgrade: true, path: "/upgrade", name: "Go to live activity", icon: "pe-7s-rocket", component: Upgrade },

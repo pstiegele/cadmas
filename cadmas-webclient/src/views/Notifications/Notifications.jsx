@@ -1,117 +1,224 @@
-import React, {Component} from 'react';
-import {Grid, Row, Col, Alert} from 'react-bootstrap';
-
+import React, { Component } from 'react';
+import { Grid, Row, Col, Table } from 'react-bootstrap';
+import Card from 'components/Card/Card.jsx';
+import { connect } from "react-redux";
 import Button from 'elements/CustomButton/CustomButton.jsx';
+import { Redirect } from 'react-router';
+import { NavLink } from 'react-router-dom';
+import moment from 'moment';
+import localization from 'moment/locale/de';
+import CustomCheckbox from 'elements/CustomCheckbox/CustomCheckbox';
+import ChartistGraph from 'react-chartist';
+
+
+
+
+
+const mapStateToProps = (state) => {
+  return { notification: state.notification, drone: state.drone, activity: state.activity };
+};
 
 class Notifications extends Component {
-  render() {
-    return (<div className="content">
-      <Grid fluid="fluid">
-        <div className="card">
-          <div className="header">
-            <h4 className="title">Notifications</h4>
-            <p className="category">Handcrafted by
-              <a target="_blank" rel="noopener noreferrer" href="https://github.com/igorprado">Igor Prado</a>. Please checkout the
-              <a href="http://igorprado.com/react-notification-system/" rel="noopener noreferrer" target="_blank">full documentation.</a>
-            </p>
+  constructor(props) {
+    super(props);
+    this.state = { redirect: false, redirectToNotification: 0 };
+  }
+  thArray = [
+    "",
+    "date",
+    "title",
+    "drone",
+    "activity",
+    "delete"
+  ];
 
-          </div>
-          <div className="content">
-            <Row>
-              <Col md={6}>
-                <h5>Notifications Style</h5>
-                <Alert bsStyle="info">
-                  <span>This is a plain notification</span>
-                </Alert>
-                <Alert bsStyle="info">
-                  <button type="button" aria-hidden="true" className="close">&#x2715;</button>
-                  <span>This is a notification with close button.</span>
-                </Alert>
-                <Alert bsStyle="info" className="alert-with-icon">
-                  <button type="button" aria-hidden="true" className="close">&#x2715;</button>
-                  <span data-notify="icon" className="pe-7s-bell"></span>
-                  <span data-notify="message">This is a notification with close button and icon.</span>
-                </Alert>
-                <Alert bsStyle="info" className="alert-with-icon">
-                  <button type="button" aria-hidden="true" className="close">&#x2715;</button>
-                  <span data-notify="icon" className="pe-7s-bell"></span>
-                  <span data-notify="message">This is a notification with close button and icon and have many lines. You can see that the icon and the close button are always vertically aligned. This is a beautiful notification. So you don't have to worry about the style.</span>
-                </Alert>
-              </Col>
-              <Col md={6}>
-                <h5>Notification states</h5>
-                <Alert bsStyle="info">
-                  <button type="button" aria-hidden="true" className="close">&#x2715;</button>
-                  <span>
-                    <b>
-                      Info -
-                    </b>
-                    This is a regular notification made with bsStyle="info"</span>
-                </Alert>
-                <Alert bsStyle="success">
-                  <button type="button" aria-hidden="true" className="close">&#x2715;</button>
-                  <span>
-                    <b>
-                      Success -
-                    </b>
-                    This is a regular notification made with bsStyle="success"</span>
-                </Alert>
-                <Alert bsStyle="warning">
-                  <button type="button" aria-hidden="true" className="close">&#x2715;</button>
-                  <span>
-                    <b>
-                      Warning -
-                    </b>
-                    This is a regular notification made with bsStyle="warning"</span>
-                </Alert>
-                <Alert bsStyle="danger">
-                  <button type="button" aria-hidden="true" className="close">&#x2715;</button>
-                  <span>
-                    <b>
-                      Danger -
-                    </b>
-                    This is a regular notification made with bsStyle="danger"</span>
-                </Alert>
-              </Col>
-            </Row>
-            <br/>
-            <br/>
-            <div className="places-buttons">
+  
+  getRelativeOrAbsoluteDate(date) {
+    if (new Date() - new Date(date * 1000) < 604800000) {
+      return moment(date * 1000).fromNow();
+    } else {
+      return moment(date * 1000).locale("de", localization).format("LL")
+    }
+  }
+
+  getSafe(fn, defaultVal) {
+    try {
+      return fn();
+    } catch (e) {
+      return defaultVal;
+    }
+  }
+  getSafeDroneNameByActivity(activityID) {
+    var droneID = this.getSafe(() => this.getActivityByID(activityID).droneID, "");
+    return this.getSafe(() => this.getDroneByID(droneID).name, "");
+  }
+  getSafeDroneIDByActivity(activityID){
+   return this.getSafe(() => this.getActivityByID(activityID).droneID, "");
+  }
+  getDroneByID(droneID) {
+    var result = this.props.drone.drones.filter(function (obj) {
+      return obj.droneID === droneID;
+    });
+    return result[0];
+  }
+
+  getSafeActivityName(activityID) {
+    return this.getSafe(() => this.getActivityByID(activityID).name, "")
+  }
+  getActivityByID(activityID) {
+    var result = this.props.activity.activities.filter(function (obj) {
+      return obj.activityID === activityID;
+    });
+    return result[0];
+  }
+
+  getNotificationType(type) {
+    switch (type) {
+      case 0:
+        return <i className="fa fa-info" style={{ color: "#006400" }}></i>;
+      case 1:
+        return <i className="fa fa-exclamation" style={{ color: "#B8860B" }}></i>;
+      case 2:
+        return <i className="fa fa-bolt" style={{ color: "#DC143C" }}></i>;
+
+      default:
+        return "info";
+    }
+  }
+  getPieData() {
+    var count = [];
+    var sum = 0;
+    for(var i = 0;i<this.props.drone.drones.length;i++){      
+      for(var j=0;j<this.props.notification.notifications.length-1;j++){
+        if(this.getSafeDroneIDByActivity(this.props.notification.notifications[j].activityID)===this.props.drone.drones[i].droneID){
+          if(count[i]===undefined){
+            count[i]=0;
+          }
+          count[i]++;
+          sum++;
+        }
+      }
+    }
+    var percentage=[];
+    for (let i = 0; i < count.length; i++) {
+    percentage[i] = (count[i]/sum)*100;
+    }
+    var percentageLabels = percentage.slice(0);
+    for (let i = 0; i < percentageLabels.length; i++) {
+      percentageLabels[i]=Math.round(percentageLabels[i])+" %";
+    }
+   
+    return {
+      labels: percentageLabels,
+      series: percentage
+    };
+  }
+  getPieLegend() {
+    var legendData = this.getPieLegendData();
+    var legend = [];
+    for (var i = 0; i < legendData["names"].length; i++) {
+      var type = "fa fa-circle";
+      legend.push(<i className={type} style={{ color: legendData["types"][i] }} key={i}></i>);
+      legend.push(" ");
+      legend.push(legendData["names"][i]);
+    }
+    return legend;
+  }
+  getPieLegendData() {
+    var drones = [];
+    var colors = [];
+    for(var i = 0;i<this.props.drone.drones.length;i++){
+    drones[i]=this.props.drone.drones[i].name;
+    colors[i]=this.props.drone.drones[i].color;
+    }
+    return {
+      names: drones,
+      types: colors
+    };
+  }
+
+
+  getErrorAmount() {
+    var amount = this.props.notification.notifications.length;
+    return "total: " + amount + " errors";
+  }
+
+  handleClick(that) {
+    this.setState({ redirect: true, redirectToNotification: that._targetInst.return.key });
+  }
+
+  render() {
+    if (this.state.redirect) {
+      return <Redirect push to={"/notification/" + this.state.redirectToNotification} />;
+    }
+    return (
+      <div className="content">
+        <Grid fluid>
+          <Row>
+            <Col md={8}>
+              <Card title="Notifications" category="That are your latest notifications" ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
+                <Table striped hover ><thead>
+                  <tr>
+                    {
+                      this.thArray.map((prop, key) => {
+                        return (<th key={key}>{prop}</th>);
+                      })
+                    }
+                  </tr>
+                </thead>
+                  <tbody>
+                    {
+                      this.props.notification.notifications.slice(0).reverse().map((prop, key) => {
+
+                        return (<tr key={prop.notificationID} onClick={this.handleClick.bind(this)}>
+
+                          <td key={prop.notificationID + "-icon"}>
+                            <NavLink to="/dashboard" className="nav-link" activeClassName="active">
+                              {this.getNotificationType(prop.type)}
+                            </NavLink>
+                          </td>
+                          <td key={prop.notificationID + "-date"}>{this.getRelativeOrAbsoluteDate(prop.dt_occured)}</td>
+                          <td key={prop.notificationID + "-title"}>{prop.title}</td>
+                          <td key={prop.notificationID + "-drone"}>{this.getSafeDroneNameByActivity(prop.activityID)}</td>
+                          <td key={prop.notificationID + "-activity"}>{this.getSafeActivityName(prop.activityID)}</td>
+                          <td key={prop.notificationID + "-delete"}>
+                            <NavLink to="/dashboard" className="nav-link" activeClassName="active">
+                              <i className="fa fa-trash" style={{ color: "#DC143C" }}></i>
+                            </NavLink>
+                          </td>
+
+                        </tr>)
+                      })
+                    }
+                  </tbody>
+                </Table>
+              } />
+            </Col>
+            <Col md={4}>
               <Row>
-                <Col md={6} mdOffset={3} className="text-center">
-                  <h5>Notifications Places
-                    <p className="category">Click to view notifications</p>
-                  </h5>
-                </Col>
+                <Card title="Filter" category="filter your notifications by drone" ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
+                  <div className="content">
+                    {this.props.drone.drones.map((prop, key) => {
+                      return <div><CustomCheckbox isChecked={true} number={key} label={prop.name} inline={false} /></div>;
+                    })
+                    }
+                  </div>
+                } />
               </Row>
               <Row>
-                <Col md={2} mdOffset={3}>
-                  <Button bsStyle="default" block="block" onClick={() => this.props.handleClick('tl')}>Top Left</Button>
-                </Col>
-                <Col md={2}>
-                  <Button bsStyle="default" block="block" onClick={() => this.props.handleClick('tc')}>Top Center</Button>
-                </Col>
-                <Col md={2}>
-                  <Button bsStyle="default" block="block" onClick={() => this.props.handleClick('tr')}>Top Right</Button>
-                </Col>
+                <Card statsIcon="fa fa-times" title="Errors per drone" category="overall" stats={this.getErrorAmount()} content={<div id="chartPreferences" className="ct-chart ct-perfect-fourth" > <ChartistGraph data={this.getPieData()} type="Pie" />
+                </div>} legend={<div className="legend" > {
+                  this.getPieLegend()
+                }
+                </div>
+                } />
               </Row>
-              <Row>
-                <Col md={2} mdOffset={3}>
-                  <Button bsStyle="default" block="block" onClick={() => this.props.handleClick('bl')}>Bottom Left</Button>
-                </Col>
-                <Col md={2}>
-                  <Button bsStyle="default" block="block" onClick={() => this.props.handleClick('bc')}>Bottom Center</Button>
-                </Col>
-                <Col md={2}>
-                  <Button bsStyle="default" block="block" onClick={() => this.props.handleClick('br')}>Bottom Right</Button>
-                </Col>
-              </Row>
-            </div>
-          </div>
-        </div>
-      </Grid>
-    </div>);
+            </Col>
+          </Row>
+        </Grid>
+      </div>
+    );
   }
 }
 
-export default Notifications;
+export default connect(mapStateToProps)(Notifications);

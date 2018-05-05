@@ -2,7 +2,8 @@ const notificationReducer = (state = {
     notifications:[{
      'notificationID':1,
      'activityID':1,
-     'dt_occured':'123423123',
+     'droneID':1,
+     'dt_occured':1503751670,
      'type':'1',
      'title':'No Websocket Connection',
      'description': 'No Websocket Connection'

@@ -1,7 +1,7 @@
 const winston = require('../../../middleware/logger');
 module.exports = function (ws, callback) {
     var db = global.db;
-    var query = "SELECT * FROM Problem";
+    var query = "SELECT id,activityID,UNIX_TIMESTAMP(dt_occured) AS dt_occured, type, title, description FROM Notification";
     db.query(query, function (error, results) {
         if (error) winston.error('error in notifications: ' + error);
         var res = [];

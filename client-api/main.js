@@ -78,6 +78,9 @@ function getHandleMethod(method) {
     case "removeActivity":
       return require('./methods/in/removeActivity.js')
       break;
+    case "addPayloadData":
+      return require('./methods/in/addPayloadData.js')
+      break;
     default:
       return require('./methods/out/invalidMethod.js');
   }
@@ -87,7 +90,8 @@ function send(ws, method, res) {
   res.time = require('moment')().unix();
   res.id = 0;
   res.method = method;
-  winston.info("send: " + method + " --> " + res);
+  winston.info("send: " + method);
+ // winston.info("send: " + method + " --> " + JSON.stringify(res));
   ws.send(JSON.stringify(res));
 }
 function sendInitalData(ws) {
@@ -96,4 +100,6 @@ function sendInitalData(ws) {
   require("./methods/out/drones")(ws, send);
   require("./methods/out/activities")(ws, send);  
   require("./methods/out/notifications")(ws, send);
+  require("./methods/out/payloads")(ws, send);
+  require("./methods/out/payloadDevices")(ws, send);
 }
