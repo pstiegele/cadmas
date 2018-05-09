@@ -1,5 +1,5 @@
 const userReducer = (state = {
-  username: "No Websocket Connection",
+  username: "username",
   mapIsShown: true
 }, action) => {
  

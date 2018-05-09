@@ -117,7 +117,7 @@ class PayloadDataCenter extends Component {
                 var activity = activities[i];
                 var payload = this.getPayloadToActivity(activity.activityID);
                 cards.push(
-                    <Row>
+                    <Row key={activity.activityID}>
                         <Col md={12}>
                             <Card title={activity.name} category={this.getRelativeOrAbsoluteDate(activity.dt_created)} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
                                 <div className="content">
