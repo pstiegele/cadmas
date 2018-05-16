@@ -16,6 +16,7 @@ var app = express();
 app.use(morgan('dev'));
 global.db = require('./middleware/db.js')();
 global.appRoot = path.resolve(__dirname);
+const util = require("util");
 
 //init server
 var port;
@@ -24,6 +25,9 @@ const connector_wss = new WebSocket.Server({ noServer: true, verifyClient: requi
 const client_wss = new WebSocket.Server({ noServer: true, verifyClient: require('./middleware/checkAuthentication.js').verifyClient });
 const auth_wss = new WebSocket.Server({ noServer: true });
 initalizeWebsocket(server);
+global.connector_wss = connector_wss;
+global.client_wss = client_wss;
+global.auth_wss = auth_wss;
 
 //connector API
 var connector_api = require('./connector-api/main')(connector_wss);
@@ -47,13 +51,20 @@ function initalizeWebsocket(server) {
   winston.log('debug', 'init websocket handlers');
   server.on('upgrade', (request, socket, head) => {
     const pathname = url.parse(request.url).pathname;
-
+   
+    //winston.info("client_wss: "+util.inspect(client_wss.clients));
+    // connector_wss.clients.forEach((value1, value2, set) => {
+    //   winston.info("foreach: value1 was sent");
+    //   value1.send("hey");
+    // });
+   
     if (pathname === '/connector') {
       connector_wss.handleUpgrade(request, socket, head, (ws) => {
+        ws.send("hey gude");
         connector_wss.emit('connection', ws);
       });
     } else if (pathname === '/client') {
-      client_wss.handleUpgrade(request, socket, head, (ws) => {
+      client_wss.handleUpgrade(request, socket, head, (ws)  => {
         client_wss.emit('connection', ws);
       });
     } else if (pathname === '/auth') {

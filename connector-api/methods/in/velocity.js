@@ -4,6 +4,7 @@ const moment = require("moment");
 
 
 module.exports = function (ws, payload, callback) {
+ws.send("ej joi");
     var db = global.db;
     var query = "INSERT INTO VelocityTelemetry (activityID,timestamp,groundspeed,airspeed,climbrate,altitude) VALUES (?,?,?,?,?,?);";
     db.query(query, [3, moment(payload.timestamp).format('YYYY-MM-DD HH:mm:ss'), payload.groundspeed, payload.airspeed, payload.climbrate,payload.altitude], function (error) {

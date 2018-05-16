@@ -65,38 +65,47 @@ class CadmasWS {
     }
     
     socket.onmessage = function (event) {
-      var msg = JSON.parse(event.data);
-      switch (msg.method) {
-        case "addMissionACK":
-          break;
-
-        case "activities":
-          store.dispatch(setActivities(msg.payload));
-          break;
-        case "missions":
-          store.dispatch(setMissions(msg.payload));
-          break;
-        case "drones":
-          store.dispatch(setDrones(msg.payload));
-          break;
-        case "notifications":
-          store.dispatch(setNotifications(msg.payload));
-          break;
-        case "user":
-          store.dispatch(setUser(msg.payload));
-          break;
-        case "payloads":
-          store.dispatch(setPayloads(msg.payload));
-          break;
-        case "payloadDevices":
-          store.dispatch(setPayloadDevices(msg.payload));
-          break;
-
-        default:
-          break;
+      var msg;
+      try {
+        msg = JSON.parse(event.data);
+      } catch (error) {
+       console.log("parsing error! msg: "+event.data); 
+       console.log("parsing error! error: "+error); 
       }
-
-      console.log("ws received: " + msg.method);
+      if(msg!==undefined && msg.hasOwnProperty("method")){
+        switch (msg.method) {
+          case "addMissionACK":
+            break;
+  
+          case "activities":
+            store.dispatch(setActivities(msg.payload));
+            break;
+          case "missions":
+            store.dispatch(setMissions(msg.payload));
+            break;
+          case "drones":
+            store.dispatch(setDrones(msg.payload));
+            break;
+          case "notifications":
+            store.dispatch(setNotifications(msg.payload));
+            break;
+          case "user":
+            store.dispatch(setUser(msg.payload));
+            break;
+          case "payloads":
+            store.dispatch(setPayloads(msg.payload));
+            break;
+          case "payloadDevices":
+            store.dispatch(setPayloadDevices(msg.payload));
+            break;
+  
+          default:
+            break;
+        }
+  
+        console.log("ws received: " + msg.method);
+      }
+      
     }
     socket.onopen = function (event) {
       console.log("onOpen called: "+ JSON.stringify(this));
@@ -178,4 +187,7 @@ class CadmasWS {
     console.log("addPayloadData sent");
   }
 }
-export default CadmasWS;
+const instance = new CadmasWS();
+Object.freeze(instance);
+
+export default instance;

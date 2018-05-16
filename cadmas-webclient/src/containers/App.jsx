@@ -55,7 +55,7 @@ class App extends Component {
       var payloadDevice = Math.floor(Math.random() * (10 - 1 + 1) + 1);
       var size = Math.floor(Math.random() * (1073741824 - 1 + 1) + 1);
 
-      this.cadmasWS.addPayloadData(activityID, payloadDevice,0,"", size);
+     // this.cadmasWS.addPayloadData(activityID, payloadDevice,0,"", size);
 
     }
     // for(var i=0;i<8;i++){
@@ -88,8 +88,8 @@ class App extends Component {
   }
 componentDidMount() {
   this.setState({ _notificationSystem: this.refs.notificationSystem });
-  this.cadmasWS = new CadmasWS();
-  this.props.setWS(this.cadmasWS);
+ // this.cadmasWS = new CadmasWS();
+ // this.props.setWS(this.cadmasWS);
 
 }
 componentDidUpdate(e) {

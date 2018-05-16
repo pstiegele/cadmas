@@ -3,11 +3,13 @@ const util = require('util');
 
 module.exports = function (wss) {
   wss.on('connection', function connection(ws, req) {
+    
     ws.droneID = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol].droneID;
     ws.name = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol].name;
     delete require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol];
     winston.info("connector connected. droneID: " + ws.droneID + " name: " + ws.name);
     ws.on('message', function incoming(raw_msg) {
+      ws.send("oh cool");
       console.log('received: %s', raw_msg);
       var msg;
       try {

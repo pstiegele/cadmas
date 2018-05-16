@@ -5,6 +5,7 @@ import { Redirect } from 'react-router';
 
 import ActivitySummary from 'components/ActivitySummary/ActivitySummary';
 import DroneSmall from 'components/DroneSmall/DroneSmall';
+import BatteryUsage from 'components/BatteryUsage/BatteryUsage';
 import Card from 'components/Card/Card.jsx';
 import { connect } from "react-redux";
 import moment from 'moment';
@@ -157,7 +158,7 @@ class Activity extends Component {
 
             } />
             <Col md={4}>
-              <Card title="Battery Usage" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length - 1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length - 1].dt_created * 1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
+              <Card title="Battery Usage" category="30 % used" stats="~ 12 % per hour" statsIcon="fa fa-clock-o" content={<div><BatteryUsage activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
             </Col>
             <Col md={4}>
               <Card title="Notifications" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length - 1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length - 1].dt_created * 1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
