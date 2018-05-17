@@ -60,7 +60,6 @@ function initalizeWebsocket(server) {
    
     if (pathname === '/connector') {
       connector_wss.handleUpgrade(request, socket, head, (ws) => {
-        ws.send("hey gude");
         connector_wss.emit('connection', ws);
       });
     } else if (pathname === '/client') {

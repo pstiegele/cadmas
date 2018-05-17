@@ -3,7 +3,7 @@ const util = require('util');
 
 module.exports = function (wss) {
   wss.on('connection', function connection(ws, req) {
-    
+    console.log("protocol: "+ws.protocol);
     ws.droneID = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol].droneID;
     ws.name = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol].name;
     delete require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol];
@@ -27,6 +27,8 @@ module.exports = function (wss) {
 
     ws.on('close', function (reason) {
       //TODO: handle close
+      winston.info("connector connection closed. droneID: " + ws.droneID + " name: " + ws.name);
+
     });
     ws.on('error', function error() {
       //TODO handle error
