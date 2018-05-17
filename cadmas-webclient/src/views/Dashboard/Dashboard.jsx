@@ -5,7 +5,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import { Card } from 'components/Card/Card.jsx';
 import { StatsCard } from 'components/StatsCard/StatsCard.jsx';
 import ActivitiesSmall from 'components/ActivitiesSmall/ActivitiesSmall.jsx';
-import LastFlight from 'components/LastFlight/LastFlight.jsx';
+import ActivitySummary from 'components/ActivitySummary/ActivitySummary.jsx';
 import { connect } from "react-redux";
 import moment from 'moment';
 
@@ -192,7 +192,7 @@ class Dashboard extends Component {
 
         <Row>
           <Col md={3}>
-            <Card title="Last Activity" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length-1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length-1].dt_created*1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><LastFlight /></div>} />
+            <Card title="Last Activity" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length-1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length-1].dt_created*1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary showMap={true} showSeeMoreButton={true} showActivityName={true} activityToShow={this.props.activity.activities[this.props.activity.activities.length-1]}/></div>} />
           </Col>
           <Col md={5}>
             <Card title="Activities" category="The latest activities of all drones" stats={this.props.activity.activities.length+" activities overall"} statsIcon="fa fa-plane" content={<div className="table-full-width" > <table className="table">

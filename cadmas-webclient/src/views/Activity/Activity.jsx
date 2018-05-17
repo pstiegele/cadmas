@@ -3,7 +3,9 @@ import { Grid, Row, Col, Table } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import { Redirect } from 'react-router';
 
-
+import ActivitySummary from 'components/ActivitySummary/ActivitySummary';
+import DroneSmall from 'components/DroneSmall/DroneSmall';
+import BatteryUsage from 'components/BatteryUsage/BatteryUsage';
 import Card from 'components/Card/Card.jsx';
 import { connect } from "react-redux";
 import moment from 'moment';
@@ -20,13 +22,13 @@ const mapStateToProps = (state) => {
 };
 
 class Activity extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state = {activityID: parseInt(this.props.match.params.activityID, 10)};
-    
+    this.state = { activityID: parseInt(this.props.match.params.activityID, 10) };
+
   }
 
-  
+
   getRelativeOrAbsoluteDate(date) {
     if (new Date() - new Date(date * 1000) < 604800000) {
       return moment(date * 1000).fromNow();
@@ -34,31 +36,30 @@ class Activity extends Component {
       return moment(date * 1000).locale("de", localization).format("LLL");
     }
   }
-  getAbsoluteDate(date){
+  getAbsoluteDate(date) {
     return moment(date * 1000).locale("de", localization).format("LLL");
   }
-  getRelativeDate(date){
+  getRelativeDate(date) {
     return moment(date * 1000).fromNow();
   }
-  getAbsoluteEndDate(start,end){
-    if(moment.duration((end-start)*1000).asDays()>1){
-      return moment(end*1000).format("LLL");
-    }else{
-      return moment(end*1000).format("LT");
+  getAbsoluteEndDate(start, end) {
+    if (moment.duration((end - start) * 1000).asDays() > 1) {
+      return moment(end * 1000).format("LLL");
+    } else {
+      return moment(end * 1000).format("LT");
     }
   }
-  getDuration(duration){
-    console.log("du: "+duration);
-    if(moment.duration(duration*1000).asMinutes()>60){
-      if(moment.duration(duration*1000).asHours()>24){
-        return Math.round(moment.duration(duration*1000).asDays())+" days";
-      }else{
-        return Math.round(moment.duration(duration*1000).asHours())+" hours";
+  getDuration(duration) {
+    if (moment.duration(duration * 1000).asMinutes() > 60) {
+      if (moment.duration(duration * 1000).asHours() > 24) {
+        return Math.round(moment.duration(duration * 1000).asDays()) + " days";
+      } else {
+        return Math.round(moment.duration(duration * 1000).asHours()) + " hours";
       }
-    }else{
-      return Math.round(moment.duration(duration*1000).asMinutes())+" min";
+    } else {
+      return Math.round(moment.duration(duration * 1000).asMinutes()) + " min";
     }
-    
+
   }
 
   getSafe(fn, defaultVal) {
@@ -68,8 +69,17 @@ class Activity extends Component {
       return defaultVal;
     }
   }
+  getSafeDrone(droneID) {
+    return this.getSafe(() => this.getDroneByID(droneID), "")
+  }
   getSafeDroneName(droneID) {
     return this.getSafe(() => this.getDroneByID(droneID).name, "")
+  }
+  getSafeDroneID(activity) {
+    return this.getSafe(() => activity.droneID, "")
+  }
+  getSafeDroneVehicleType(droneID) {
+    return this.getSafe(() => this.getDroneByID(droneID).vehicleType, "")
   }
   getDroneByID(droneID) {
     var result = this.props.drone.drones.filter(function (obj) {
@@ -77,7 +87,7 @@ class Activity extends Component {
     });
     return result[0];
   }
-  
+
   getSafeMissionName(missionID) {
     return this.getSafe(() => this.getMissionByID(missionID).name, "")
   }
@@ -100,57 +110,80 @@ class Activity extends Component {
     return this.getSafe(() => this.getActivityByID(activityID).state, "")
   }
   getActivityByID(activityID) {
-    console.log("called "+JSON.stringify(this.props.activity));
-    
     var result = this.props.activity.activities.filter(function (obj) {
       return obj.activityID === activityID;
     });
     return result[0];
   }
 
-  handleClick(that){
-    this.setState({redirect: true, redirectToActivity: that._targetInst.return.key});
+  handleClick(that) {
+    this.setState({ redirect: true, redirectToActivity: that._targetInst.return.key });
   }
 
-getDate(){
-  var start = parseInt(this.getSafeActivityDtCreated(this.state.activityID),10);
-  var end = parseInt(this.getSafeActivityDtEnded(this.state.activityID),10);
-  console.log("end: "+end);
-  console.log("start: "+start);
-  return this.getAbsoluteDate(start)+" - "+this.getAbsoluteEndDate(start,end)+" ("+this.getRelativeDate(start)+", duration: "+this.getDuration(end-start)+")";
-}
-
-getState(){
-  var state = parseInt(this.getSafeActivityState(this.state.activityID),10);
-  switch (state) {
-    case 0:
-    return <div><i className="fa fa-circle" style={{ color: "grey"}} key={"activityStatus"}></i>{" activity has not started yet."}</div>;
-    
-  
-    case 1:
-      return <div><i className="fa fa-circle" style={{ color: "red"}} key={"activityStatus"}></i>{" activity is currently live"}</div>;
-      
-  
-    case 2:
-    return <div><i className="fa fa-circle" style={{ color: "green"}} key={"activityStatus"}></i>{" activity was successfully completed"}</div>;
-   
-  
-    default:
-      break;
+  getDate() {
+    var start = parseInt(this.getSafeActivityDtCreated(this.state.activityID), 10);
+    var end = parseInt(this.getSafeActivityDtEnded(this.state.activityID), 10);
+    return this.getAbsoluteDate(start) + " - " + this.getAbsoluteEndDate(start, end) + " (" + this.getRelativeDate(start) + ", duration: " + this.getDuration(end - start) + ")";
   }
-}
 
-  render() { 
+  getState() {
+    var state = parseInt(this.getSafeActivityState(this.state.activityID), 10);
+    switch (state) {
+      case 0:
+        return <span><i className="fa fa-circle" style={{ color: "grey" }} key={"activityStatus"}></i>{" activity has not started yet."}</span>;
+
+
+      case 1:
+        return <span><i className="fa fa-circle" style={{ color: "red" }} key={"activityStatus"}></i>{" activity is currently live"}</span>;
+
+
+      case 2:
+        return <span><i className="fa fa-circle" style={{ color: "green" }} key={"activityStatus"}></i>{" activity was successfully completed"}</span>;
+
+
+      default:
+        break;
+    }
+  }
+
+  render() {
     return (<div className="content">
       <Grid fluid>
         <Row>
           <Col md={8}>
-            <Card title={this.getSafeActivityName(this.state.activityID)} category={<div>{this.getDate()}<br />{this.getState()}</div>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
-              <Maps />
+            <Card title={this.getSafeActivityName(this.state.activityID)} category={<span>{this.getDate()}<br />{this.getState()}</span>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
+              <div style={{ height: "60%" }}>
+                <Maps />
+              </div>
+
             } />
+            <Col md={4}>
+              <Card title="Battery Usage" category="30 % used" stats="~ 12 % per hour" statsIcon="fa fa-clock-o" content={<div><BatteryUsage activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
+            </Col>
+            <Col md={4}>
+              <Card title="Notifications" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length - 1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length - 1].dt_created * 1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
+            </Col>
+            <Col md={4}>
+              <Card title="Height Profile" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length - 1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length - 1].dt_created * 1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
+            </Col>
           </Col>
-          <Col md={4}></Col>
+          <Col md={4}>
+            <Row>
+              <Card title="Activity summary" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
+            </Row>
+            <Row>
+              <Card title={this.getSafeDroneName(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} category={this.getSafeDroneVehicleType(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} content={
+                <div>
+                  <DroneSmall droneToShow={this.getSafeDrone(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} />
+                </div>
+              } />
+            </Row>
+            <Row>
+              <Card title="Payload" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length - 1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length - 1].dt_created * 1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
+            </Row>
+          </Col>
         </Row>
+
       </Grid>
     </div>);
   }

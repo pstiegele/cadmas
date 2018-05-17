@@ -44,6 +44,11 @@ class UserProfile extends Component {
     });
     return drones;
   }
+
+  onChange(){
+
+  }
+
   render() {
     console.log("rendered: "+this.props.user.username);
     return (<div className="content">
@@ -56,13 +61,13 @@ class UserProfile extends Component {
                 type: "text",
                 bsClass: "form-control",
                 placeholder: "Username",
-                value: this.props.user.username
+                defaultValue: this.props.user.username
               }, {
                 label: "Email address",
                 type: "email",
                 bsClass: "form-control",
                 placeholder: "your@email.com",
-                value: this.props.user.email
+                defaultValue: this.props.user.email
               }
             ]} />
               <FormInputs ncols={["col-md-4", "col-md-4"]} proprieties={[
@@ -71,13 +76,13 @@ class UserProfile extends Component {
                   type: "text",
                   bsClass: "form-control",
                   placeholder: "First name",
-                  value: this.props.user.firstname
+                  defaultValue: this.props.user.firstname
                 }, {
                   label: "Last name",
                   type: "text",
                   bsClass: "form-control",
                   placeholder: "Last name",
-                  value: this.props.user.lastname
+                  defaultValue: this.props.user.lastname
                 }
               ]} />
               <FormInputs ncols={["col-md-4", "col-md-4"]} proprieties={[
@@ -86,13 +91,13 @@ class UserProfile extends Component {
                   type: "password",
                   bsClass: "form-control",
                   placeholder: "12345",
-                  value: "12345"
+                  defaultValue: "12345"
                 }, {
                   label: "New password",
                   type: "password",
                   bsClass: "form-control",
                   placeholder: "12345",
-                  value: "12345  "
+                  defaultValue: "12345  "
                 }
               ]} />
 

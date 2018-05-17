@@ -1,12 +1,12 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 // import {Tooltip, OverlayTrigger} from 'react-bootstrap';
 import Button from 'elements/CustomButton/CustomButton.jsx';
 // import {NavLink} from 'react-router-dom';
-import {connect} from "react-redux";
-import {setUser, setMapIsShown} from "actions/userActions";
+import { connect } from "react-redux";
+import { setUser, setMapIsShown } from "actions/userActions";
 
 const mapStateToProps = (state) => {
-  return {user: state.user, activity: state.activity};
+  return { user: state.user, activity: state.activity };
 };
 
 const mapDispatchToProps = (dispatch) => {
@@ -20,7 +20,7 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-class LastFlight extends Component {
+class ActivitySummary extends Component {
   constructor(props) {
     super(props);
     this.handleSeeMoreClick = this.handleSeeMoreClick.bind(this);
@@ -28,7 +28,9 @@ class LastFlight extends Component {
     this.hideMap = this.hideMap.bind(this);
   }
   componentDidMount() {
-    this.showMap();
+    if (this.props.showMap) {
+      this.showMap();
+    }
   }
   showMap() {
     var c = document.getElementById("myCanvas");
@@ -85,15 +87,23 @@ class LastFlight extends Component {
     }
 
   }
+  getSafe(fn, defaultVal) {
+    try {
+      return fn();
+    } catch (e) {
+      return defaultVal;
+    }
+  }
   render() {
-    var lastFlight = <div>
+    var ActivitySummary = <div>
       <div className="row">
         <div className="col-lg-8">
-          <div>
-            <p>
-              <i className="fa fa-globe"></i>
-              &nbsp;&nbsp;{this.props.activity.activities[this.props.activity.activities.length-1].name}</p>
-          </div>
+          {this.props.showActivityName ?
+            <div>
+              <p>
+                <i className="fa fa-globe"></i>
+                &nbsp;&nbsp;{this.getSafe(() => this.props.activityToShow.name, "")}</p>
+            </div> : ""}
           <div>
             <p>
               <i className="fa fa-road"></i>
@@ -103,7 +113,7 @@ class LastFlight extends Component {
           <div>
             <p>
               <i className="fa fa-clock-o"></i>
-              &nbsp;&nbsp;{this.props.activity.activities[this.props.activity.activities.length-1].duration} min</p>
+              &nbsp;&nbsp;{this.getSafe(() => this.props.activityToShow.duration + " min", "")}</p>
           </div>
 
           <div>
@@ -125,20 +135,22 @@ class LastFlight extends Component {
             </p>
           </div>
         </div>
-        <div className="col-lg-4">
-          <canvas id="myCanvas"></canvas>
-        </div>
+        {this.props.showMap ?
+          <div className="col-lg-4">
+            <canvas id="myCanvas"></canvas>
+          </div> : ""}
+
       </div>
       <div className="row">
         <div className="col-lg-12 text-right">
-          <Button className="pt-1" bsStyle="default" type="button" bsSize="small" pullRight={true} fill={true} onClick={() => this.handleSeeMoreClick(this.props.user.mapIsShown)}>
+          {this.props.showSeeMoreButton ? <Button className="pt-1" bsStyle="default" type="button" bsSize="small" pullRight={true} fill={true} onClick={() => this.handleSeeMoreClick(this.props.user.mapIsShown)}>
             See more
-          </Button>
+          </Button> : ""}
         </div>
       </div>
     </div>;
-    return (lastFlight);
+    return (ActivitySummary);
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LastFlight);
+export default connect(mapStateToProps, mapDispatchToProps)(ActivitySummary);

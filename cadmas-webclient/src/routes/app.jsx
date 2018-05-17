@@ -12,6 +12,7 @@ import Mission from 'views/Mission/Mission';
 import Activity from 'views/Activity/Activity';
 import Notification from 'views/Notification/Notification';
 import PayloadDataCenter from 'views/PayloadDataCenter/PayloadDataCenter';
+import GetDroneConnector from 'views/GetDroneConnector/GetDroneConnector';
 
 const appRoutes = [
   {
@@ -54,7 +55,7 @@ const appRoutes = [
     path: "/getDroneConnector",
     name: "Get Drone Connector",
     icon: "pe-7s-cloud-download",
-    component: Icons,
+    component: GetDroneConnector,
     showInSidebar: true
   }, {
     path: "/user",

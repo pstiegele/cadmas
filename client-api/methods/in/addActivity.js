@@ -1,4 +1,5 @@
 const ack = require('../out/ack');
+const util = require("util");
 const winston = require('../../../middleware/logger');
 
 module.exports = function (ws, payload, callback) {
@@ -10,4 +11,9 @@ module.exports = function (ws, payload, callback) {
      ack('addActivityACK',0,ws,callback);
  });
 
+ global.connector_wss.clients.forEach((value1, value2, set) => {
+    winston.info("foreach: value1: "+util.inspect(value1));
+    value1.send("hey!!!!!");
+    winston.info("has been sent");
+  })
 }

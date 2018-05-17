@@ -161,7 +161,7 @@ class Notifications extends Component {
                   <tr>
                     {
                       this.thArray.map((prop, key) => {
-                        return (<th key={key}>{prop}</th>);
+                        return (<th key={prop+"-th"}>{prop}</th>);
                       })
                     }
                   </tr>
@@ -199,7 +199,7 @@ class Notifications extends Component {
                 <Card title="Filter" category="filter your notifications by drone" ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
                   <div className="content">
                     {this.props.drone.drones.map((prop, key) => {
-                      return <div><CustomCheckbox isChecked={true} number={key} label={prop.name} inline={false} /></div>;
+                      return <div key={prop.droneID+"-droneID"}><CustomCheckbox isChecked={true} number={key} label={prop.name} inline={false} /></div>;
                     })
                     }
                   </div>
