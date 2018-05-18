@@ -11,55 +11,50 @@ import fi_circle from 'assets/img/flightinstruments/fi_circle.svg';
 export class Attitude extends Component {
     constructor(props){
         super(props);
-        if(!"size" in this.props)
-            this.props.size=100;
-        if(!"roll" in this.props)
-            this.props.roll=0;
-        if(!"pitch" in this.props)
-            this.props.pitch=0;
     }
-    // Initial configuration
-    attitude = this;
-    settings = {
-        size: 200,
-        roll: 0,
-        pitch: 0,
-        turn: 0,
-        heading: 0,
-        vario: 0,
-        airspeed: 0,
-        altitude: 0,
-        pressure: 1000,
-        showBox: true,
-        img_directory: 'img/'
-    };
 
     pitch_bound = 30;
 
     setRoll(roll){
-        return {transform: "rotate("+this.props.roll+"deg)"};
+        if(roll===undefined)
+        roll=0;
+        return {transform: "rotate("+roll+"deg)",transition: "0.5s ease-in-out"};
     }
 
     setPitch(pitch){
+        if(pitch===undefined)
+        pitch=0;
+        
         if(pitch>this.pitch_bound){
             pitch=this.pitch_bound;
         }else if(pitch< -this.pitch_bound){
             pitch=-this.pitch_bound;
         }
-        return {top: pitch*0.7+"%"};
+        return {top: pitch*0.7+"%",transition: "0.5s ease-in-out"};
     }
 
     setSize(size){
-        console.log("size: "+size);
+        if(size===undefined)
+            size=100;
         return {height : size, width : size};
     }
 
+    showBox(showBox){
+        if(showBox===undefined){
+            showBox=true;
+        }
+        if(showBox){
+            return {display: "inherit"};
+        }else{
+            return {display: "none"};
+        }
+        
+    }
+
     render() {
-        console.log("attitude: pitch: "+JSON.stringify(this.props));
-        console.log("attitude: roll: "+JSON.stringify(this.props));
         return (
             <div className="instrument attitude" style={this.setSize(this.props.size)}>
-                <img src={fi_box} class="background box" alt="" />
+                <img src={fi_box} class="background box" alt="" style={this.showBox(this.props.showBox)}/>
                 <div className="roll box" style={this.setRoll(this.props.roll)}>
                     <img src={horizon_back} className="box" alt="" />
                     <div className="pitch box" style={this.setPitch(this.props.pitch)}>

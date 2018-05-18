@@ -1,6 +1,7 @@
 const ack = require('../out/ack');
 const winston = require('../../../middleware/logger');
 const moment = require("moment");
+const velocityToClient = require('../../../client-api/methods/out/velocity');
 
 
 module.exports = function (ws, payload, callback) {
@@ -11,5 +12,15 @@ module.exports = function (ws, payload, callback) {
         winston.info('velocity successfully inserted');
         ack('velocityACK', 0, ws, callback);
     });
-
+    
+    global.client_wss.clients.forEach((value1, value2, set) => {
+        winston.info("velocity sent to client");
+        velocityToClient(value1, payload, function (ws, method, res) {
+            res.time = require('moment')().unix();
+            res.id = 0;
+            res.method = method;
+            value1.send(JSON.stringify(res));
+          });
+    
+      });
 }

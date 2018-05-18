@@ -14,7 +14,7 @@ module.exports = function (ws, payload, callback) {
     });
 
     global.client_wss.clients.forEach((value1, value2, set) => {
-        console.log("executed");
+        winston.info("attitude sent to client");
         attitudeToClient(value1, payload, function (ws, method, res) {
             res.time = require('moment')().unix();
             res.id = 0;

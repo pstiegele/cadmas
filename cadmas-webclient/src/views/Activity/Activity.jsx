@@ -11,7 +11,12 @@ import { connect } from "react-redux";
 import moment from 'moment';
 import localization from 'moment/locale/de'
 import Maps from '../Maps/Maps';
+import Airspeed from '../../components/FlightInstruments/Airspeed';
+import Altimeter from '../../components/FlightInstruments/Altimeter';
 import Attitude from '../../components/FlightInstruments/Attitude';
+import Heading from '../../components/FlightInstruments/Heading';
+import TurnCoordinator from '../../components/FlightInstruments/TurnCoordinator';
+import Variometer from '../../components/FlightInstruments/Variometer';
 
 
 //import util from 'util';
@@ -29,8 +34,8 @@ class Activity extends Component {
     this.state = { activityID: parseInt(this.props.match.params.activityID, 10) };
 
   }
-  componentDidMount(){
-    
+  componentDidMount() {
+
 
   }
 
@@ -193,47 +198,57 @@ class Activity extends Component {
 
   getLiveActivity() {
     return <Grid fluid>
-    <Row>
-      <Col lg={6}>
-        <Card title={this.getSafeActivityName(this.state.activityID)} category={<span>{this.getDate()}<br />{this.getState()}</span>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
-          <div style={{ height: "50%" }}>
-            <Maps />
-          </div>
+      <Row>
+        <Col lg={6}>
+          <Card title={this.getSafeActivityName(this.state.activityID)} category={<span>{this.getDate()}<br />{this.getState()}</span>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
+            <div style={{ height: "50%" }}>
+              <Maps />
+            </div>
 
-        } />
-        <Col md={4}>
-          <Card title="flight statistics" content={<div>Content here!</div>} />
+          } />
+          <Col lg={2}>
+            <TurnCoordinator showBox={false} size={100} turn={this.props.telemetry.telemetry.attitude.roll} />
+          </Col>
+          <Col md={5}>
+            <Card title="altitude profile " content={<div>Bla bla</div>} />
+          </Col>
+          <Col md={5}>
+            <Card title="battery" content={<div>Battery goes here</div>} />
+          </Col>
+          <Col md={4}>
+            <Card title="flight statistics" content={<div>Content here!</div>} />
+          </Col>
+          <Col md={4}>
+            <Card title="notifications" content={<div>Notifications goes here</div>} />
+          </Col>
+          <Col md={4}>
+            <Card title="payload" content={<div>Payload goes here</div>} />
+          </Col>
         </Col>
-        <Col md={4}>
-          <Card title="altitude profile " content={<div>Bla bla</div>} />
+        <Col lg={6}>
+          <Col lg={12} >
+            <div>
+              <img src="https://dummyimage.com/300x200/000/51ff00.jpg&text=Onboard+Camera" style={{verticalAlign: "top", paddingTop:"45px"}}></img>
+              <Airspeed showBox={false} size={300} speed={this.props.telemetry.telemetry.velocity.airspeed} />
+            </div>
+          </Col>
+          <Col lg={12}>
+            <Attitude showBox={false} size={300} roll={this.props.telemetry.telemetry.attitude.roll} pitch={this.props.telemetry.telemetry.attitude.pitch} />
+            <Altimeter showBox={false} size={300} pressure={this.props.telemetry.telemetry.velocity.airspeed} altitude={this.props.telemetry.telemetry.velocity.altitude} />
+          </Col>
+          <Col lg={12}>
+            <Heading showBox={false} size={300} heading={this.props.telemetry.telemetry.attitude.heading} />
+            <Variometer showBox={false} size={300} vario={this.props.telemetry.telemetry.velocity.climbrate} />
+          </Col>
+          
         </Col>
-        <Col md={4}>
-          <Card title="battery" content={<div>Battery goes here</div>} />
-        </Col>
-        <Col md={4}>
-          <Card title="notifications" content={<div>Notifications goes here</div>} />
-        </Col>
-        <Col md={4}>
-          <Card title="payload" content={<div>Payload goes here</div>} />
-        </Col>
-      </Col>
-      <Col lg={3}>
-          <Card title="Onboard camera" content={<div>Hey ho</div>} />
-          <Card title="Airspeed" content={<div>Hey cool</div>} />
-          <Card title="Altitude" content={<div>Bonjour</div>} />
-      </Col>
-      <Col lg={3}>
-         <Attitude roll={this.props.telemetry.telemetry.attitude.roll} pitch={this.props.telemetry.telemetry.attitude.pitch}/>
-          <Card title="Heading"  content={<div>mooooore content!</div>} />
-          <Card title="Variometer" content={<div>it's enough for now</div>} />
-      </Col>
-    </Row>
+      </Row>
 
-  </Grid>
+    </Grid>
   }
   render() {
     return (<div className="content">
-    {parseInt(this.getSafeActivityState(this.state.activityID), 10)=== 1 ? this.getLiveActivity() : this.getNormalActivity()}
+      {parseInt(this.getSafeActivityState(this.state.activityID), 10) === 1 ? this.getLiveActivity() : this.getNormalActivity()}
 
     </div>);
   }

@@ -8,7 +8,7 @@ module.exports = function (wss) {
     delete require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol];
     winston.info("connector connected. droneID: " + ws.droneID + " name: " + ws.name);
     ws.on('message', function incoming(raw_msg) {
-      console.log('received: %s', raw_msg);
+      winston.info('received: %s', raw_msg);
       var msg;
       try {
         msg = JSON.parse(raw_msg);

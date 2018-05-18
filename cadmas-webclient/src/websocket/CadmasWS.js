@@ -102,6 +102,24 @@ class CadmasWS {
           case "attitude":
             store.dispatch(setAttitude(msg.payload));
             break;
+          case "battery":
+            store.dispatch(setBattery(msg.payload));
+            break;
+          case "heartbeat":
+            store.dispatch(setHeartbeat(msg.payload));
+            break;
+          case "missionItem":
+            store.dispatch(setMissionItem(msg.payload));
+            break;
+          case "missionState":
+            store.dispatch(setMissionState(msg.payload));
+            break;
+          case "position":
+            store.dispatch(setPosition(msg.payload));
+            break;
+          case "velocity":
+            store.dispatch(setVelocity(msg.payload));
+            break;
   
           default:
             break;
