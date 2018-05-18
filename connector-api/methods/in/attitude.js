@@ -1,6 +1,7 @@
 const ack = require('../out/ack');
 const winston = require('../../../middleware/logger');
 const moment = require("moment");
+const attitudeToClient = require('../../../client-api/methods/out/attitude');
 
 
 module.exports = function (ws, payload, callback) {
@@ -12,5 +13,16 @@ module.exports = function (ws, payload, callback) {
         ack('attitudeACK', 0, ws, callback);
     });
 
+    global.client_wss.clients.forEach((value1, value2, set) => {
+        console.log("executed");
+        attitudeToClient(value1, payload, function (ws, method, res) {
+            res.time = require('moment')().unix();
+            res.id = 0;
+            res.method = method;
+            value1.send(JSON.stringify(res));
+          });
+    
+      });
+    
 }
 

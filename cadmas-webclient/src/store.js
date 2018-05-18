@@ -9,5 +9,6 @@ import mission from "./reducers/missionReducer";
 import notification from "./reducers/notificationReducer";
 import payload from "./reducers/payloadReducer";
 import payloadDevice from "./reducers/payloadDeviceReducer";
+import telemetry from "./reducers/telemetryReducer";
 
-export default createStore(combineReducers({ ws, user, activity, drone, mission, notification, payload, payloadDevice }), {}, applyMiddleware(logger));
+export default createStore(combineReducers({ ws, user, activity, drone, mission, notification, payload, payloadDevice, telemetry}), {}, applyMiddleware(logger));

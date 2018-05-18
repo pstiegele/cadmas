@@ -18,7 +18,7 @@ import Maps from '../Maps/Maps';
 
 
 const mapStateToProps = (state) => {
-  return { mission: state.mission, drone: state.drone, activity: state.activity };
+  return { mission: state.mission, drone: state.drone, activity: state.activity, telemetry: state.telemetry };
 };
 
 class Activity extends Component {
@@ -146,45 +146,90 @@ class Activity extends Component {
     }
   }
 
-  render() {
-    return (<div className="content">
-      <Grid fluid>
-        <Row>
-          <Col md={8}>
-            <Card title={this.getSafeActivityName(this.state.activityID)} category={<span>{this.getDate()}<br />{this.getState()}</span>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
-              <div style={{ height: "60%" }}>
-                <Maps />
-              </div>
+  getNormalActivity() {
+    return <Grid fluid>
+      <Row>
+        <Col md={8}>
+          <Card title={this.getSafeActivityName(this.state.activityID)} category={<span>{this.getDate()}<br />{this.getState()}</span>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
+            <div style={{ height: "60%" }}>
+              <Maps />
+            </div>
 
-            } />
-            <Col md={4}>
-              <Card title="Battery Usage" category="30 % used" stats="~ 12 % per hour" statsIcon="fa fa-clock-o" content={<div><BatteryUsage activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
-            </Col>
-            <Col md={4}>
-              <Card title="Notifications" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length - 1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length - 1].dt_created * 1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
-            </Col>
-            <Col md={4}>
-              <Card title="Height Profile" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length - 1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length - 1].dt_created * 1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
-            </Col>
+          } />
+          <Col md={4}>
+            <Card title="Battery Usage" category={this.props.telemetry.telemetry.attitude.pitch} stats="~ 12 % per hour" statsIcon="fa fa-clock-o" content={<div><BatteryUsage activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
           </Col>
           <Col md={4}>
-            <Row>
-              <Card title="Activity summary" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
-            </Row>
-            <Row>
-              <Card title={this.getSafeDroneName(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} category={this.getSafeDroneVehicleType(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} content={
-                <div>
-                  <DroneSmall droneToShow={this.getSafeDrone(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} />
-                </div>
-              } />
-            </Row>
-            <Row>
-              <Card title="Payload" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length - 1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length - 1].dt_created * 1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
-            </Row>
+            <Card title="Notifications" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length - 1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length - 1].dt_created * 1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
           </Col>
-        </Row>
+          <Col md={4}>
+            <Card title="Height Profile" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length - 1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length - 1].dt_created * 1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
+          </Col>
+        </Col>
+        <Col md={4}>
+          <Row>
+            <Card title="Activity summary" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
+          </Row>
+          <Row>
+            <Card title={this.getSafeDroneName(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} category={this.getSafeDroneVehicleType(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} content={
+              <div>
+                <DroneSmall droneToShow={this.getSafeDrone(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} />
+              </div>
+            } />
+          </Row>
+          <Row>
+            <Card title="Payload" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length - 1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length - 1].dt_created * 1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
+          </Row>
+        </Col>
+      </Row>
 
-      </Grid>
+    </Grid>
+  }
+
+  getLiveActivity() {
+    return <Grid fluid>
+    <Row>
+      <Col lg={6}>
+        <Card title={this.getSafeActivityName(this.state.activityID)} category={<span>{this.getDate()}<br />{this.getState()}</span>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
+          <div style={{ height: "50%" }}>
+            <Maps />
+          </div>
+
+        } />
+        <Col md={4}>
+          <Card title="flight statistics" content={<div>Content here!</div>} />
+        </Col>
+        <Col md={4}>
+          <Card title="altitude profile " content={<div>Bla bla</div>} />
+        </Col>
+        <Col md={4}>
+          <Card title="battery" content={<div>Battery goes here</div>} />
+        </Col>
+        <Col md={4}>
+          <Card title="notifications" content={<div>Notifications goes here</div>} />
+        </Col>
+        <Col md={4}>
+          <Card title="payload" content={<div>Payload goes here</div>} />
+        </Col>
+      </Col>
+      <Col lg={3}>
+          <Card title="Onboard camera" content={<div>Hey ho</div>} />
+          <Card title="Airspeed" content={<div>Hey cool</div>} />
+          <Card title="Altitude" content={<div>Bonjour</div>} />
+      </Col>
+      <Col lg={3}>
+          <Card title="Attitude" content={<div>content goes here</div>} />
+          <Card title="Heading"  content={<div>mooooore content!</div>} />
+          <Card title="Variometer" content={<div>it's enough for now</div>} />
+      </Col>
+    </Row>
+
+  </Grid>
+  }
+  render() {
+    return (<div className="content">
+    {parseInt(this.getSafeActivityState(this.state.activityID), 10)=== 1 ? this.getLiveActivity() : this.getNormalActivity()}
+
     </div>);
   }
 }
