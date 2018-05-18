@@ -11,6 +11,8 @@ import { connect } from "react-redux";
 import moment from 'moment';
 import localization from 'moment/locale/de'
 import Maps from '../Maps/Maps';
+import Attitude from '../../components/FlightInstruments/Attitude';
+
 
 //import util from 'util';
 
@@ -27,7 +29,10 @@ class Activity extends Component {
     this.state = { activityID: parseInt(this.props.match.params.activityID, 10) };
 
   }
+  componentDidMount(){
+    
 
+  }
 
   getRelativeOrAbsoluteDate(date) {
     if (new Date() - new Date(date * 1000) < 604800000) {
@@ -218,7 +223,7 @@ class Activity extends Component {
           <Card title="Altitude" content={<div>Bonjour</div>} />
       </Col>
       <Col lg={3}>
-          <Card title="Attitude" content={<div>content goes here</div>} />
+         <Attitude roll={this.props.telemetry.telemetry.attitude.roll} pitch={this.props.telemetry.telemetry.attitude.pitch}/>
           <Card title="Heading"  content={<div>mooooore content!</div>} />
           <Card title="Variometer" content={<div>it's enough for now</div>} />
       </Col>

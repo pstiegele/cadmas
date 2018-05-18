@@ -12,8 +12,6 @@ module.exports = function (ws, payload, callback) {
  });
 
  global.connector_wss.clients.forEach((value1, value2, set) => {
-    winston.info("foreach: value1: "+util.inspect(value1));
     value1.send("hey!!!!!");
-    winston.info("has been sent");
-  })
+  });
 }
