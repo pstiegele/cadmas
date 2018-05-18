@@ -199,10 +199,10 @@ class Activity extends Component {
   getLiveActivity() {
     return <Grid fluid>
       <Row>
-        <Col lg={6}>
+        <Col lg={7}>
           <Card title={this.getSafeActivityName(this.state.activityID)} category={<span>{this.getDate()}<br />{this.getState()}</span>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
             <div style={{ height: "50%" }}>
-              <Maps />
+              <Maps longitude={this.props.telemetry.telemetry.position.longitude} latitude={this.props.telemetry.telemetry.position.latitude}/>
             </div>
 
           } />
@@ -225,7 +225,7 @@ class Activity extends Component {
             <Card title="payload" content={<div>Payload goes here</div>} />
           </Col>
         </Col>
-        <Col lg={6}>
+        <Col lg={5}>
           <Col lg={12} >
             <div>
               <img src="https://dummyimage.com/300x200/000/51ff00.jpg&text=Onboard+Camera" style={{verticalAlign: "top", paddingTop:"45px"}}></img>

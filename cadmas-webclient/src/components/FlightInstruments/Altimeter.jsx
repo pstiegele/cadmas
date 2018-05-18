@@ -56,8 +56,6 @@ export class Altimeter extends Component {
     }
 
     render() {
-        console.log("attitude: pitch: " + JSON.stringify(this.props));
-        console.log("attitude: roll: " + JSON.stringify(this.props));
         return (
             <div className="instrument altimeter" style={this.setSize(this.props.size)}>
                 <img src={fi_box} className="background box" alt="" style={this.showBox(this.props.showBox)} />

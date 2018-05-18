@@ -16,6 +16,7 @@ export class TurnCoordinator extends Component {
     }
 
     setTurn(turn) {
+        turn = turn * (180/Math.PI);
         if (turn === undefined)
             turn = 0;
         return { transform: "rotate(" + turn + "deg)",transition: "0.5s ease-in-out" };

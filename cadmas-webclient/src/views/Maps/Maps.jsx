@@ -4,15 +4,19 @@ import {Map, Marker, GoogleApiWrapper} from 'google-maps-react';
 class Maps extends Component {
   render() {
     return (<div id="map">
-      <Map style={{
+      <Map center={{
+            lat: this.props.latitude,
+            lng: this.props.longitude
+          }}
+          style={{
           width: '100%',
           height: '100%',
           position: 'relative'
       }} google={this.props.google} initialCenter={{
-          lat: 49.781641,
-          lng: 9.970359
+          lat: this.props.latitude,
+          lng: this.props.longitude
       }} zoom={17} clickableIcons={false}>
-        <Marker onClick={this.onMarkerClick} name={'Current location'}/>
+        <Marker position={{ lat: this.props.latitude, lng: this.props.longitude }}onClick={this.onMarkerClick} name={'Current location'}/>
       </Map>
     </div>);
   }
