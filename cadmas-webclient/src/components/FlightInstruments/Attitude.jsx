@@ -56,7 +56,7 @@ export class Attitude extends Component {
     render() {
         return (
             <div className="instrument attitude" style={this.setSize(this.props.size)}>
-                <img src={fi_box} class="background box" alt="" style={this.showBox(this.props.showBox)}/>
+                <img src={fi_box} className="background box" alt="" style={this.showBox(this.props.showBox)}/>
                 <div className="roll box" style={this.setRoll(this.props.roll)}>
                     <img src={horizon_back} className="box" alt="" />
                     <div className="pitch box" style={this.setPitch(this.props.pitch)}>

@@ -1,5 +1,5 @@
 const telemetryReducer = (state = {
-  telemetry: {
+  0: {
     'attitude': {
       'timestamp': 0,
       'roll': 0,
@@ -45,73 +45,80 @@ const telemetryReducer = (state = {
 }, action) => {
   switch (action.type) {
     case "SET_ATTITUDE":
+      var droneID = action.payload.droneID;
       state = {
-        ...state,
-        telemetry: {
-          ...state.telemetry,
-          attitude: action.payload
-        }
+        ...state
       };
+      if (state[action.payload.droneID] === undefined || state[action.payload.droneID] === null)
+        state[action.payload.droneID] = {};
+      state[action.payload.droneID].attitude = action.payload;
+      delete state[action.payload.droneID].attitude.droneID;
       break;
 
     case "SET_BATTERY":
+      var droneID = action.payload.droneID;
       state = {
-        ...state,
-        telemetry: {
-          ...state.telemetry,
-          battery: action.payload
-        }
+        ...state
       };
+      if (state[action.payload.droneID] === undefined || state[action.payload.droneID] === null)
+        state[action.payload.droneID] = {};
+      state[action.payload.droneID].battery = action.payload;
+      delete state[action.payload.droneID].battery.droneID;
       break;
 
     case "SET_HEARTBEAT":
+      var droneID = action.payload.droneID;
       state = {
-        ...state,
-        telemetry: {
-          ...state.telemetry,
-          heartbeat: action.payload
-        }
+        ...state
       };
+      if (state[action.payload.droneID] === undefined || state[action.payload.droneID] === null)
+        state[action.payload.droneID] = {};
+      state[action.payload.droneID].heartbeat = action.payload;
+      delete state[action.payload.droneID].heartbeat.droneID;
       break;
 
     case "SET_MISSIONITEM":
+      var droneID = action.payload.droneID;
       state = {
-        ...state,
-        telemetry: {
-          ...state.telemetry,
-          missionItem: action.payload
-        }
+        ...state
       };
+      if (state[action.payload.droneID] === undefined || state[action.payload.droneID] === null)
+        state[action.payload.droneID] = {};
+      state[action.payload.droneID].missionItem = action.payload;
+      delete state[action.payload.droneID].missionItem.droneID;
       break;
 
     case "SET_MISSIONSTATE":
+      var droneID = action.payload.droneID;
       state = {
-        ...state,
-        telemetry: {
-          ...state.telemetry,
-          missionState: action.payload
-        }
+        ...state
       };
+      if (state[action.payload.droneID] === undefined || state[action.payload.droneID] === null)
+        state[action.payload.droneID] = {};
+      state[action.payload.droneID].missionState = action.payload;
+      delete state[action.payload.droneID].missionState.droneID;
       break;
 
     case "SET_POSITION":
+      var droneID = action.payload.droneID;
       state = {
-        ...state,
-        telemetry: {
-          ...state.telemetry,
-          position: action.payload
-        }
+        ...state
       };
+      if (state[action.payload.droneID] === undefined || state[action.payload.droneID] === null)
+        state[action.payload.droneID] = {};
+      state[action.payload.droneID].position = action.payload;
+      delete state[action.payload.droneID].position.droneID;
       break;
 
     case "SET_VELOCITY":
+      var droneID = action.payload.droneID;
       state = {
-        ...state,
-        telemetry: {
-          ...state.telemetry,
-          velocity: action.payload
-        }
+        ...state
       };
+      if (state[action.payload.droneID] === undefined || state[action.payload.droneID] === null)
+        state[action.payload.droneID] = {};
+      state[action.payload.droneID].velocity = action.payload;
+      delete state[action.payload.droneID].velocity.droneID;
       break;
 
     default:

@@ -28,6 +28,9 @@ initalizeWebsocket(server);
 global.connector_wss = connector_wss;
 global.client_wss = client_wss;
 global.auth_wss = auth_wss;
+connector_wss.cadmasConnectors=[];
+client_wss.cadmasClients=[];
+auth_wss.cadmasAuths=[];
 
 //connector API
 var connector_api = require('./connector-api/main')(connector_wss);

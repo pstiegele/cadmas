@@ -8,6 +8,17 @@ module.exports = function (wss) {
     ws.username = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol].username;
     delete require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol];
     winston.info("client connected. userID: " + ws.userID + " username: " + ws.username);
+    if (global.client_wss.cadmasClients[ws.userID] === undefined||global.client_wss.cadmasClients[ws.userID] === null) {
+      global.client_wss.cadmasClients[ws.userID] = [];
+    }
+    var pos = global.client_wss.cadmasClients[ws.userID].length;
+    for (let i = 0; i < global.client_wss.cadmasClients[ws.userID].length; i++) {
+      if(global.client_wss.cadmasClients[ws.userID][i]===null){
+        pos=i;
+        break;
+      }
+    }
+    global.client_wss.cadmasClients[ws.userID][pos] = ws;
     sendInitalData(ws);
     //winston.info("clients: "+util.inspect(wss.clients));
     ws.on('message', function incoming(raw_msg) {
@@ -91,14 +102,14 @@ function send(ws, method, res) {
   res.id = 0;
   res.method = method;
   winston.info("send: " + method);
- // winston.info("send: " + method + " --> " + JSON.stringify(res));
+  // winston.info("send: " + method + " --> " + JSON.stringify(res));
   ws.send(JSON.stringify(res));
 }
 function sendInitalData(ws) {
   require("./methods/out/user")(ws, send);
   require("./methods/out/missions")(ws, send);
   require("./methods/out/drones")(ws, send);
-  require("./methods/out/activities")(ws, send);  
+  require("./methods/out/activities")(ws, send);
   require("./methods/out/notifications")(ws, send);
   require("./methods/out/payloads")(ws, send);
   require("./methods/out/payloadDevices")(ws, send);

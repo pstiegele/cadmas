@@ -48,14 +48,14 @@ export class Variometer extends Component {
 
     render() {
         return (
-            <div class="instrument vario" style={this.setSize(this.props.size)}>
-                <img src={fi_box} class="background box" alt="" style={this.showBox(this.props.showBox)} />
-                <img src={vertical_mechanics} class="box" alt=""/>
-                <div class="vario box"  style={this.setVario(this.props.vario)} >
-                    <img src={fi_needle} class="box" alt="" />
+            <div className="instrument vario" style={this.setSize(this.props.size)}>
+                <img src={fi_box} className="background box" alt="" style={this.showBox(this.props.showBox)} />
+                <img src={vertical_mechanics} className="box" alt=""/>
+                <div className="vario box"  style={this.setVario(this.props.vario)} >
+                    <img src={fi_needle} className="box" alt="" />
                 </div>
-                <div class="mechanics box">
-                    <img src={fi_circle} class="box" alt="" />
+                <div className="mechanics box">
+                    <img src={fi_circle} className="box" alt="" />
                 </div>
             </div>
         );

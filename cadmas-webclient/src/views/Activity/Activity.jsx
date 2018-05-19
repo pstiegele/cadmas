@@ -23,7 +23,6 @@ import Variometer from '../../components/FlightInstruments/Variometer';
 
 
 
-
 const mapStateToProps = (state) => {
   return { mission: state.mission, drone: state.drone, activity: state.activity, telemetry: state.telemetry };
 };
@@ -86,7 +85,7 @@ class Activity extends Component {
     return this.getSafe(() => this.getDroneByID(droneID).name, "")
   }
   getSafeDroneID(activity) {
-    return this.getSafe(() => activity.droneID, "")
+    return this.getSafe(() => activity.droneID, 0)
   }
   getSafeDroneVehicleType(droneID) {
     return this.getSafe(() => this.getDroneByID(droneID).vehicleType, "")
@@ -109,6 +108,30 @@ class Activity extends Component {
   }
   getSafeActivityName(activityID) {
     return this.getSafe(() => this.getActivityByID(activityID).name, "")
+  }
+  getSafeTelemetry() {
+    var telemetry = this.getSafe(() => this.props.telemetry[parseInt(this.getSafeDroneID(this.getActivityByID(this.state.activityID)),10)], this.props.telemetry[0]);
+    if(telemetry===undefined||telemetry===null)
+      return this.props.telemetry[0];
+    return telemetry;
+  }
+  getSafeTelemetryAttitude(){
+    return this.getSafe(() => this.getSafeTelemetry().attitude, this.props.telemetry[0].attitude);
+  }
+  getSafeTelemetryBattery(){
+    return this.getSafe(() => this.getSafeTelemetry().battery, this.props.telemetry[0].battery);
+  }
+  getSafeTelemetryHeartbeat(){
+    return this.getSafe(() => this.getSafeTelemetry().heartbeat, this.props.telemetry[0].heartbeat);
+  }
+  getSafeTelemetryMissionState(){
+    return this.getSafe(() => this.getSafeTelemetry().missionState, this.props.telemetry[0].missionState);
+  }
+  getSafeTelemetryPosition(){
+    return this.getSafe(() => this.getSafeTelemetry().position, this.props.telemetry[0].position);
+  }
+  getSafeTelemetryVelocity(){
+    return this.getSafe(() => this.getSafeTelemetry().velocity, this.props.telemetry[0].velocity);
   }
   getSafeActivityDtCreated(activityID) {
     return this.getSafe(() => this.getActivityByID(activityID).dt_created, "")
@@ -167,7 +190,7 @@ class Activity extends Component {
 
           } />
           <Col md={4}>
-            <Card title="Battery Usage" category={this.props.telemetry.telemetry.attitude.pitch} stats="~ 12 % per hour" statsIcon="fa fa-clock-o" content={<div><BatteryUsage activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
+            <Card title="Battery Usage" category={0} stats="~ 12 % per hour" statsIcon="fa fa-clock-o" content={<div><BatteryUsage activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
           </Col>
           <Col md={4}>
             <Card title="Notifications" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length - 1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length - 1].dt_created * 1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
@@ -202,12 +225,12 @@ class Activity extends Component {
         <Col lg={7}>
           <Card title={this.getSafeActivityName(this.state.activityID)} category={<span>{this.getDate()}<br />{this.getState()}</span>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
             <div style={{ height: "50%" }}>
-              <Maps longitude={this.props.telemetry.telemetry.position.longitude} latitude={this.props.telemetry.telemetry.position.latitude}/>
+              <Maps longitude={this.getSafeTelemetryPosition().longitude} latitude={this.getSafeTelemetryPosition().latitude}/>
             </div>
 
           } />
           <Col lg={2}>
-            <TurnCoordinator showBox={false} size={100} turn={this.props.telemetry.telemetry.attitude.roll} />
+            <TurnCoordinator showBox={false} size={100} turn={this.getSafeTelemetryAttitude().roll} />
           </Col>
           <Col md={5}>
             <Card title="altitude profile " content={<div>Bla bla</div>} />
@@ -229,16 +252,16 @@ class Activity extends Component {
           <Col lg={12} >
             <div>
               <img src="https://dummyimage.com/300x200/000/51ff00.jpg&text=Onboard+Camera" style={{verticalAlign: "top", paddingTop:"45px"}}></img>
-              <Airspeed showBox={false} size={300} speed={this.props.telemetry.telemetry.velocity.airspeed} />
+              <Airspeed showBox={false} size={300} speed={this.getSafeTelemetryVelocity().airspeed} />
             </div>
           </Col>
           <Col lg={12}>
-            <Attitude showBox={false} size={300} roll={this.props.telemetry.telemetry.attitude.roll} pitch={this.props.telemetry.telemetry.attitude.pitch} />
-            <Altimeter showBox={false} size={300} pressure={this.props.telemetry.telemetry.velocity.airspeed} altitude={this.props.telemetry.telemetry.velocity.altitude} />
+            <Attitude showBox={false} size={300} roll={this.getSafeTelemetryAttitude().roll} pitch={this.getSafeTelemetryAttitude().pitch} />
+            <Altimeter showBox={false} size={300} pressure={this.getSafeTelemetryVelocity().airspeed} altitude={this.getSafeTelemetryVelocity().altitude} />
           </Col>
           <Col lg={12}>
-            <Heading showBox={false} size={300} heading={this.props.telemetry.telemetry.attitude.heading} />
-            <Variometer showBox={false} size={300} vario={this.props.telemetry.telemetry.velocity.climbrate} />
+            <Heading showBox={false} size={300} heading={this.getSafeTelemetryAttitude().heading} />
+            <Variometer showBox={false} size={300} vario={this.getSafeTelemetryVelocity().climbrate} />
           </Col>
           
         </Col>

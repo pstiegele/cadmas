@@ -1,10 +1,13 @@
 const winston = require('../middleware/logger');
 const util = require('util');
+const Websocket = require('ws');
 
 module.exports = function (wss) {
   wss.on('connection', function connection(ws, req) {
     ws.droneID = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol].droneID;
     ws.name = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol].name;
+    getUserIDByDroneID(ws);
+    getActiveActivity(ws);
     delete require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol];
     winston.info("connector connected. droneID: " + ws.droneID + " name: " + ws.name);
     ws.on('message', function incoming(raw_msg) {
@@ -20,7 +23,8 @@ module.exports = function (wss) {
         res.id = 0;
         res.method = method;
         //TODO: check if ws is open
-        ws.send(JSON.stringify(res));
+        if (ws.readyState === ws.OPEN)
+          ws.send(JSON.stringify(res));
       });
     });
 
@@ -72,6 +76,32 @@ function isValidAPIKey(apikey, callback) {
     if (err === null && results.length == 1) {
       console.log("wird betreten");
       callback();
+    }
+  });
+}
+
+function getUserIDByDroneID(ws) {
+  var query = "SELECT userID FROM Drone WHERE id=?";
+  db.query(query, ws.droneID, function (err, results) {
+    if (err === null && results.length == 1) {
+      ws.userID = results[0].userID;
+    }
+  });
+}
+
+function getActiveActivity(ws) {
+  var queryGetActiveActivity = "SELECT activeActivity FROM Drone WHERE id=?";
+  db.query(queryGetActiveActivity, ws.droneID, function (errActiveActivity, resultsActiveActivity) {
+    if (errActiveActivity === null && resultsActiveActivity.length == 1) {
+      var queryGetActivityStatus = "SELECT state FROM Activity WHERE id=?";
+      db.query(queryGetActivityStatus, resultsActiveActivity[0].activeActivity, function (errActivityStatus, resultsActivityStatus) {
+        if (errActivityStatus === null && resultsActivityStatus.length == 1) {
+          if (resultsActivityStatus[0].state === "1") {
+            ws.activeActivity = resultsActiveActivity[0].activeActivity;
+            winston.info("activeActivity: "+ws.activeActivity);
+          }
+        }
+      });
     }
   });
 }

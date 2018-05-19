@@ -85,11 +85,11 @@ class Missions extends Component {
 
   getSetTo(missionID){
     var res=[]
-    for(var i=0;i<this.props.drone.drones.length;i++){
-      if(this.props.drone.drones[i].activeMission===missionID){
-        res.push(this.props.drone.drones[i].name);
-      }
-    }
+    // for(var i=0;i<this.props.drone.drones.length;i++){
+    //   if(this.props.drone.drones[i].activeMission===missionID){
+    //     res.push(this.props.drone.drones[i].name);
+    //   }
+    // }
     return res;
   }
 
