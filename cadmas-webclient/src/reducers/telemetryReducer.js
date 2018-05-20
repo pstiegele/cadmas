@@ -32,14 +32,15 @@ const telemetryReducer = (state = {
       'timestamp': 0,
       'latitude': 0,
       'longitude': 0,
-      'altitude': 0
+      'altitude': 0,
+      'altitudeAbsolute':0,
+      'altitudeRelative':0
     },
     'velocity': {
       'timestamp': 0,
       'groundspeed': 0,
       'airspeed': 0,
-      'climbrate': 0,
-      'altitude': 0
+      'climbrate': 0
     }
   }
 }, action) => {

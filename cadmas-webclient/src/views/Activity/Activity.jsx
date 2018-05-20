@@ -110,28 +110,40 @@ class Activity extends Component {
     return this.getSafe(() => this.getActivityByID(activityID).name, "")
   }
   getSafeTelemetry() {
-    var telemetry = this.getSafe(() => this.props.telemetry[parseInt(this.getSafeDroneID(this.getActivityByID(this.state.activityID)),10)], this.props.telemetry[0]);
-    if(telemetry===undefined||telemetry===null)
+    var telemetry = this.getSafe(() => this.props.telemetry[parseInt(this.getSafeDroneID(this.getActivityByID(this.state.activityID)), 10)], this.props.telemetry[0]);
+    if (telemetry === undefined || telemetry === null)
       return this.props.telemetry[0];
     return telemetry;
   }
-  getSafeTelemetryAttitude(){
-    return this.getSafe(() => this.getSafeTelemetry().attitude, this.props.telemetry[0].attitude);
+  getSafeTelemetryAttitude() {
+    if (this.getSafeTelemetry().attitude === undefined || this.getSafeTelemetry().attitude === null)
+      return this.props.telemetry[0].attitude;
+    return this.getSafeTelemetry().attitude;
   }
-  getSafeTelemetryBattery(){
-    return this.getSafe(() => this.getSafeTelemetry().battery, this.props.telemetry[0].battery);
+  getSafeTelemetryBattery() {
+    if (this.getSafeTelemetry().battery === undefined || this.getSafeTelemetry().battery === null)
+      return this.props.telemetry[0].battery;
+    return this.getSafeTelemetry().battery;
   }
-  getSafeTelemetryHeartbeat(){
-    return this.getSafe(() => this.getSafeTelemetry().heartbeat, this.props.telemetry[0].heartbeat);
+  getSafeTelemetryHeartbeat() {
+    if (this.getSafeTelemetry().heartbeat === undefined || this.getSafeTelemetry().heartbeat === null)
+      return this.props.telemetry[0].heartbeat;
+    return this.getSafeTelemetry().heartbeat;
   }
-  getSafeTelemetryMissionState(){
-    return this.getSafe(() => this.getSafeTelemetry().missionState, this.props.telemetry[0].missionState);
+  getSafeTelemetryMissionState() {
+    if (this.getSafeTelemetry().missionState === undefined || this.getSafeTelemetry().missionState === null)
+      return this.props.telemetry[0].missionState;
+    return this.getSafeTelemetry().missionState;
   }
-  getSafeTelemetryPosition(){
-    return this.getSafe(() => this.getSafeTelemetry().position, this.props.telemetry[0].position);
+  getSafeTelemetryPosition() {
+    if (this.getSafeTelemetry().position === undefined || this.getSafeTelemetry().position === null)
+      return this.props.telemetry[0].position;
+    return this.getSafeTelemetry().position;
   }
-  getSafeTelemetryVelocity(){
-    return this.getSafe(() => this.getSafeTelemetry().velocity, this.props.telemetry[0].velocity);
+  getSafeTelemetryVelocity() {
+    if (this.getSafeTelemetry().velocity === undefined || this.getSafeTelemetry().velocity === null)
+      return this.props.telemetry[0].velocity;
+    return this.getSafeTelemetry().velocity;
   }
   getSafeActivityDtCreated(activityID) {
     return this.getSafe(() => this.getActivityByID(activityID).dt_created, "")
@@ -225,7 +237,11 @@ class Activity extends Component {
         <Col lg={7}>
           <Card title={this.getSafeActivityName(this.state.activityID)} category={<span>{this.getDate()}<br />{this.getState()}</span>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
             <div style={{ height: "50%" }}>
-              <Maps longitude={this.getSafeTelemetryPosition().longitude} latitude={this.getSafeTelemetryPosition().latitude}/>
+              <Maps
+                longitude={this.getSafeTelemetryPosition().longitude}
+                latitude={this.getSafeTelemetryPosition().latitude}
+                route={this.polyline}
+              />
             </div>
 
           } />
@@ -251,23 +267,43 @@ class Activity extends Component {
         <Col lg={5}>
           <Col lg={12} >
             <div>
-              <img src="https://dummyimage.com/300x200/000/51ff00.jpg&text=Onboard+Camera" style={{verticalAlign: "top", paddingTop:"45px"}}></img>
+              <img src="https://dummyimage.com/300x200/000/51ff00.jpg&text=Onboard+Camera" style={{ verticalAlign: "top", paddingTop: "45px" }}></img>
               <Airspeed showBox={false} size={300} speed={this.getSafeTelemetryVelocity().airspeed} />
             </div>
           </Col>
           <Col lg={12}>
             <Attitude showBox={false} size={300} roll={this.getSafeTelemetryAttitude().roll} pitch={this.getSafeTelemetryAttitude().pitch} />
-            <Altimeter showBox={false} size={300} pressure={this.getSafeTelemetryVelocity().airspeed} altitude={this.getSafeTelemetryVelocity().altitude} />
+            <Altimeter showBox={false} size={300} pressure={this.getSafeTelemetryPosition().altitudeAbsolute} altitude={this.getSafeTelemetryPosition().altitudeRelative} />
           </Col>
           <Col lg={12}>
             <Heading showBox={false} size={300} heading={this.getSafeTelemetryAttitude().heading} />
             <Variometer showBox={false} size={300} vario={this.getSafeTelemetryVelocity().climbrate} />
           </Col>
-          
+
         </Col>
       </Row>
 
     </Grid>
+  }
+  polyline = [
+    { "lat": -35.275307, "lng": 148.93459 }, 
+    { "lat": -35.275307, "lng": 148.93459 }, 
+    { "lat": -35.275307, "lng": 148.93459 }, 
+    { "lat": -35.275406, "lng": 148.93457 }, 
+    { "lat": -35.275406, "lng": 148.93457 }, 
+    { "lat": -35.275406, "lng": 148.93457 }, 
+    { "lat": -35.275406, "lng": 148.93457 }, 
+    { "lat": -35.275406, "lng": 148.93457 }, 
+    { "lat": -35.275406, "lng": 148.93457 }, 
+    { "lat": -35.275406, "lng": 148.93457 }
+  ];
+
+
+  componentWillUpdate(nextProps) {
+    this.polyline.push({
+      lat: this.getSafeTelemetryPosition().latitude,
+      lng: this.getSafeTelemetryPosition().longitude
+    });
   }
   render() {
     return (<div className="content">

@@ -20,7 +20,7 @@ class CadmasWS {
     var that=this;
     console.log("authenticate first! ");
     var authSocket;
-    if(window.location.hostname!=="localhost"){
+    if(window.location.hostname!=="localhost"&&!window.location.hostname.startsWith("192")){
       authSocket = new WebSocket("wss://" + window.location.hostname + ":8081/auth");
     }else{
       authSocket = new WebSocket("ws://" + window.location.hostname + "/auth");
@@ -59,7 +59,7 @@ class CadmasWS {
   initClientAPI(token){
 
     var hostname = window.location.hostname;
-    if(window.location.hostname!=="localhost"){
+    if(window.location.hostname!=="localhost"&&!window.location.hostname.startsWith("192")){
       socket = new WebSocket("wss://" + hostname + ":8081/client?token=" + token, token);
     }else{
       socket = new WebSocket("ws://" + hostname + "/client?token=" + token, token);
