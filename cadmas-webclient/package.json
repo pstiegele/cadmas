@@ -5,7 +5,7 @@
   "dependencies": {
     "chartist": "^0.11.0",
     "cross-env": "^5.1.4",
-    "google-maps-react": "^1.1.11",
+    "google-maps-react": "latest",
     "moment": "^2.22.1",
     "node-sass-chokidar": "^1.2.2",
     "npm": "^5.8.0",

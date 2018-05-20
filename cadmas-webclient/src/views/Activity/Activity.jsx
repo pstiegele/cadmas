@@ -145,6 +145,11 @@ class Activity extends Component {
       return this.props.telemetry[0].velocity;
     return this.getSafeTelemetry().velocity;
   }
+  getSafeTelemetryRoute() {
+    if (this.getSafeTelemetry().route === undefined || this.getSafeTelemetry().route === null)
+      return this.props.telemetry[0].route;
+    return this.getSafeTelemetry().route;
+  }
   getSafeActivityDtCreated(activityID) {
     return this.getSafe(() => this.getActivityByID(activityID).dt_created, "")
   }
@@ -240,7 +245,8 @@ class Activity extends Component {
               <Maps
                 longitude={this.getSafeTelemetryPosition().longitude}
                 latitude={this.getSafeTelemetryPosition().latitude}
-                route={this.polyline}
+                route={this.getSafeTelemetryRoute()}
+
               />
             </div>
 
@@ -285,26 +291,30 @@ class Activity extends Component {
 
     </Grid>
   }
-  polyline = [
-    { "lat": -35.275307, "lng": 148.93459 }, 
-    { "lat": -35.275307, "lng": 148.93459 }, 
-    { "lat": -35.275307, "lng": 148.93459 }, 
-    { "lat": -35.275406, "lng": 148.93457 }, 
-    { "lat": -35.275406, "lng": 148.93457 }, 
-    { "lat": -35.275406, "lng": 148.93457 }, 
-    { "lat": -35.275406, "lng": 148.93457 }, 
-    { "lat": -35.275406, "lng": 148.93457 }, 
-    { "lat": -35.275406, "lng": 148.93457 }, 
-    { "lat": -35.275406, "lng": 148.93457 }
-  ];
+  // getRoute(){
+  //   var r = this.polyline.slice(0);
+  //   return r;
+  // }
+  // polyline = [
+  //   { "lat": -35.275307, "lng": 148.93459 }, 
+  //   { "lat": -35.275307, "lng": 148.93459 }, 
+  //   { "lat": -35.275307, "lng": 148.93459 }, 
+  //   { "lat": -35.275406, "lng": 148.93457 }, 
+  //   { "lat": -35.275406, "lng": 148.93457 }, 
+  //   { "lat": -35.275406, "lng": 148.93457 }, 
+  //   { "lat": -35.275406, "lng": 148.93457 }, 
+  //   { "lat": -35.275406, "lng": 148.93457 }, 
+  //   { "lat": -35.275406, "lng": 148.93457 }, 
+  //   { "lat": -35.275406, "lng": 148.93457 }
+  // ];
 
 
-  componentWillUpdate(nextProps) {
-    this.polyline.push({
-      lat: this.getSafeTelemetryPosition().latitude,
-      lng: this.getSafeTelemetryPosition().longitude
-    });
-  }
+  // componentWillUpdate(nextProps) {
+  //   this.polyline.push({
+  //     lat: parseInt(this.getSafeTelemetryPosition().latitude,10),
+  //     lng: parseInt(this.getSafeTelemetryPosition().longitude,10)
+  //   });
+  // }
   render() {
     return (<div className="content">
       {parseInt(this.getSafeActivityState(this.state.activityID), 10) === 1 ? this.getLiveActivity() : this.getNormalActivity()}

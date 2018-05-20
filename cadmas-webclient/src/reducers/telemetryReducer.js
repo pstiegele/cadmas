@@ -33,15 +33,16 @@ const telemetryReducer = (state = {
       'latitude': 0,
       'longitude': 0,
       'altitude': 0,
-      'altitudeAbsolute':0,
-      'altitudeRelative':0
+      'altitudeAbsolute': 0,
+      'altitudeRelative': 0
     },
     'velocity': {
       'timestamp': 0,
       'groundspeed': 0,
       'airspeed': 0,
       'climbrate': 0
-    }
+    },
+    'route': []
   }
 }, action) => {
   switch (action.type) {
@@ -108,6 +109,13 @@ const telemetryReducer = (state = {
       if (state[action.payload.droneID] === undefined || state[action.payload.droneID] === null)
         state[action.payload.droneID] = {};
       state[action.payload.droneID].position = action.payload;
+      if (state[action.payload.droneID].route === undefined || state[action.payload.droneID].route === null)
+        state[action.payload.droneID].route = [];
+      state[action.payload.droneID].route.push({
+        lat: action.payload.latitude,
+        lng: action.payload.longitude
+      }
+      );
       delete state[action.payload.droneID].position.droneID;
       break;
 

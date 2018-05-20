@@ -8,13 +8,13 @@ module.exports = function (wss) {
     ws.username = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol].username;
     delete require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol];
     winston.info("client connected. userID: " + ws.userID + " username: " + ws.username);
-    if (global.client_wss.cadmasClients[ws.userID] === undefined||global.client_wss.cadmasClients[ws.userID] === null) {
+    if (global.client_wss.cadmasClients[ws.userID] === undefined || global.client_wss.cadmasClients[ws.userID] === null) {
       global.client_wss.cadmasClients[ws.userID] = [];
     }
     var pos = global.client_wss.cadmasClients[ws.userID].length;
     for (let i = 0; i < global.client_wss.cadmasClients[ws.userID].length; i++) {
-      if(global.client_wss.cadmasClients[ws.userID][i]===null){
-        pos=i;
+      if (global.client_wss.cadmasClients[ws.userID][i] === null) {
+        pos = i;
         break;
       }
     }
@@ -34,7 +34,8 @@ module.exports = function (wss) {
         res.time = require('moment')().unix();
         res.id = 0;
         res.method = method;
-        ws.send(JSON.stringify(res));
+        if (ws.readyState === Websocket.OPEN)
+          ws.send(JSON.stringify(res));
       });
     });
 

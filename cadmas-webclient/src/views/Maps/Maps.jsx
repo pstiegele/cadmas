@@ -5,7 +5,6 @@ class Maps extends Component {
 
   render() {
     console.log("update: " + JSON.stringify(this.props.route));
-
     return (<div id="map">
       <Map center={{
         lat: this.props.latitude,
@@ -20,6 +19,7 @@ class Maps extends Component {
           lng: this.props.longitude
         }} zoom={17} clickableIcons={false}>
         <Marker position={{ lat: this.props.latitude, lng: this.props.longitude }} onClick={this.onMarkerClick} name={'Current location'} />
+        
         <Polyline
           fillColor="#0000FF"
           fillOpacity={0.35}
