@@ -4,7 +4,6 @@ import { Map, Polyline, Marker, GoogleApiWrapper } from 'google-maps-react';
 class Maps extends Component {
 
   render() {
-    console.log("update: " + JSON.stringify(this.props.route));
     return (<div id="map">
       <Map center={{
         lat: this.props.latitude,
@@ -21,12 +20,12 @@ class Maps extends Component {
         <Marker position={{ lat: this.props.latitude, lng: this.props.longitude }} onClick={this.onMarkerClick} name={'Current location'} />
         
         <Polyline
-          fillColor="#0000FF"
+          fillColor="#ed8721"
           fillOpacity={0.35}
           path={this.props.route}
-          strokeColor="#0000FF"
+          strokeColor="#ed8721"
           strokeOpacity={0.8}
-          strokeWeight={2}
+          strokeWeight={3}
         />
       </Map>
     </div>);

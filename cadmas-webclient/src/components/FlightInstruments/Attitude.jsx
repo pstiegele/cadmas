@@ -19,7 +19,7 @@ export class Attitude extends Component {
         roll=roll*(180/Math.PI);
         if(roll===undefined)
         roll=0;
-        return {transform: "rotate("+roll+"deg)",transition: "0.5s ease-in-out"};
+        return {transform: "rotate("+(-roll)+"deg)",transition: "0.5s ease-in-out"};
     }
 
     setPitch(pitch){

@@ -245,7 +245,8 @@ class Activity extends Component {
               <Maps
                 longitude={this.getSafeTelemetryPosition().longitude}
                 latitude={this.getSafeTelemetryPosition().latitude}
-                route={this.getSafeTelemetryRoute()}
+                route={JSON.parse(JSON.stringify(this.getSafeTelemetryRoute()))
+                }
 
               />
             </div>
@@ -279,7 +280,7 @@ class Activity extends Component {
           </Col>
           <Col lg={12}>
             <Attitude showBox={false} size={300} roll={this.getSafeTelemetryAttitude().roll} pitch={this.getSafeTelemetryAttitude().pitch} />
-            <Altimeter showBox={false} size={300} pressure={this.getSafeTelemetryPosition().altitudeAbsolute} altitude={this.getSafeTelemetryPosition().altitudeRelative} />
+            <Altimeter showBox={false} size={300} absoluteAltitude={this.getSafeTelemetryPosition().altitudeAbsolute} altitude={this.getSafeTelemetryPosition().altitudeRelative} />
           </Col>
           <Col lg={12}>
             <Heading showBox={false} size={300} heading={this.getSafeTelemetryAttitude().heading} />

@@ -15,7 +15,7 @@ export class Variometer extends Component {
         super(props);
     }
 
-    vario_bound = 1.95;
+    vario_bound = 19.5;
     setVario(vario) {
         if (vario === undefined)
             vario = 0;
@@ -23,7 +23,7 @@ export class Variometer extends Component {
             vario = this.vario_bound;
         else if (vario < -this.vario_bound)
             vario = -this.vario_bound;
-        vario = vario * 90;
+        vario = vario * 9;
         return { transform: "rotate(" + vario + "deg)",transition: "0.5s ease-in-out" };
     }
 

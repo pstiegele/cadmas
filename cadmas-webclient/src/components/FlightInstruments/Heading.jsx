@@ -14,12 +14,25 @@ export class Heading extends Component {
     constructor(props) {
         super(props);
     }
-    
+
+    oldValue=0;
+    rotateShortestWay(newValue) {
+        var aR;
+        aR = this.oldValue % 360;
+        if ( aR < 0 ) { aR += 360; }
+        if ( aR < 180 && (newValue > (aR + 180)) ) { this.oldValue -= 360; }
+        if ( aR >= 180 && (newValue <= (aR - 180)) ) { this.oldValue += 360; }
+        this.oldValue += (newValue - aR);
+        return this.oldValue;
+    }
+
     setHeading(heading) {
         heading = heading* (180/Math.PI);
         if(heading===undefined)
             heading=0;
-        return { transform: 'rotate('+ -heading + 'deg)',transition: "0.5s ease-in-out" };
+        if(heading < this.lastHeading)
+            this.headingMultiplicator++;
+        return { transform: 'rotate('+ this.rotateShortestWay(-heading) + 'deg)',transition: "0.5s ease-in-out" };
     }
 
     setSize(size) {

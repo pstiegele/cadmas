@@ -7,7 +7,7 @@ import horizon_ball from 'assets/img/flightinstruments/horizon_ball.svg';
 import horizon_circle from 'assets/img/flightinstruments/horizon_circle.svg';
 import horizon_mechanics from 'assets/img/flightinstruments/horizon_mechanics.svg';
 import fi_circle from 'assets/img/flightinstruments/fi_circle.svg';
-import altitude_pressure from 'assets/img/flightinstruments/altitude_pressure.svg';
+import altitude_absolute from 'assets/img/flightinstruments/altitude_absolute.svg';
 import altitude_ticks from 'assets/img/flightinstruments/altitude_ticks.svg';
 import fi_needle_small from 'assets/img/flightinstruments/fi_needle_small.svg';
 import fi_needle from 'assets/img/flightinstruments/fi_needle.svg';
@@ -17,24 +17,35 @@ export class Altimeter extends Component {
         super(props);
     }
 
-    setPressure(pressure) {
-        if (pressure === undefined)
-            pressure = 0;
-        pressure = 2 * pressure - 1980;
-        return { transform: "rotate(" + pressure + "deg)",transition: "0.5s ease-in-out"  };
+    oldValue=0;
+    rotateShortestWay(newValue) {
+        var aR;
+        aR = this.oldValue % 360;
+        if ( aR < 0 ) { aR += 360; }
+        if ( aR < 180 && (newValue > (aR + 180)) ) { this.oldValue -= 360; }
+        if ( aR >= 180 && (newValue <= (aR - 180)) ) { this.oldValue += 360; }
+        this.oldValue += (newValue - aR);
+        return this.oldValue;
+    }
+
+    setAbsoluteAltitude(absoluteAltitude) {
+        if (absoluteAltitude === undefined)
+        absoluteAltitude = 0;
+        absoluteAltitude = 70 - absoluteAltitude / 5;
+        return { transform: "rotate(" + absoluteAltitude + "deg)", transition: "0.5s ease-in-out" };
     }
 
     setAltitudeBig(altitude) {
         if (altitude === undefined)
             altitude = 0;
-        var needle = 90 + altitude % 1000 * 360 / 1000;
-        return { transform: "rotate(" + needle + "deg)",transition: "0.5s ease-in-out"  };
+        var needle = 90 + altitude % 100 * 360 / 100;
+        return { transform: "rotate(" + this.rotateShortestWay(needle) + "deg)", transition: "0.5s ease-in-out" };
     }
     setAltitudeSmall(altitude) {
         if (altitude === undefined)
             altitude = 0;
-        var needleSmall = altitude / 10000 * 360;
-        return { transform: "rotate(" + needleSmall + "deg)",transition: "0.5s ease-in-out"  };
+        var needleSmall = altitude / 1000 * 360;
+        return { transform: "rotate(" + needleSmall + "deg)", transition: "0.5s ease-in-out" };
     }
 
     setSize(size) {
@@ -59,8 +70,8 @@ export class Altimeter extends Component {
         return (
             <div className="instrument altimeter" style={this.setSize(this.props.size)}>
                 <img src={fi_box} className="background box" alt="" style={this.showBox(this.props.showBox)} />
-                <div className="pressure box" style={this.setPressure(this.props.pressure)}>
-                    <img src={altitude_pressure} className="box" alt="" />
+                <div className="absoluteAltitude box" style={this.setAbsoluteAltitude(this.props.absoluteAltitude)}>
+                    <img src={altitude_absolute} className="box" alt="" />
                 </div>
                 <img src={altitude_ticks} className="box" alt="" />
                 <div className="needleSmall box" style={this.setAltitudeSmall(this.props.altitude)}>
