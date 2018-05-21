@@ -40,7 +40,10 @@ module.exports = function (wss) {
     });
 
     ws.on('close', function (reason) {
-      //TODO: handle close
+      for (let i = 0; i < global.client_wss.cadmasClients[ws.userID].length; i++) {
+        if(global.client_wss.cadmasClients[ws.userID][i]===this)
+          delete global.client_wss.cadmasClients[ws.userID][i];
+      }
     });
     ws.on('error', function error() {
       //TODO handle error

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Grid, Row, Col, Table } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import { Redirect } from 'react-router';
+import Button from 'elements/CustomButton/CustomButton.jsx';
+import FlightModeControlButtons from 'elements/FlightModeControlButtons/FlightModeControlButtons.jsx';
 
 import ActivitySummary from 'components/ActivitySummary/ActivitySummary';
 import DroneSmall from 'components/DroneSmall/DroneSmall';
@@ -33,11 +35,7 @@ class Activity extends Component {
     this.state = { activityID: parseInt(this.props.match.params.activityID, 10) };
 
   }
-  componentDidMount() {
-
-
-  }
-
+  
   getRelativeOrAbsoluteDate(date) {
     if (new Date() - new Date(date * 1000) < 604800000) {
       return moment(date * 1000).fromNow();
@@ -106,8 +104,14 @@ class Activity extends Component {
     });
     return result[0];
   }
+  
   getSafeActivityName(activityID) {
-    return this.getSafe(() => this.getActivityByID(activityID).name, "")
+    var res;
+    var name = this.getSafe(() => this.getActivityByID(activityID).name, "");
+    var controlButtons = <span className="pull-right">
+      <FlightModeControlButtons /></span>
+    res = <div>{name}{controlButtons}</div>
+    return res
   }
   getSafeTelemetry() {
     var telemetry = this.getSafe(() => this.props.telemetry[parseInt(this.getSafeDroneID(this.getActivityByID(this.state.activityID)), 10)], this.props.telemetry[0]);
@@ -166,8 +170,9 @@ class Activity extends Component {
     return result[0];
   }
 
-  handleClick(that) {
-    this.setState({ redirect: true, redirectToActivity: that._targetInst.return.key });
+  
+  handleStop() {
+    
   }
 
   getDate() {

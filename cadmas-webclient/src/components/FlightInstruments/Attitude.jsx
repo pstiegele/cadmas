@@ -13,13 +13,21 @@ export class Attitude extends Component {
         super(props);
     }
 
+    shouldComponentUpdate(nextProps, nextState){
+        if(this.props.pitch!==nextProps.pitch||this.props.roll!==nextProps.roll||this.props.size!==nextProps.size||this.props.showBox!==nextProps.showBox){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     pitch_bound = 30;
 
     setRoll(roll){
         roll=roll*(180/Math.PI);
         if(roll===undefined)
         roll=0;
-        return {transform: "rotate("+(-roll)+"deg)",transition: "0.5s ease-in-out"};
+        return {transform: "rotate("+(-roll)+"deg)",transition: "1s ease-in-out"};
     }
 
     setPitch(pitch){
@@ -32,7 +40,7 @@ export class Attitude extends Component {
         }else if(pitch< -this.pitch_bound){
             pitch=-this.pitch_bound;
         }
-        return {top: pitch*0.7+"%",transition: "0.5s ease-in-out"};
+        return {top: pitch*0.7+"%",transition: "1s ease-in-out"};
     }
 
     setSize(size){

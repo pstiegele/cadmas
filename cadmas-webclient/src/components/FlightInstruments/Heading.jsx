@@ -15,6 +15,14 @@ export class Heading extends Component {
         super(props);
     }
 
+    shouldComponentUpdate(nextProps, nextState){
+        if(this.props.heading!==nextProps.heading||this.props.size!==nextProps.size||this.props.showBox!==nextProps.showBox){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     oldValue=0;
     rotateShortestWay(newValue) {
         var aR;
@@ -32,7 +40,7 @@ export class Heading extends Component {
             heading=0;
         if(heading < this.lastHeading)
             this.headingMultiplicator++;
-        return { transform: 'rotate('+ this.rotateShortestWay(-heading) + 'deg)',transition: "0.5s ease-in-out" };
+        return { transform: 'rotate('+ this.rotateShortestWay(-heading) + 'deg)',transition: "1s ease-in-out" };
     }
 
     setSize(size) {

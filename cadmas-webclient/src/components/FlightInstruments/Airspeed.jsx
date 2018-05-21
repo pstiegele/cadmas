@@ -15,6 +15,15 @@ export class Airspeed extends Component {
         super(props);
     }
 
+    shouldComponentUpdate(nextProps, nextState){
+        if(this.props.speed!==nextProps.speed||this.props.size!==nextProps.size||this.props.showBox!==nextProps.showBox){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
     airspeed_bound_h = 40;
     airspeed_bound_l = 0;
     setAirspeed(speed) {
@@ -26,7 +35,7 @@ export class Airspeed extends Component {
             speed = this.airspeed_bound_l;
 
         speed = 90 + speed * 8;
-        return { transform: "rotate(" + speed + "deg)",transition: "0.5s ease-in-out" };
+        return { transform: "rotate(" + speed + "deg)",transition: "1s ease-in-out" };
     }
 
 

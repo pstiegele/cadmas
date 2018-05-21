@@ -15,11 +15,19 @@ export class TurnCoordinator extends Component {
         super(props);
     }
 
+    shouldComponentUpdate(nextProps, nextState){
+        if(this.props.turn!==nextProps.turn||this.props.size!==nextProps.size||this.props.showBox!==nextProps.showBox){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     setTurn(turn) {
         turn = turn * (180/Math.PI);
         if (turn === undefined)
             turn = 0;
-        return { transform: "rotate(" + turn + "deg)",transition: "0.5s ease-in-out" };
+        return { transform: "rotate(" + turn + "deg)",transition: "1s ease-in-out" };
     }
 
     setSize(size) {

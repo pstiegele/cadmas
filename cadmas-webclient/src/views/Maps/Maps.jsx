@@ -2,7 +2,13 @@ import React, { Component } from 'react';
 import { Map, Polyline, Marker, GoogleApiWrapper } from 'google-maps-react';
 
 class Maps extends Component {
-
+  shouldComponentUpdate(nextProps, nextState){
+    if(this.props.longitude!==nextProps.longitude||this.props.latitude!==nextProps.latitude||this.props.route!==nextProps.route){
+        return true;
+    }else{
+        return false;
+    }
+}
   render() {
     return (<div id="map">
       <Map center={{

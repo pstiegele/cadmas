@@ -17,6 +17,15 @@ export class Altimeter extends Component {
         super(props);
     }
 
+    shouldComponentUpdate(nextProps, nextState){
+        if(this.props.absoluteAltitude!==nextProps.absoluteAltitude||this.props.altitude!==nextProps.altitude||this.props.size!==nextProps.size||this.props.showBox!==nextProps.showBox){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
     oldValue=0;
     rotateShortestWay(newValue) {
         var aR;
@@ -32,20 +41,20 @@ export class Altimeter extends Component {
         if (absoluteAltitude === undefined)
         absoluteAltitude = 0;
         absoluteAltitude = 70 - absoluteAltitude / 5;
-        return { transform: "rotate(" + absoluteAltitude + "deg)", transition: "0.5s ease-in-out" };
+        return { transform: "rotate(" + absoluteAltitude + "deg)", transition: "1s ease-in-out" };
     }
 
     setAltitudeBig(altitude) {
         if (altitude === undefined)
             altitude = 0;
         var needle = 90 + altitude % 100 * 360 / 100;
-        return { transform: "rotate(" + this.rotateShortestWay(needle) + "deg)", transition: "0.5s ease-in-out" };
+        return { transform: "rotate(" + this.rotateShortestWay(needle) + "deg)", transition: "1s ease-in-out" };
     }
     setAltitudeSmall(altitude) {
         if (altitude === undefined)
             altitude = 0;
         var needleSmall = altitude / 1000 * 360;
-        return { transform: "rotate(" + needleSmall + "deg)", transition: "0.5s ease-in-out" };
+        return { transform: "rotate(" + needleSmall + "deg)", transition: "1s ease-in-out" };
     }
 
     setSize(size) {
