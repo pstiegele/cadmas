@@ -1,20 +1,13 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col, Table } from 'react-bootstrap';
-import { NavLink } from 'react-router-dom';
-import { Redirect } from 'react-router';
+import { Grid, Row, Col } from 'react-bootstrap';
 
 import ActivitySummary from 'components/ActivitySummary/ActivitySummary';
 import MissionSummary from 'components/MissionSummary/MissionSummary';
-import SetMissionToDrone from 'components/SetMissionToDrone/SetMissionToDrone';
-import DroneSmall from 'components/DroneSmall/DroneSmall';
-import BatteryUsage from 'components/BatteryUsage/BatteryUsage';
 import Card from 'components/Card/Card.jsx';
 import { connect } from "react-redux";
 import moment from 'moment';
 import localization from 'moment/locale/de';
-import Button from 'elements/CustomButton/CustomButton.jsx';
 import Maps from '../Maps/Maps';
-import util from 'util';
 import CadmasWS from 'websocket/CadmasWS';
 import MissionTitleControlButtons from 'elements/MissionTitleControlButtons/MissionTitleControlButtons.jsx';
 

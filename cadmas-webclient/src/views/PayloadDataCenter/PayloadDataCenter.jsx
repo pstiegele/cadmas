@@ -2,13 +2,10 @@ import React, { Component } from 'react';
 // import { NavLink } from 'react-router-dom';
 import { Grid, Row, Col,  Table  } from 'react-bootstrap';
 import Card from 'components/Card/Card.jsx';
-import ActivitiesSmall from 'components/ActivitiesSmall/ActivitiesSmall.jsx';
-import Button from 'elements/CustomButton/CustomButton.jsx';
 import { connect } from "react-redux";
 import moment from "moment";
 import { NavLink } from 'react-router-dom';
 import localization from 'moment/locale/de'
-import util from 'util';
 
 
 
@@ -95,6 +92,7 @@ class PayloadDataCenter extends Component {
             if(prop.activityID===activityID){
                 payload.push(prop);
             }
+            return null;
         });
         return payload;
     }

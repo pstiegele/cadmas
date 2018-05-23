@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 // import { NavLink } from 'react-router-dom';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Card from 'components/Card/Card.jsx';
-import ActivitiesSmall from 'components/ActivitiesSmall/ActivitiesSmall.jsx';
 import Button from 'elements/CustomButton/CustomButton.jsx';
 import { connect } from "react-redux";
-import moment from "moment";
 
 
 
@@ -21,7 +19,7 @@ class GetDroneConnector extends Component {
   handleDownloadiNav(){
     alert("download...");
   }
-  handleDownloadiNav(){
+  handleUpload(){
     alert("upload...");
   }
   render() {

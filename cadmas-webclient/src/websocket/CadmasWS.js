@@ -1,5 +1,3 @@
-import React, { Component } from 'react';
-
 import store from "../store";
 import { setActivities,setActivity } from "../actions/activityActions";
 import { setMissions } from "../actions/missionActions";
@@ -13,10 +11,9 @@ import { setAttitude, setBattery, setHeartbeat, setMissionItem, setMissionState,
 var socket;
 var msgID = 0;
 
-class CadmasWS extends Component {
+class CadmasWS{
   callbacks = []
   constructor(props) {
-    super(props);
     this.initWS();
   }
   initAuthAPI() {
@@ -141,7 +138,7 @@ class CadmasWS extends Component {
 
     }
     socket.onopen = function (event) {
-      console.log("onOpen called: " + JSON.stringify(this));
+      //console.log("onOpen called: " + JSON.stringify(this));
       //   for (var i = 0; i < 350; i++) {
       //     var activityID = Math.floor(Math.random() * (296 - 1 + 1) + 1);
       //     while (activityID < 119 && activityID > 17) {

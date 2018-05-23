@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import CustomDropdown from '../CustomDropdown/CustomDropdown';
 import CustomModal from '../CustomModal/CustomModal';
 import Button from 'elements/CustomButton/CustomButton.jsx';
 import DroneSelector from 'elements/DroneSelector/DroneSelector.jsx';
@@ -87,7 +86,6 @@ class MissionTitleControlButtons extends Component {
     }
 
     redirect(payload) {
-        console.log("payload: "+JSON.stringify(payload));
         this.setState({
             redirect: true,
             activityIDToRedirect: payload.activityID

@@ -20,31 +20,31 @@ class FlightModeControlButtons extends Component {
   getDropdownModes() {
     var res = [{
       title: "AUTO",
-      key: 'AUTO',
+      eventKey: 'AUTO',
       active: true
     }, {
       title: "RETURN TO LAUNCH",
-      key: 'RTL',
+      eventKey: 'RTL',
       active: false
     }, {
       title: "LOITER",
-      key: 'LOITER',
+      eventKey: 'LOITER',
       active: false
     }, {
       title: "STABILIZE",
-      key: 'STABILIZE',
+      eventKey: 'STABILIZE',
       active: false
     }, {
       title: "MANUAL",
-      key: 'MANUAL',
+      eventKey: 'MANUAL',
       active: false
     }, {
       title: "FLY BY WIRE THROTTLE MANUAL",
-      key: 'FBWA',
+      eventKey: 'FBWA',
       active: false
     }, {
       title: "FLY BY WIRE THROTTLE AUTO",
-      key: 'FBWB',
+      eventKey: 'FBWB',
       active: false
     }]
     return res;
@@ -64,33 +64,26 @@ class FlightModeControlButtons extends Component {
       switch (this.state.changeFlightModeTo) {
         case 'AUTO':
           return <span>Are you sure you want to activate the <b>AUTO</b> flight mode? Your drone will continue the mission.</span>
-          break;
         case 'RTL':
           return <span>Are you sure you want to activate the <b>Return-to-launch</b> flight mode? Your drone will fly back to the starting point.</span>
-          break;
         case 'LOITER':
           return <span>Are you sure you want to activate the <b>LOITER</b> flight mode? Your drone will fly circles.</span>
-          break;
         case 'STABILIZE':
           return <span>Are you sure you want to activate the <b>STABILIZE</b> flight mode? I do not really know what the mode does.</span>
-          break;
         case 'MANUAL':
           return <span>Are you sure you want to activate the <b>MANUAL</b> flight mode? Make sure if your remote control is ready for use.</span>
-          break;
         case 'FBWA':
           return <span>Are you sure you want to activate the <b>FLY BY WIRE THROTTLE MANUAL</b> flight mode? You will control the throttle of the drone manually.</span>
-          break;
         case 'FBWB':
           return <span>Are you sure you want to activate the <b>FLY BY WIRE THROTTLE AUTO</b> flight mode? The throttle of the drone will be controlled automatically.</span>
-          break;
 
         default:
-          break;
+          return "Error. Please refresh the site."
       }
     } else if (this.state.trigger === "stop") {
       return <span>Are you sure you want to quit the activity? <b>Do not continue if your drone is still in the air, you will <span style={{ color: "red" }}>lose full control</span></b>. This action can not be undone.</span>;
-    }else if (this.state.trigger === "start") {
-      return <span>Are you sure you want to start the activity? <br /><b>Do not continue if your drone isn't ready to start.<br/><span style={{ color: "red" }}>This step activates the motors.</span></b></span>;
+    } else if (this.state.trigger === "start") {
+      return <span>Are you sure you want to start the activity? <br /><b>Do not continue if your drone isn't ready to start.<br /><span style={{ color: "red" }}>This step activates the motors.</span></b></span>;
     }
   }
   getModalTitle() {
@@ -98,7 +91,7 @@ class FlightModeControlButtons extends Component {
       return "Activate " + this.state.changeFlightModeTo + " flight mode";
     } else if (this.state.trigger === "stop") {
       return "STOP ACTIVITY"
-    }else if (this.state.trigger === "start") {
+    } else if (this.state.trigger === "start") {
       return "START ACTIVITY"
     }
   }
@@ -119,7 +112,7 @@ class FlightModeControlButtons extends Component {
         showModal: false
       });
       //TODO STOP MISSION
-    }else if (this.state.trigger === "start") {
+    } else if (this.state.trigger === "start") {
       this.setState({
         showModal: false
       });
@@ -133,7 +126,7 @@ class FlightModeControlButtons extends Component {
       trigger: "stop"
     })
   }
-  handleStartFlightClick(){
+  handleStartFlightClick() {
     this.setState({
       showModal: true,
       trigger: "start"
@@ -149,7 +142,7 @@ class FlightModeControlButtons extends Component {
       );
     } else if (this.props.state === 1) {
       return (<span>
-        <CustomDropdown title={this.state.activeFlightMode} bsStyle="warning" bsSize="small" key="modeDropdown" menuItems={this.getDropdownModes()} onSelect={this.handleOnSelectMode.bind(this)} /> &nbsp;
+        <CustomDropdown title={this.state.activeFlightMode} bsStyle="warning" bsSize="small" dropdownKey="modeDropdown" menuItems={this.getDropdownModes()} onSelect={this.handleOnSelectMode.bind(this)} /> &nbsp;
         <CustomModal show={this.state.showModal} bsStyle="danger" handleClose={this.handleClose.bind(this)} handleAccept={this.handleAccept.bind(this)} acceptTitle="Yes, I know what I do." title={this.getModalTitle()} text={this.getModalText()} />
         <Button className="pt-1" bsStyle="danger" type="button" bsSize="small" onClick={() => this.handleStopClick()}>
           STOP ACTIVITY

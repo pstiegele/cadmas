@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-// import {Tooltip, OverlayTrigger} from 'react-bootstrap';
-import Button from 'elements/CustomButton/CustomButton.jsx';
-// import {NavLink} from 'react-router-dom';
 import { connect } from "react-redux";
 
 const mapStateToProps = (state) => {
@@ -10,9 +7,6 @@ const mapStateToProps = (state) => {
 
 
 class MissionSummary extends Component {
-  constructor(props) {
-    super(props);
-  }
   componentDidMount() {
   
   }

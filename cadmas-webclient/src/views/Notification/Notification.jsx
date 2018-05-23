@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col, Table } from 'react-bootstrap';
-import { NavLink } from 'react-router-dom';
-import { Redirect } from 'react-router';
-
-
+import { Grid, Row, Col} from 'react-bootstrap';
 import Card from 'components/Card/Card.jsx';
 import { connect } from "react-redux";
 import moment from 'moment';
 import localization from 'moment/locale/de'
-import Maps from '../Maps/Maps';
 
 
 

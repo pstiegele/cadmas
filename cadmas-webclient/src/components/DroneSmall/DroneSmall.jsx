@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-import { Tooltip, OverlayTrigger } from 'react-bootstrap';
-import Button from 'elements/CustomButton/CustomButton.jsx';
 import { connect } from "react-redux";
-import { NavLink } from 'react-router-dom';
-import moment from 'moment';
 import ChartistGraph from 'react-chartist';
-import { Grid, Row, Col, Table } from 'react-bootstrap';
+import { Grid, Row, Col} from 'react-bootstrap';
 
 
 
@@ -16,9 +12,7 @@ const mapStateToProps = (state) => {
 
 
 class DroneSmall extends Component {
-    constructor(props) {
-        super(props);
-    }
+  
     dataSales = {
         labels: ['JAN', 'MAR', 'MAI', 'JUL', 'SEP'],
         series: [
@@ -66,7 +60,6 @@ class DroneSmall extends Component {
         return result[0];
     }
     render() {
-        console.log("drone: " + JSON.stringify(this.props.droneToShow));
         return <Grid fluid>
             <Row>
                 <Col md={5}>

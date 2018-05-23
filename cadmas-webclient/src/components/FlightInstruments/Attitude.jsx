@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-bootstrap';
-
 import fi_box from 'assets/img/flightinstruments/fi_box.svg';
 import horizon_back from 'assets/img/flightinstruments/horizon_back.svg';
 import horizon_ball from 'assets/img/flightinstruments/horizon_ball.svg';
@@ -9,9 +7,6 @@ import horizon_mechanics from 'assets/img/flightinstruments/horizon_mechanics.sv
 import fi_circle from 'assets/img/flightinstruments/fi_circle.svg';
 
 export class Attitude extends Component {
-    constructor(props){
-        super(props);
-    }
 
     shouldComponentUpdate(nextProps, nextState){
         if(this.props.pitch!==nextProps.pitch||this.props.roll!==nextProps.roll||this.props.size!==nextProps.size||this.props.showBox!==nextProps.showBox){

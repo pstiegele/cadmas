@@ -7,7 +7,7 @@ class CustomDropdown extends Component {
         if (this.props.menuItems !== undefined && this.props.menuItems !== null) {
             this.props.menuItems.forEach(element => {
                 menuItems.push(
-                    <MenuItem eventKey={element.key} active={element.active} onSelect={this.props.onSelect}>{element.title}</MenuItem>
+                    <MenuItem eventKey={element.eventKey} key={element.eventKey} active={element.active} onSelect={this.props.onSelect}>{element.title}</MenuItem>
                 );
             });
         }
@@ -16,7 +16,7 @@ class CustomDropdown extends Component {
                 bsSize={this.props.bsSize}
                 bsStyle={this.props.bsStyle}
                 title={this.props.title === undefined ? "" : this.props.title}
-                key={this.props.key}
+                key={this.props.dropdownKey}
                 id={'dropdown-basic-'+this.props.key}>
                 {menuItems}
             </DropdownButton>

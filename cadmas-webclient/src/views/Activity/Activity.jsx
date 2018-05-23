@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col, Table } from 'react-bootstrap';
-import { NavLink } from 'react-router-dom';
-import { Redirect } from 'react-router';
-import Button from 'elements/CustomButton/CustomButton.jsx';
+import { Grid, Row, Col } from 'react-bootstrap';
 import FlightModeControlButtons from 'elements/FlightModeControlButtons/FlightModeControlButtons.jsx';
 
 import ActivitySummary from 'components/ActivitySummary/ActivitySummary';
@@ -187,13 +184,14 @@ class Activity extends Component {
   }
 
   getDate() {
+    var start;
     if (parseInt(this.getSafeActivityState(this.state.activityID), 10) === 2) {
 
-      var start = parseInt(this.getSafeActivityDtCreated(this.state.activityID), 10);
+      start = parseInt(this.getSafeActivityDtCreated(this.state.activityID), 10);
       var end = parseInt(this.getSafeActivityDtEnded(this.state.activityID), 10);
       return this.getAbsoluteDate(start) + " - " + this.getAbsoluteEndDate(start, end) + " (" + this.getRelativeDate(start) + ", duration: " + this.getDuration(end - start) + ")";
     } else {
-      var start = parseInt(this.getSafeActivityDtCreated(this.state.activityID), 10);
+      start = parseInt(this.getSafeActivityDtCreated(this.state.activityID), 10);
       return this.getAbsoluteDate(start) + " (" + this.getRelativeDate(start) + ")";
 
     }
@@ -297,7 +295,7 @@ class Activity extends Component {
         <Col lg={5}>
           <Col lg={12} >
             <div>
-              <img src="https://dummyimage.com/300x200/000/51ff00.jpg&text=Onboard+Camera" style={{ verticalAlign: "top", paddingTop: "45px" }}></img>
+              <img alt="onboard-camera" src="https://dummyimage.com/300x200/000/51ff00.jpg&text=Onboard+Camera" style={{ verticalAlign: "top", paddingTop: "45px" }}></img>
               <Airspeed showBox={false} size={300} speed={this.getSafeTelemetryVelocity().airspeed} />
             </div>
           </Col>

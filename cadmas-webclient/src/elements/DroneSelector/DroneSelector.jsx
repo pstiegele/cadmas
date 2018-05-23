@@ -3,10 +3,6 @@ import CustomDropdown from '../CustomDropdown/CustomDropdown';
 
 class MissionTitleControlButtons extends Component {
 
-    constructor(){
-        super();
-    }
-
     componentWillMount(){
         this.setState({
             title: this.getDroneNames()[0].title
@@ -19,7 +15,7 @@ class MissionTitleControlButtons extends Component {
         this.props.drones.forEach(element => {
             droneNames.push({
                 title: element.name,
-                key: element.droneID
+                eventKey: element.droneID
             });
         });
         return droneNames;
@@ -47,7 +43,7 @@ class MissionTitleControlButtons extends Component {
 
     render() {
         return (
-            <CustomDropdown title={this.state.title} bsStyle="primary" bsSize="small" key="droneDropdown" menuItems={this.getDroneNames()} onSelect={this.handleOnSelectDrone.bind(this)} />
+            <CustomDropdown title={this.state.title} bsStyle="primary" bsSize="small" dropdownKey="droneDropdown" menuItems={this.getDroneNames()} onSelect={this.handleOnSelectDrone.bind(this)} />
         );
     }
 }

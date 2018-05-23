@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Grid, Row, Col, Table } from 'react-bootstrap';
 import Card from 'components/Card/Card.jsx';
 import { connect } from "react-redux";
-import Button from 'elements/CustomButton/CustomButton.jsx';
 import { Redirect } from 'react-router';
 import { NavLink } from 'react-router-dom';
 import moment from 'moment';

@@ -6,7 +6,7 @@ import Header from 'components/Header/Header';
 import Footer from 'components/Footer/Footer';
 import Sidebar from 'components/Sidebar/Sidebar';
 
-import CadmasWS from '../websocket/CadmasWS';
+//import CadmasWS from '../websocket/CadmasWS';
 
 import { style } from "variables/Variables.jsx";
 import {connect} from "react-redux";
@@ -47,17 +47,17 @@ class App extends Component {
   }
   handleNotificationClick(position) {
     //this.cadmasWS.addMission("MyCadmasMission", "any note", "RTL");
-    for (var i = 0; i < 350; i++) {
-      var activityID = Math.floor(Math.random() * (296 - 1 + 1) + 1);
-      while (activityID < 119 && activityID > 17) {
-        activityID = Math.floor(Math.random() * (296 - 1 + 1) + 1);
-      }
-      var payloadDevice = Math.floor(Math.random() * (10 - 1 + 1) + 1);
-      var size = Math.floor(Math.random() * (1073741824 - 1 + 1) + 1);
+    // for (var i = 0; i < 350; i++) {
+    //   var activityID = Math.floor(Math.random() * (296 - 1 + 1) + 1);
+    //   while (activityID < 119 && activityID > 17) {
+    //     activityID = Math.floor(Math.random() * (296 - 1 + 1) + 1);
+    //   }
+    //   var payloadDevice = Math.floor(Math.random() * (10 - 1 + 1) + 1);
+    //   var size = Math.floor(Math.random() * (1073741824 - 1 + 1) + 1);
 
-     // this.cadmasWS.addPayloadData(activityID, payloadDevice,0,"", size);
+    //  // this.cadmasWS.addPayloadData(activityID, payloadDevice,0,"", size);
 
-    }
+    // }
     // for(var i=0;i<8;i++){
     //  // var month = Math.floor(Math.random()*(12-1+1)+1);
     //  // var drone = Math.floor(Math.random()*(2-1+1)+1);
