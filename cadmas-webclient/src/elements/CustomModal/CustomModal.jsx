@@ -14,7 +14,7 @@ class CustomModal extends Component {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={this.props.handleClose}>Close</Button>
-                    <Button bsStyle="danger" onClick={this.props.handleAccept}>{this.props.acceptTitle}</Button>
+                    <Button bsStyle={this.props.bsStyle} onClick={this.props.handleAccept}>{this.props.acceptTitle}</Button>
                 </Modal.Footer>
             </Modal>
         )

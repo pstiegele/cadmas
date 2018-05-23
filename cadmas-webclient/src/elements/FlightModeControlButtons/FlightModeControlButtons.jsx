@@ -87,7 +87,7 @@ class FlightModeControlButtons extends Component {
         break;
     }   
   }else if(this.state.trigger==="stop") {
-    return <span>Are you sure you want to quit the activity? Do not continue if your drone is still in the air. This action can not be undone.</span>
+    return <span>Are you sure you want to quit the activity? <b>Do not continue if your drone is still in the air, you will <span style={{color: "red"}}>lose full control</span></b>. This action can not be undone.</span>
   }
   }
   getModalTitle(){
@@ -128,7 +128,7 @@ class FlightModeControlButtons extends Component {
   render() {
     return (<span>
       <CustomDropdown title={this.state.activeFlightMode} bsStyle="warning" bsSize="small" key="modeDropdown" menuItems={this.getDropdownModes()} onSelect={this.handleOnSelectMode.bind(this)} /> &nbsp;
-      <CustomModal show={this.state.showModal} handleClose={this.handleClose.bind(this)} handleAccept={this.handleAccept.bind(this)} acceptTitle="Yes, I know what I do." title={this.getModalTitle()} text={this.getModalText()}/>
+      <CustomModal show={this.state.showModal} bsStyle="danger" handleClose={this.handleClose.bind(this)} handleAccept={this.handleAccept.bind(this)} acceptTitle="Yes, I know what I do." title={this.getModalTitle()} text={this.getModalText()}/>
       <Button className="pt-1" bsStyle="danger" type="button" bsSize="small" onClick={() => this.handleStop()}>
         STOP ACTIVITY
   </Button></span>

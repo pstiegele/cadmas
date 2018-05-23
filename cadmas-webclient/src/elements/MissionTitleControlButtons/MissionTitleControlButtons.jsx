@@ -1,0 +1,111 @@
+import React, { Component } from 'react';
+import CustomDropdown from '../CustomDropdown/CustomDropdown';
+import CustomModal from '../CustomModal/CustomModal';
+import Button from 'elements/CustomButton/CustomButton.jsx';
+import DroneSelector from 'elements/DroneSelector/DroneSelector.jsx';
+import CadmasWS from '../../websocket/CadmasWS';
+import {FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
+import util from 'util';
+
+class MissionTitleControlButtons extends Component {
+
+    constructor() {
+        super();
+        this.state = {
+            showModal: false,
+            missionID: 0,
+            droneID: 0,
+            title: "",
+            note: "",
+        };
+        this.setDrone = this.setDrone.bind(this);
+        this.setNote = this.setNote.bind(this);
+        this.setTitle = this.setTitle.bind(this);
+    }
+
+    componentWillMount(){
+        this.setState({
+            missionID: this.props.missionID
+        });
+    }
+
+    getModalTitle() {
+        return "CREATE AN ACTIVITY TO START THIS MISSION";
+    }
+    setDrone(droneID) {
+        this.setState({
+            droneID: droneID
+        });
+    }
+    setTitle(event) {
+        this.setState({
+            title: event.target.value
+        });
+    }
+    setNote(event) {
+        this.setState({
+            note: event.target.value
+        });
+    }
+
+    getModalText() {
+        return <span >
+            <p>Are you sure you want to create an activity to be able to start this mission? Choose the drone you want to fly with:</p><br />
+            <span ><DroneSelector drones={this.props.drones} onSelectDrone={this.setDrone} /></span>
+            <br /><br /><br />
+            <form>
+                <FormGroup controlId="getActivityInfoForm">
+                    <ControlLabel>Set the name of the activity</ControlLabel>
+                    <FormControl
+                        type="text"
+                        placeholder="name"
+                        onChange={this.setTitle}
+                    /><br />
+                    <ControlLabel>Set an optional note of the activity</ControlLabel>
+                    <FormControl
+                        type="text"
+                        placeholder="note"
+                        onChange={this.setNote}
+                    />
+                </FormGroup>
+            </form>
+            <br /><br /><br /><small>The drone does not start automatically after this step. </small>
+        </span>;
+    }
+    handleClose() {
+        this.setState({
+            showModal: false
+        });
+    }
+    handleAccept() {
+        this.setState({
+            showModal: false
+        });
+        CadmasWS.addActivity(this.props.missionID, this.state.droneID, this.state.title, 0, this.state.note);
+
+    }
+
+    handleStart() {
+        this.setState({
+            showModal: true
+        });
+        
+    }
+    render() {
+        return (<span>
+            <CustomModal bsStyle="success" show={this.state.showModal} handleClose={this.handleClose.bind(this)} handleAccept={this.handleAccept.bind(this)} acceptTitle="Yes, I want to create an activity" title={this.getModalTitle()} text={this.getModalText()} />
+            <Button className="pt-1" bsStyle="success" type="button" bsSize="small" onClick={this.handleStart.bind(this)}>
+                FLY THIS MISSION NOW!
+  </Button></span>
+        );
+    }
+}
+
+export default MissionTitleControlButtons;
+
+
+
+
+
+
+

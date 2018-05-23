@@ -105,13 +105,16 @@ class Activity extends Component {
     return result[0];
   }
   
-  getSafeActivityName(activityID) {
+  getLiveActivityTitle(activityID){
     var res;
-    var name = this.getSafe(() => this.getActivityByID(activityID).name, "");
+    var name = this.getSafeActivityName(activityID);
     var controlButtons = <span className="pull-right">
       <FlightModeControlButtons /></span>
     res = <div>{name}{controlButtons}</div>
-    return res
+    return res;
+  }
+  getSafeActivityName(activityID) {
+    return this.getSafe(() => this.getActivityByID(activityID).name, "");
   }
   getSafeTelemetry() {
     var telemetry = this.getSafe(() => this.props.telemetry[parseInt(this.getSafeDroneID(this.getActivityByID(this.state.activityID)), 10)], this.props.telemetry[0]);
@@ -245,7 +248,7 @@ class Activity extends Component {
     return <Grid fluid>
       <Row>
         <Col lg={7}>
-          <Card title={this.getSafeActivityName(this.state.activityID)} category={<span>{this.getDate()}<br />{this.getState()}</span>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
+          <Card title={this.getLiveActivityTitle(this.state.activityID)} category={<span>{this.getDate()}<br />{this.getState()}</span>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
             <div style={{ height: "50%" }}>
               <Maps
                 longitude={this.getSafeTelemetryPosition().longitude}

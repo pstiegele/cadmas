@@ -178,7 +178,7 @@ class CadmasWS {
     socket.send(JSON.stringify(msg));
     console.log("addMission (" + name + ") sent");
   }
-  addActivity(missionID, droneID, name, state, note, dt_created, dt_ended) {
+  addActivity(missionID, droneID, name, state, note) {
     var msg = {
       method: "addActivity",
       payload: {
@@ -186,9 +186,7 @@ class CadmasWS {
         droneID: droneID,
         name: name,
         state: state,
-        note: note,
-        dt_created: dt_created,
-        dt_ended
+        note: note
       }
     };
     socket.send(JSON.stringify(msg));

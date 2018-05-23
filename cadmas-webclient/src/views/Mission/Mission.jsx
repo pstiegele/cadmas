@@ -16,6 +16,7 @@ import Button from 'elements/CustomButton/CustomButton.jsx';
 import Maps from '../Maps/Maps';
 import util from 'util';
 import CadmasWS from 'websocket/CadmasWS';
+import MissionTitleControlButtons from 'elements/MissionTitleControlButtons/MissionTitleControlButtons.jsx';
 
 
 //import util from 'util';
@@ -32,7 +33,6 @@ class Activity extends Component {
     super(props);
     this.state = { missionID: parseInt(this.props.match.params.missionID, 10) };
     this.handleSeeMoreClick = this.handleSeeMoreClick.bind(this);
-
   }
 
 
@@ -104,6 +104,14 @@ class Activity extends Component {
     });
     return result[0];
   }
+  getMissionTitle(missionID){
+    var res;
+    var name = this.getSafeMissionName(missionID);
+    var controlButtons = <span className="pull-right">
+      <MissionTitleControlButtons missionID={this.state.missionID} drones={this.props.drone.drones}/></span>
+    res = <div>{name}{controlButtons}</div>
+    return res;
+  }
   getSafeActivityName(activityID) {
     return this.getSafe(() => this.getActivityByID(activityID).name, "")
   }
@@ -161,7 +169,7 @@ class Activity extends Component {
       <Grid fluid>
         <Row>
           <Col md={8}>
-            <Card title={this.getSafeMissionName(this.state.missionID)} category={"Mission"} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
+            <Card title={this.getMissionTitle(this.state.missionID)} category={"Mission"} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
               <div style={{ height: "60%" }}>
                 <Maps />
               </div>
@@ -175,14 +183,14 @@ class Activity extends Component {
             <Row>
               <Card title="Mission summary" content={<div><MissionSummary missionToShow={this.getMissionByID(this.state.missionID)} /></div>} />
             </Row>
-            <Row>
+            {/* <Row>
               <Card title="Mission is set to" category="2 drones" content={
                 <div>
                   <SetMissionToDrone missionToSet={this.state.missionID} />
                 </div>
               } />
-            </Row>
-            <Row>
+            </Row> */}
+            {/* <Row>
               <Card title="Start Mission" category="on Skywalker X-8" content={
                 <div>
                   <Button className="pt-1" bsStyle="danger" type="button" bsSize="small" pullRight={true} fill={true} onClick={() => this.handleSeeMoreClick()}>
@@ -190,7 +198,7 @@ class Activity extends Component {
           </Button>
                 </div>
               } />
-            </Row>
+            </Row> */}
             
           </Col>
         </Row>
