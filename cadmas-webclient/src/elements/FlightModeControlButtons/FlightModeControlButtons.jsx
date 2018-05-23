@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import CustomDropdown from '../CustomDropdown/CustomDropdown';
 import CustomModal from '../CustomModal/CustomModal';
 import Button from 'elements/CustomButton/CustomButton.jsx';
+import CadmasWS from '../../websocket/CadmasWS';
 
 class FlightModeControlButtons extends Component {
 
@@ -9,7 +10,7 @@ class FlightModeControlButtons extends Component {
     super();
     this.state = {
       showModal: false,
-      showStopModal:false,
+      showStopModal: false,
       trigger: "",
       activeFlightMode: 'AUTO',
       changeFlightModeTo: 'AUTO'
@@ -57,82 +58,105 @@ class FlightModeControlButtons extends Component {
     })
   }
 
-  getModalText(){
-    if(this.state.trigger==="modeChange"){
-      
-    switch (this.state.changeFlightModeTo) {
-      case 'AUTO':
-        return <span>Are you sure you want to activate the <b>AUTO</b> flight mode? Your drone will continue the mission.</span>
-        break;
-      case 'RTL':
-        return <span>Are you sure you want to activate the <b>Return-to-launch</b> flight mode? Your drone will fly back to the starting point.</span>
-        break;
-      case 'LOITER':
-        return <span>Are you sure you want to activate the <b>LOITER</b> flight mode? Your drone will fly circles.</span>
-        break;
-      case 'STABILIZE':
-        return <span>Are you sure you want to activate the <b>STABILIZE</b> flight mode? I do not really know what the mode does.</span>
-        break;
-      case 'MANUAL':
-        return <span>Are you sure you want to activate the <b>MANUAL</b> flight mode? Make sure if your remote control is ready for use.</span>
-        break;
-      case 'FBWA':
-        return <span>Are you sure you want to activate the <b>FLY BY WIRE THROTTLE MANUAL</b> flight mode? You will control the throttle of the drone manually.</span>
-        break;
-      case 'FBWB':
-        return <span>Are you sure you want to activate the <b>FLY BY WIRE THROTTLE AUTO</b> flight mode? The throttle of the drone will be controlled automatically.</span>
-        break;
-    
-      default:
-        break;
-    }   
-  }else if(this.state.trigger==="stop") {
-    return <span>Are you sure you want to quit the activity? <b>Do not continue if your drone is still in the air, you will <span style={{color: "red"}}>lose full control</span></b>. This action can not be undone.</span>
-  }
-  }
-  getModalTitle(){
-    if(this.state.trigger==="modeChange"){
-    return "Activate "+this.state.changeFlightModeTo+" flight mode";
-    }else if(this.state.trigger==="stop") {
-    return "STOP ACTIVITY"
+  getModalText() {
+    if (this.state.trigger === "modeChange") {
+
+      switch (this.state.changeFlightModeTo) {
+        case 'AUTO':
+          return <span>Are you sure you want to activate the <b>AUTO</b> flight mode? Your drone will continue the mission.</span>
+          break;
+        case 'RTL':
+          return <span>Are you sure you want to activate the <b>Return-to-launch</b> flight mode? Your drone will fly back to the starting point.</span>
+          break;
+        case 'LOITER':
+          return <span>Are you sure you want to activate the <b>LOITER</b> flight mode? Your drone will fly circles.</span>
+          break;
+        case 'STABILIZE':
+          return <span>Are you sure you want to activate the <b>STABILIZE</b> flight mode? I do not really know what the mode does.</span>
+          break;
+        case 'MANUAL':
+          return <span>Are you sure you want to activate the <b>MANUAL</b> flight mode? Make sure if your remote control is ready for use.</span>
+          break;
+        case 'FBWA':
+          return <span>Are you sure you want to activate the <b>FLY BY WIRE THROTTLE MANUAL</b> flight mode? You will control the throttle of the drone manually.</span>
+          break;
+        case 'FBWB':
+          return <span>Are you sure you want to activate the <b>FLY BY WIRE THROTTLE AUTO</b> flight mode? The throttle of the drone will be controlled automatically.</span>
+          break;
+
+        default:
+          break;
+      }
+    } else if (this.state.trigger === "stop") {
+      return <span>Are you sure you want to quit the activity? <b>Do not continue if your drone is still in the air, you will <span style={{ color: "red" }}>lose full control</span></b>. This action can not be undone.</span>;
+    }else if (this.state.trigger === "start") {
+      return <span>Are you sure you want to start the activity? <br /><b>Do not continue if your drone isn't ready to start.<br/><span style={{ color: "red" }}>This step activates the motors.</span></b></span>;
     }
   }
-  handleClose(){
+  getModalTitle() {
+    if (this.state.trigger === "modeChange") {
+      return "Activate " + this.state.changeFlightModeTo + " flight mode";
+    } else if (this.state.trigger === "stop") {
+      return "STOP ACTIVITY"
+    }else if (this.state.trigger === "start") {
+      return "START ACTIVITY"
+    }
+  }
+  handleClose() {
     this.setState({
-      showModal:false
+      showModal: false
     });
   }
-  handleAccept(){
-    if(this.state.trigger==="modeChange"){
+  handleAccept() {
+    if (this.state.trigger === "modeChange") {
       this.setState({
-        showModal:false,
+        showModal: false,
         activeFlightMode: this.state.changeFlightModeTo
       });
       //TODO CHANGE FLIGHT MODE
-    }else if(this.state.trigger==="stop") {
+    } else if (this.state.trigger === "stop") {
       this.setState({
-        showModal:false
+        showModal: false
       });
       //TODO STOP MISSION
+    }else if (this.state.trigger === "start") {
+      this.setState({
+        showModal: false
+      });
+      CadmasWS.startActivity(this.props.activityID);
     }
-
-    
   }
 
-  handleStop(){
+  handleStopClick() {
     this.setState({
       showModal: true,
       trigger: "stop"
     })
   }
+  handleStartFlightClick(){
+    this.setState({
+      showModal: true,
+      trigger: "start"
+    })
+  }
   render() {
-    return (<span>
-      <CustomDropdown title={this.state.activeFlightMode} bsStyle="warning" bsSize="small" key="modeDropdown" menuItems={this.getDropdownModes()} onSelect={this.handleOnSelectMode.bind(this)} /> &nbsp;
-      <CustomModal show={this.state.showModal} bsStyle="danger" handleClose={this.handleClose.bind(this)} handleAccept={this.handleAccept.bind(this)} acceptTitle="Yes, I know what I do." title={this.getModalTitle()} text={this.getModalText()}/>
-      <Button className="pt-1" bsStyle="danger" type="button" bsSize="small" onClick={() => this.handleStop()}>
-        STOP ACTIVITY
-  </Button></span>
-    );
+    if (this.props.state === 0) {
+      return (<span>
+        <CustomModal show={this.state.showModal} bsStyle="success" handleClose={this.handleClose.bind(this)} handleAccept={this.handleAccept.bind(this)} acceptTitle="Yes, I want to start the drone." title={this.getModalTitle()} text={this.getModalText()} />
+        <Button className="pt-1" bsStyle="success" type="button" bsSize="small" onClick={() => this.handleStartFlightClick()}>
+          START ACTIVITY
+    </Button></span>
+      );
+    } else if (this.props.state === 1) {
+      return (<span>
+        <CustomDropdown title={this.state.activeFlightMode} bsStyle="warning" bsSize="small" key="modeDropdown" menuItems={this.getDropdownModes()} onSelect={this.handleOnSelectMode.bind(this)} /> &nbsp;
+        <CustomModal show={this.state.showModal} bsStyle="danger" handleClose={this.handleClose.bind(this)} handleAccept={this.handleAccept.bind(this)} acceptTitle="Yes, I know what I do." title={this.getModalTitle()} text={this.getModalText()} />
+        <Button className="pt-1" bsStyle="danger" type="button" bsSize="small" onClick={() => this.handleStopClick()}>
+          STOP ACTIVITY
+    </Button></span>
+      );
+    }
+    return null;
   }
 }
 

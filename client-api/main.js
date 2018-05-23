@@ -83,6 +83,9 @@ function getHandleMethod(method) {
     case "addActivity":
       return require('./methods/in/addActivity.js')
       break;
+    case "startActivity":
+      return require('./methods/in/startActivity.js')
+      break;
     case "updateActivity":
       return require('./methods/in/updateActivity.js')
       break;

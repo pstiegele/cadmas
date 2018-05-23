@@ -35,7 +35,7 @@ class Activity extends Component {
     this.state = { activityID: parseInt(this.props.match.params.activityID, 10) };
 
   }
-  
+
   getRelativeOrAbsoluteDate(date) {
     if (new Date() - new Date(date * 1000) < 604800000) {
       return moment(date * 1000).fromNow();
@@ -104,12 +104,20 @@ class Activity extends Component {
     });
     return result[0];
   }
-  
-  getLiveActivityTitle(activityID){
+
+  getLiveActivityTitle(activityID) {
     var res;
     var name = this.getSafeActivityName(activityID);
     var controlButtons = <span className="pull-right">
-      <FlightModeControlButtons /></span>
+      <FlightModeControlButtons activityID={activityID} state={parseInt(this.getSafeActivityState(this.state.activityID), 10)}/></span>
+    res = <div>{name}{controlButtons}</div>
+    return res;
+  }
+  getActivityTitle(activityID) {
+    var res;
+    var name = this.getSafeActivityName(activityID);
+    var controlButtons = <span className="pull-right">
+      <FlightModeControlButtons activityID={activityID} state={parseInt(this.getSafeActivityState(this.state.activityID), 10)} /></span>
     res = <div>{name}{controlButtons}</div>
     return res;
   }
@@ -173,15 +181,22 @@ class Activity extends Component {
     return result[0];
   }
 
-  
+
   handleStop() {
-    
+
   }
 
   getDate() {
-    var start = parseInt(this.getSafeActivityDtCreated(this.state.activityID), 10);
-    var end = parseInt(this.getSafeActivityDtEnded(this.state.activityID), 10);
-    return this.getAbsoluteDate(start) + " - " + this.getAbsoluteEndDate(start, end) + " (" + this.getRelativeDate(start) + ", duration: " + this.getDuration(end - start) + ")";
+    if (parseInt(this.getSafeActivityState(this.state.activityID), 10) === 2) {
+
+      var start = parseInt(this.getSafeActivityDtCreated(this.state.activityID), 10);
+      var end = parseInt(this.getSafeActivityDtEnded(this.state.activityID), 10);
+      return this.getAbsoluteDate(start) + " - " + this.getAbsoluteEndDate(start, end) + " (" + this.getRelativeDate(start) + ", duration: " + this.getDuration(end - start) + ")";
+    } else {
+      var start = parseInt(this.getSafeActivityDtCreated(this.state.activityID), 10);
+      return this.getAbsoluteDate(start) + " (" + this.getRelativeDate(start) + ")";
+
+    }
   }
 
   getState() {
@@ -208,7 +223,7 @@ class Activity extends Component {
     return <Grid fluid>
       <Row>
         <Col md={8}>
-          <Card title={this.getSafeActivityName(this.state.activityID)} category={<span>{this.getDate()}<br />{this.getState()}</span>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
+          <Card title={this.getActivityTitle(this.state.activityID)} category={<span>{this.getDate()}<br />{this.getState()}</span>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
             <div style={{ height: "60%" }}>
               <Maps />
             </div>

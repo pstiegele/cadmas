@@ -214,6 +214,13 @@ class CadmasWS extends Component {
     this.packAndSend("addActivity", payload, callback);
     console.log("addActivity (" + name + ") sent");
   }
+  startActivity(activityID, callback) {
+    var payload = {
+      activityID: activityID
+    };
+    this.packAndSend("startActivity", payload, callback);
+    console.log("startActivity (" + activityID + ") sent");
+  }
 
   packAndSend(method, payload, callback) {
     var msg = {
