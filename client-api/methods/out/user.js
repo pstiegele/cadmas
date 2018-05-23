@@ -21,7 +21,7 @@ module.exports = function (ws, callback) {
                 "lastname":element.lastname
             };
         }
-        callback(ws, "user", {'payload': res});
+        callback(ws, "user",res);
     });
 
 

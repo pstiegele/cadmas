@@ -23,7 +23,7 @@ module.exports = function (ws, callback) {
             }
             );
         }
-        callback(ws, "drones", {'payload': res});
+        callback(ws, "drones", res);
     });
 
 

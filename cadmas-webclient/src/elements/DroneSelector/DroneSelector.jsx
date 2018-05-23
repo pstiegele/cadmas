@@ -11,6 +11,7 @@ class MissionTitleControlButtons extends Component {
         this.setState({
             title: this.getDroneNames()[0].title
         });
+        this.props.onSelectDrone(this.getDroneNames()[0].key);
     }
 
     getDroneNames() {
@@ -37,6 +38,7 @@ class MissionTitleControlButtons extends Component {
 
     handleOnSelectDrone(event, data) {
        this.getDroneNameToID(event);
+       this.props.onSelectDrone(event);
     }
 
     getSafeDroneNameTitle() {

@@ -15,7 +15,7 @@ module.exports = function (ws, callback) {
             }
             );
         }
-        callback(ws, "payloadDevices", {'payload': res});
+        callback(ws, "payloadDevices", res);
     });
 
 

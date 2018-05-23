@@ -1,30 +1,34 @@
+import React, { Component } from 'react';
+
 import store from "../store";
-import { setActivities } from "../actions/activityActions";
+import { setActivities,setActivity } from "../actions/activityActions";
 import { setMissions } from "../actions/missionActions";
 import { setDrones } from "../actions/droneActions";
 import { setNotifications } from "../actions/notificationActions";
 import { setUser } from "actions/userActions";
 import { setPayloads } from "actions/payloadActions";
 import { setPayloadDevices } from "actions/payloadDeviceActions";
-import { setAttitude,setBattery,setHeartbeat,setMissionItem,setMissionState,setPosition,setVelocity } from "actions/telemetryActions";
+import { setAttitude, setBattery, setHeartbeat, setMissionItem, setMissionState, setPosition, setVelocity } from "actions/telemetryActions";
 
 var socket;
+var msgID = 0;
 
-
-class CadmasWS {
-
+class CadmasWS extends Component {
+  callbacks = []
   constructor(props) {
+    super(props);
     this.initWS();
   }
-  initAuthAPI(){
-    var that=this;
+  initAuthAPI() {
+    var that = this;
     console.log("authenticate first! ");
     var authSocket;
-    if(window.location.hostname!=="localhost"&&!window.location.hostname.startsWith("192")){
+    if (window.location.hostname !== "localhost" && !window.location.hostname.startsWith("192")) {
       authSocket = new WebSocket("wss://" + window.location.hostname + ":8081/auth");
-    }else{
+    } else {
       authSocket = new WebSocket("ws://" + window.location.hostname + "/auth");
     }
+
     authSocket.onmessage = function (event) {
       var msg = JSON.parse(event.data);
       switch (msg.method) {
@@ -56,30 +60,37 @@ class CadmasWS {
 
     };
   }
-  initClientAPI(token){
-
+  initClientAPI(token) {
+    var that = this;
     var hostname = window.location.hostname;
-    if(window.location.hostname!=="localhost"&&!window.location.hostname.startsWith("192")){
+    if (window.location.hostname !== "localhost" && !window.location.hostname.startsWith("192")) {
       socket = new WebSocket("wss://" + hostname + ":8081/client?token=" + token, token);
-    }else{
+    } else {
       socket = new WebSocket("ws://" + hostname + "/client?token=" + token, token);
     }
-    
+
+
     socket.onmessage = function (event) {
       var msg;
       try {
         msg = JSON.parse(event.data);
       } catch (error) {
-       console.log("parsing error! msg: "+event.data); 
-       console.log("parsing error! error: "+error); 
+        console.log("parsing error! msg: " + event.data);
+        console.log("parsing error! error: " + error);
       }
-      if(msg!==undefined && msg.hasOwnProperty("method")){
+      if (msg !== undefined && msg.hasOwnProperty("method")) {
         switch (msg.method) {
           case "addMissionACK":
             break;
-  
+          case "addActivityACK":
+            that.handleCallback(msg.payload);
+            break;
+
           case "activities":
             store.dispatch(setActivities(msg.payload));
+            break;
+          case "activity":
+            store.dispatch(setActivity(msg.payload));
             break;
           case "missions":
             store.dispatch(setMissions(msg.payload));
@@ -120,41 +131,42 @@ class CadmasWS {
           case "velocity":
             store.dispatch(setVelocity(msg.payload));
             break;
-  
+
           default:
             break;
         }
-  
+
         console.log("ws received: " + msg.method);
       }
-      
+
     }
     socket.onopen = function (event) {
-      console.log("onOpen called: "+ JSON.stringify(this));
-    //   for (var i = 0; i < 350; i++) {
-    //     var activityID = Math.floor(Math.random() * (296 - 1 + 1) + 1);
-    //     while (activityID < 119 && activityID > 17) {
-    //       activityID = Math.floor(Math.random() * (296 - 1 + 1) + 1);
-    //     }
-    //     var payloadDevice = Math.floor(Math.random() * (10 - 1 + 1) + 1);
-    //     var size = Math.floor(Math.random() * (1073741824 - 1 + 1) + 1);
-        
-        
-    //     var msg = {
-    //       method: "addPayloadData",
-    //       payload: {
-    //         activityID: activityID,
-    //         payloadDeviceID: payloadDevice,
-    //         type: "0",
-    //         filepath: "",
-    //         size: size
-    //       }
-    //     };
-    //     socket.send(JSON.stringify(msg));
-    //     console.log("addPayloadData sent");
-    
-    //   }
-     };
+      console.log("onOpen called: " + JSON.stringify(this));
+      //   for (var i = 0; i < 350; i++) {
+      //     var activityID = Math.floor(Math.random() * (296 - 1 + 1) + 1);
+      //     while (activityID < 119 && activityID > 17) {
+      //       activityID = Math.floor(Math.random() * (296 - 1 + 1) + 1);
+      //     }
+      //     var payloadDevice = Math.floor(Math.random() * (10 - 1 + 1) + 1);
+      //     var size = Math.floor(Math.random() * (1073741824 - 1 + 1) + 1);
+
+
+      //     var msg = {
+      //       method: "addPayloadData",
+      //       payload: {
+      //         activityID: activityID,
+      //         payloadDeviceID: payloadDevice,
+      //         type: "0",
+      //         filepath: "",
+      //         size: size
+      //       }
+      //     };
+      //     socket.send(JSON.stringify(msg));
+      //     console.log("addPayloadData sent");
+
+      //   }
+    };
+
 
   }
 
@@ -162,10 +174,23 @@ class CadmasWS {
     var token = localStorage.getItem("token");
     if (!token) {
       this.initAuthAPI();
-    }else{
+    } else {
       this.initClientAPI(token);
     }
   }
+  getMsgID() {
+    if (msgID > Number.MAX_SAFE_INTEGER) {
+      msgID = 0;
+    }
+    return msgID++;
+  }
+
+  handleCallback(payload) {
+    if (typeof this.callbacks[payload.ackToID] === "function")
+      this.callbacks[payload.ackToID](payload);
+  }
+
+
   addMission(name, note, onConnectionLostMode) {
     var msg = {
       "method": "addMission",
@@ -178,19 +203,27 @@ class CadmasWS {
     socket.send(JSON.stringify(msg));
     console.log("addMission (" + name + ") sent");
   }
-  addActivity(missionID, droneID, name, state, note) {
-    var msg = {
-      method: "addActivity",
-      payload: {
-        missionID: missionID,
-        droneID: droneID,
-        name: name,
-        state: state,
-        note: note
-      }
+  addActivity(missionID, droneID, name, state, note, callback) {
+    var payload = {
+      missionID: missionID,
+      droneID: droneID,
+      name: name,
+      state: state,
+      note: note
     };
-    socket.send(JSON.stringify(msg));
+    this.packAndSend("addActivity", payload, callback);
     console.log("addActivity (" + name + ") sent");
+  }
+
+  packAndSend(method, payload, callback) {
+    var msg = {
+      time: new Date(),
+      id: this.getMsgID(),
+      method: method,
+      payload: payload
+    }
+    socket.send(JSON.stringify(msg));
+    this.callbacks[msg.id] = callback;
   }
   addPayloadData(activityID, payloadDeviceID, type, filepath, size) {
     var msg = {

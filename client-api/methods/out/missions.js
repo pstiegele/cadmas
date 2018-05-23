@@ -18,7 +18,7 @@ module.exports = function (ws, callback) {
             }
             );
         }
-        callback(ws, "missions", {'payload': res});
+        callback(ws, "missions", res);
     });
 
 

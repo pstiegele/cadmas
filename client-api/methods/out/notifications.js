@@ -18,7 +18,7 @@ module.exports = function (ws, callback) {
             }
             );
         }
-        callback(ws, "notifications", {'payload': res});
+        callback(ws, "notifications", res);
     });
 
 

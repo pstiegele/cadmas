@@ -4,8 +4,9 @@ import CustomModal from '../CustomModal/CustomModal';
 import Button from 'elements/CustomButton/CustomButton.jsx';
 import DroneSelector from 'elements/DroneSelector/DroneSelector.jsx';
 import CadmasWS from '../../websocket/CadmasWS';
-import {FormGroup, ControlLabel, FormControl} from 'react-bootstrap';
-import util from 'util';
+import { FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
+import { Redirect } from 'react-router';
+
 
 class MissionTitleControlButtons extends Component {
 
@@ -17,13 +18,14 @@ class MissionTitleControlButtons extends Component {
             droneID: 0,
             title: "",
             note: "",
+            redirect: false
         };
         this.setDrone = this.setDrone.bind(this);
         this.setNote = this.setNote.bind(this);
         this.setTitle = this.setTitle.bind(this);
     }
 
-    componentWillMount(){
+    componentWillMount() {
         this.setState({
             missionID: this.props.missionID
         });
@@ -81,17 +83,27 @@ class MissionTitleControlButtons extends Component {
         this.setState({
             showModal: false
         });
-        CadmasWS.addActivity(this.props.missionID, this.state.droneID, this.state.title, 0, this.state.note);
+        CadmasWS.addActivity(this.props.missionID, this.state.droneID, this.state.title, 0, this.state.note, this.redirect.bind(this));
+    }
 
+    redirect(payload) {
+        console.log("payload: "+JSON.stringify(payload));
+        this.setState({
+            redirect: true,
+            activityIDToRedirect: payload.activityID
+        });
     }
 
     handleStart() {
         this.setState({
-            showModal: true
+            showModal: true,
         });
-        
+
     }
     render() {
+        if (this.state.redirect) {
+            return <Redirect push to={"/activity/" + this.state.activityIDToRedirect} />;
+        }
         return (<span>
             <CustomModal bsStyle="success" show={this.state.showModal} handleClose={this.handleClose.bind(this)} handleAccept={this.handleAccept.bind(this)} acceptTitle="Yes, I want to create an activity" title={this.getModalTitle()} text={this.getModalText()} />
             <Button className="pt-1" bsStyle="success" type="button" bsSize="small" onClick={this.handleStart.bind(this)}>

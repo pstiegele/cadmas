@@ -22,7 +22,7 @@ module.exports = function (ws, callback) {
             }
             );
         }
-        callback(ws, "activities", {'payload': res});
+        callback(ws, "activities", res);
     });
 
 

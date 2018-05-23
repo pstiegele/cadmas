@@ -19,6 +19,12 @@ const activityReducer = (state = {
           activities: action.payload
         };
         break;
+      case "SET_ACTIVITY":
+        state = {
+          ...state,
+        };
+        state.activities[state.activities.length]=action.payload;
+        break;
       
       default:
         break;

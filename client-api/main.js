@@ -1,7 +1,10 @@
 const jwt = require('jsonwebtoken');
 const winston = require('../middleware/logger');
 const util = require('util');
+const Websocket = require('ws');
 
+
+var msgID = 0;
 module.exports = function (wss) {
   wss.on('connection', function connection(ws, req) {
     ws.userID = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcess()[ws.protocol].userID;
@@ -29,19 +32,12 @@ module.exports = function (wss) {
       } catch (e) {
         return console.error(e);
       }
-
-      getHandleMethod(msg.method)(ws, msg.payload, function (ws, method, res) {
-        res.time = require('moment')().unix();
-        res.id = 0;
-        res.method = method;
-        if (ws.readyState === Websocket.OPEN)
-          ws.send(JSON.stringify(res));
-      });
+      getHandleMethod(msg.method)(ws, msg, send);
     });
 
     ws.on('close', function (reason) {
       for (let i = 0; i < global.client_wss.cadmasClients[ws.userID].length; i++) {
-        if(global.client_wss.cadmasClients[ws.userID][i]===this)
+        if (global.client_wss.cadmasClients[ws.userID][i] === this)
           delete global.client_wss.cadmasClients[ws.userID][i];
       }
     });
@@ -101,14 +97,24 @@ function getHandleMethod(method) {
   }
 }
 
-function send(ws, method, res) {
-  res.time = require('moment')().unix();
-  res.id = 0;
-  res.method = method;
-  winston.info("send: " + method);
-  // winston.info("send: " + method + " --> " + JSON.stringify(res));
-  ws.send(JSON.stringify(res));
+
+function send(ws, method, payload) {
+  var res = {
+    time: require('moment')().unix(),
+    id: getMsgID(),
+    method: method,
+    payload: payload
+  }
+  if (ws.readyState === Websocket.OPEN) {
+    winston.info("send: " + method);
+    ws.send(JSON.stringify(res));
+  } else {
+    winston.info("client closed connection while trying to send data (" + method + ")");
+  }
+
 }
+module.exports.send = send;
+
 function sendInitalData(ws) {
   require("./methods/out/user")(ws, send);
   require("./methods/out/missions")(ws, send);
@@ -117,4 +123,11 @@ function sendInitalData(ws) {
   require("./methods/out/notifications")(ws, send);
   require("./methods/out/payloads")(ws, send);
   require("./methods/out/payloadDevices")(ws, send);
+}
+
+function getMsgID() {
+  if (msgID > Number.MAX_SAFE_INTEGER) {
+    msgID = 0;
+  }
+  return msgID++;
 }

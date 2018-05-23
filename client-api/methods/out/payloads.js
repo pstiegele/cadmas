@@ -18,7 +18,7 @@ module.exports = function (ws, callback) {
             }
             );
         }
-        callback(ws, "payloads", {'payload': res});
+        callback(ws, "payloads", res);
     });
 
 

@@ -6,6 +6,9 @@ export function setActivities(activities) {
     });
     return { type: "SET_ACTIVITIES", payload: activities };
 }
+export function setActivity(activity) {
+    return { type: "SET_ACTIVITY", payload: activity };
+}
 
 // export function setMapIsShown(mapIsShown) {
 //     return { type: "SET_MAP_IS_SHOWN", payload: mapIsShown };
