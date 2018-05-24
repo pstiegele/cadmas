@@ -201,6 +201,11 @@ class CadmasWS{
     console.log("addMission (" + name + ") sent");
   }
   addActivity(missionID, droneID, name, state, note, callback) {
+    console.log("droneID: "+droneID);
+    console.log("props: "+JSON.stringify(this.props));
+    if(droneID===null){
+      console.log("droneID: "+JSON.stringify(this.props));
+    }
     var payload = {
       missionID: missionID,
       droneID: droneID,

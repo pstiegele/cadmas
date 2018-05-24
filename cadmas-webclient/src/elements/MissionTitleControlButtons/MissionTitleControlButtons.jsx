@@ -79,10 +79,17 @@ class MissionTitleControlButtons extends Component {
         });
     }
     handleAccept() {
+        var droneID = this.state.droneID;
         this.setState({
             showModal: false
         });
-        CadmasWS.addActivity(this.props.missionID, this.state.droneID, this.state.title, 0, this.state.note, this.redirect.bind(this));
+        if(droneID===undefined){
+            droneID = this.props.drones[0].droneID;
+            this.setState({
+                droneID: this.props.drones[0].droneID
+            });
+        }
+        CadmasWS.addActivity(this.props.missionID, droneID, this.state.title, 0, this.state.note, this.redirect.bind(this));
     }
 
     redirect(payload) {

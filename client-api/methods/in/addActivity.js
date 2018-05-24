@@ -24,10 +24,6 @@ module.exports = function (ws, msg, callback) {
         activity(value1, result.insertId, send);
       });
     }
-
-
-
-
   });
 
 
