@@ -55,11 +55,7 @@ function initalizeWebsocket(server) {
   server.on('upgrade', (request, socket, head) => {
     const pathname = url.parse(request.url).pathname;
    
-    //winston.info("client_wss: "+util.inspect(client_wss.clients));
-    // connector_wss.clients.forEach((value1, value2, set) => {
-    //   winston.info("foreach: value1 was sent");
-    //   value1.send("hey");
-    // });
+    winston.error("request: "+util.inspect(request));
    
     if (pathname === '/connector') {
       connector_wss.handleUpgrade(request, socket, head, (ws) => {

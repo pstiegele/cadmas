@@ -50,7 +50,6 @@ class UserProfile extends Component {
   }
 
   render() {
-    console.log("rendered: "+this.props.user.username);
     return (<div className="content">
       <Grid fluid>
         <Row>
