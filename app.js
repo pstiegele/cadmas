@@ -84,8 +84,8 @@ function initalizeServer() {
   app.set('port', port);
 
   var httpsServerOptions = {
-    key: fs.readFileSync('keys/key.pem'),
-    cert: fs.readFileSync('keys/cert.pem')
+    key: fs.readFileSync('keys/letsencrypt/key.pem'),
+    cert: fs.readFileSync('keys/letsencrypt/cert.pem')
   }
 
   /**
