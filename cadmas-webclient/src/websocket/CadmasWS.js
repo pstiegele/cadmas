@@ -75,6 +75,7 @@ class CadmasWS{
         console.log("parsing error! msg: " + event.data);
         console.log("parsing error! error: " + error);
       }
+      console.log("msg: "+JSON.stringify(msg));
       if (msg !== undefined && msg.hasOwnProperty("method")) {
         switch (msg.method) {
           case "addMissionACK":
@@ -217,6 +218,15 @@ class CadmasWS{
     };
     this.packAndSend("startActivity", payload, callback);
     console.log("startActivity (" + activityID + ") sent");
+  }
+
+  setMode(mode, droneID, callback){
+    var payload = {
+      mode: mode,
+      droneID: droneID
+    };
+    this.packAndSend("setMode", payload, callback);
+    console.log("setMode ("+mode+") sent");
   }
 
   packAndSend(method, payload, callback) {

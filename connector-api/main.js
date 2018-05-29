@@ -10,6 +10,7 @@ module.exports = function (wss) {
     getActiveActivity(ws);
     delete require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol];
     winston.info("connector connected. droneID: " + ws.droneID + " name: " + ws.name);
+    global.connector_wss.cadmasConnectors[ws.droneID] = ws;
     ws.on('message', function incoming(raw_msg) {
       winston.info('received: %s', raw_msg);
       var msg;
@@ -29,7 +30,7 @@ module.exports = function (wss) {
     });
 
     ws.on('close', function (reason) {
-      //TODO: handle close
+      delete global.connector_wss.cadmasConnectors[ws.droneID];
       winston.info("connector connection closed. droneID: " + ws.droneID + " name: " + ws.name);
 
     });

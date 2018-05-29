@@ -95,6 +95,9 @@ function getHandleMethod(method) {
     case "addPayloadData":
       return require('./methods/in/addPayloadData.js')
       break;
+    case "setMode":
+      return require('./methods/in/setMode.js')
+      break;
     default:
       return require('./methods/out/invalidMethod.js');
   }

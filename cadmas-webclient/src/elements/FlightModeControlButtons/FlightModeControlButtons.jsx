@@ -20,31 +20,31 @@ class FlightModeControlButtons extends Component {
   getDropdownModes() {
     var res = [{
       title: "AUTO",
-      eventKey: 'AUTO',
+      eventKey: '10',
       active: true
     }, {
       title: "RETURN TO LAUNCH",
-      eventKey: 'RTL',
+      eventKey: '11',
       active: false
     }, {
       title: "LOITER",
-      eventKey: 'LOITER',
+      eventKey: '12',
       active: false
     }, {
       title: "STABILIZE",
-      eventKey: 'STABILIZE',
+      eventKey: '2',
       active: false
     }, {
       title: "MANUAL",
-      eventKey: 'MANUAL',
+      eventKey: '0',
       active: false
     }, {
       title: "FLY BY WIRE THROTTLE MANUAL",
-      eventKey: 'FBWA',
+      eventKey: '5',
       active: false
     }, {
       title: "FLY BY WIRE THROTTLE AUTO",
-      eventKey: 'FBWB',
+      eventKey: '6',
       active: false
     }]
     return res;
@@ -106,7 +106,8 @@ class FlightModeControlButtons extends Component {
         showModal: false,
         activeFlightMode: this.state.changeFlightModeTo
       });
-      //TODO CHANGE FLIGHT MODE
+      //TODO set droneID
+      CadmasWS.setMode(this.state.changeFlightModeTo, 1);
     } else if (this.state.trigger === "stop") {
       this.setState({
         showModal: false
