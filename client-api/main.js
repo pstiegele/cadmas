@@ -32,7 +32,7 @@ module.exports = function (wss) {
       } catch (e) {
         return console.error(e);
       }
-      getHandleMethod(msg.method)(ws, msg, send);
+      getHandleMethod(msg.method)(ws, msg);
     });
 
     ws.on('close', function (reason) {
@@ -122,13 +122,13 @@ function send(ws, method, payload) {
 module.exports.send = send;
 
 function sendInitalData(ws) {
-  require("./methods/out/user")(ws, send);
-  require("./methods/out/missions")(ws, send);
-  require("./methods/out/drones")(ws, send);
-  require("./methods/out/activities")(ws, send);
-  require("./methods/out/notifications")(ws, send);
-  require("./methods/out/payloads")(ws, send);
-  require("./methods/out/payloadDevices")(ws, send);
+  require("./methods/out/user")(ws);
+  require("./methods/out/missions")(ws);
+  require("./methods/out/drones")(ws);
+  require("./methods/out/activities")(ws);
+  require("./methods/out/notifications")(ws);
+  require("./methods/out/payloads")(ws);
+  require("./methods/out/payloadDevices")(ws);
 }
 
 function getMsgID() {

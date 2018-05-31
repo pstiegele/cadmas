@@ -1,4 +1,6 @@
 const winston = require('../../../middleware/logger');
-module.exports = function (ws, payload, callback) {
-    callback(ws, "velocity", payload);
+const send = require("../../main").send;
+
+module.exports = function (ws, payload) {
+    send(ws, "velocity", payload);
 }

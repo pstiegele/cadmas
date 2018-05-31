@@ -1,5 +1,7 @@
 const winston = require('../../../middleware/logger');
-module.exports = function (ws, callback) {
+const send = require("../../main").send;
+
+module.exports = function (ws) {
     var db = global.db;
     var query = "SELECT id, activityID, payloadDeviceID, type, filepath, size FROM PayloadData";
     db.query(query, ws.userID, function (error, results) {
@@ -18,7 +20,7 @@ module.exports = function (ws, callback) {
             }
             );
         }
-        callback(ws, "payloads", res);
+        send(ws, "payloads", res);
     });
 
 

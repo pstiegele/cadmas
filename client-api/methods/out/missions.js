@@ -1,5 +1,7 @@
 const winston = require('../../../middleware/logger');
-module.exports = function (ws, callback) {
+const send = require("../../main").send;
+
+module.exports = function (ws) {
     var db = global.db;
     var query = "SELECT id,name,note,UNIX_TIMESTAMP(dtCreated) AS dtCreated,thumbnailpath,onConnectionLostMode FROM Mission";
     db.query(query, function (error, results) {
@@ -18,7 +20,7 @@ module.exports = function (ws, callback) {
             }
             );
         }
-        callback(ws, "missions", res);
+        send(ws, "missions", res);
     });
 
 

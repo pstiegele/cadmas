@@ -1,15 +1,15 @@
 const ack = require('../out/ack');
 const winston = require('../../../middleware/logger');
 const moment = require("moment");
-const heartbeatToClient = require('../../../client-api/methods/out/heartbeat');
+const heartbeat = require('../../../client-api/methods/out/heartbeat');
 const Websocket = require('ws');
 
 module.exports = function (ws, payload, callback) {
-    if (ws.activityID !== undefined && ws.activityID !== null) {
+    if (ws.activeActivity !== undefined && ws.activeActivity !== null) {
         var db = global.db;
-        var query = "INSERT INTO HeartbeatTelemetry (activityID,timestamp,baseMode,customMode) VALUES (?,?,?,?);";
+        var query = "INSERT INTO HeartbeatTelemetry (activityID,timestamp,isArmed,customMode,messagesLost) VALUES (?,?,?,?,?);";
         console.log("timestamp: " + payload.timestamp);
-        db.query(query, [ws.activityID, moment(payload.timestamp).format('YYYY-MM-DD HH:mm:ss'), payload.baseMode, payload.customMode], function (error) {
+        db.query(query, [ws.activeActivity, moment(payload.timestamp).format('YYYY-MM-DD HH:mm:ss'), payload.isArmed, payload.customMode, payload.messagesLost], function (error) {
             if (error) winston.error('error in heartbeat(connector): ' + error);;
             winston.info('heartbeat(connector) successfully inserted');
             ack('heartbeatACK', 0, ws, callback);
@@ -20,14 +20,7 @@ module.exports = function (ws, payload, callback) {
         global.client_wss.cadmasClients[ws.userID].forEach((value1, value2, set) => {
             winston.info("heartbeat sent to client");
             payload.droneID = ws.droneID;
-            heartbeatToClient(value1, payload, function (ws, method, res) {
-                res.time = require('moment')().unix();
-                res.id = 0;
-                res.method = method;
-                if (value1.readyState === Websocket.OPEN) {
-                    value1.send(JSON.stringify(res));
-                }
-            });
+            heartbeat(value1, payload);
 
         });
     }

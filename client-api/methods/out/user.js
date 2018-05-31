@@ -1,5 +1,7 @@
 const winston = require('../../../middleware/logger');
-module.exports = function (ws, callback) {
+const send = require("../../main").send;
+
+module.exports = function (ws) {
     var db = global.db;
     var query = "SELECT id,username,registrationdate,email,thumbnailpath,firstname,lastname FROM User";
     db.query(query, function (error, results) {
@@ -21,7 +23,7 @@ module.exports = function (ws, callback) {
                 "lastname":element.lastname
             };
         }
-        callback(ws, "user",res);
+        send(ws, "user",res);
     });
 
 

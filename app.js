@@ -54,9 +54,7 @@ function initalizeWebsocket(server) {
   winston.log('debug', 'init websocket handlers');
   server.on('upgrade', (request, socket, head) => {
     const pathname = url.parse(request.url).pathname;
-   
-    winston.error("request: "+util.inspect(request));
-   
+      
     if (pathname === '/connector') {
       connector_wss.handleUpgrade(request, socket, head, (ws) => {
         connector_wss.emit('connection', ws);
