@@ -2,6 +2,7 @@ const winston = require('../middleware/logger');
 const util = require('util');
 const Websocket = require('ws');
 
+var msgID = 0;
 module.exports = function (wss) {
   wss.on('connection', function connection(ws, req) {
     ws.droneID = require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol].droneID;
@@ -19,14 +20,7 @@ module.exports = function (wss) {
       } catch (e) {
         return console.error(e);
       }
-      getHandleMethod(msg.method)(ws, msg.payload, function (ws, method, res) {
-        res.time = require('moment')().unix();
-        res.id = 0;
-        res.method = method;
-        //TODO: check if ws is open
-        if (ws.readyState === ws.OPEN)
-          ws.send(JSON.stringify(res));
-      });
+      getHandleMethod(msg.method)(ws, msg.payload,send);
     });
 
     ws.on('close', function (reason) {
@@ -38,6 +32,30 @@ module.exports = function (wss) {
       //TODO handle error
     });
   });
+}
+
+function send(ws, method, payload) {
+  var res = {
+    time: require('moment')().unix(),
+    id: getMsgID(),
+    method: method,
+    payload: payload
+  }
+  if (ws.readyState === Websocket.OPEN) {
+    winston.info("send: " + method);
+    ws.send(JSON.stringify(res));
+  } else {
+    winston.info("connector closed connection while trying to send data (" + method + ")");
+  }
+
+}
+module.exports.send = send;
+
+function getMsgID() {
+  if (msgID > Number.MAX_SAFE_INTEGER) {
+    msgID = 0;
+  }
+  return msgID++;
 }
 
 function getHandleMethod(method) {

@@ -122,7 +122,7 @@ class FlightModeControlButtons extends Component {
       this.setState({
         showModal: false
       });
-      //TODO STOP MISSION
+      CadmasWS.stopActivity(this.props.activityID);
     } else if (this.state.trigger === "start") {
       this.setState({
         showModal: false

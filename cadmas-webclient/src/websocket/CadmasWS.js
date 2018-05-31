@@ -53,7 +53,7 @@ class CadmasWS{
         }
       };
       authSocket.send(JSON.stringify(msg));
-      console.log("authenticate sent");
+      console.log("authenticate transmitted");
 
     };
   }
@@ -160,7 +160,7 @@ class CadmasWS{
       //       }
       //     };
       //     socket.send(JSON.stringify(msg));
-      //     console.log("addPayloadData sent");
+      //     console.log("addPayloadData transmitted");
 
       //   }
     };
@@ -199,7 +199,7 @@ class CadmasWS{
       }
     };
     socket.send(JSON.stringify(msg));
-    console.log("addMission (" + name + ") sent");
+    console.log("addMission (" + name + ") transmitted");
   }
   addActivity(missionID, droneID, name, state, note, callback) {
     var payload = {
@@ -210,14 +210,21 @@ class CadmasWS{
       note: note
     };
     this.packAndSend("addActivity", payload, callback);
-    console.log("addActivity (" + name + ") sent");
+    console.log("addActivity (" + name + ") transmitted");
   }
   startActivity(activityID, callback) {
     var payload = {
       activityID: activityID
     };
     this.packAndSend("startActivity", payload, callback);
-    console.log("startActivity (" + activityID + ") sent");
+    console.log("startActivity (" + activityID + ") transmitted");
+  }
+  stopActivity(activityID, callback) {
+    var payload = {
+      activityID: activityID
+    };
+    this.packAndSend("stopActivity", payload, callback);
+    console.log("stopActivity (" + activityID + ") transmitted");
   }
 
   setMode(mode, droneID, callback){
@@ -226,7 +233,7 @@ class CadmasWS{
       droneID: droneID
     };
     this.packAndSend("setMode", payload, callback);
-    console.log("setMode ("+mode+") sent");
+    console.log("setMode ("+mode+") transmitted");
   }
 
   packAndSend(method, payload, callback) {
@@ -251,7 +258,7 @@ class CadmasWS{
       }
     };
     socket.send(JSON.stringify(msg));
-    console.log("addPayloadData sent");
+    console.log("addPayloadData transmitted");
   }
 }
 const instance = new CadmasWS();

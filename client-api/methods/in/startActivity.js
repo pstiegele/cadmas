@@ -3,6 +3,8 @@ const util = require("util");
 const winston = require('../../../middleware/logger');
 const { send } = require('../../main');
 const activity = require('../out/activity');
+const arm = require('../../../connector-api/methods/out/arm');
+
 
 module.exports = function (ws, msg, callback) {
   var payload = msg.payload;
@@ -15,7 +17,6 @@ module.exports = function (ws, msg, callback) {
       ackToID: msg.id
     };
     ack('startActivityACK', ackPayload, ws, callback);
-
     //send updated activity to every client
     if (global.client_wss.cadmasClients[ws.userID] !== undefined && global.client_wss.cadmasClients[ws.userID] !== null) {
       global.client_wss.cadmasClients[ws.userID].forEach((value1, value2, set) => {
@@ -24,13 +25,17 @@ module.exports = function (ws, msg, callback) {
       });
     }
 
-
-
-
   });
 
 
 
+  var query = "SELECT droneID FROM Activity WHERE id=?";
+  db.query(query, payload.activityID, function (error, result) {
+    if (error || result.length !== 1) winston.error('error in stopActivity (in select droneID): ' + error);
+    if (global.connector_wss.cadmasConnectors[result[0].droneID] !== undefined && global.connector_wss.cadmasConnectors[result[0].droneID] !== null) {
+      arm(global.connector_wss.cadmasConnectors[result[0].droneID]);
+    }
 
+  });
 
 }
