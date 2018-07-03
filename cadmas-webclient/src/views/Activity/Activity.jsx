@@ -16,10 +16,7 @@ import Attitude from '../../components/FlightInstruments/Attitude';
 import Heading from '../../components/FlightInstruments/Heading';
 import TurnCoordinator from '../../components/FlightInstruments/TurnCoordinator';
 import Variometer from '../../components/FlightInstruments/Variometer';
-
-
-//import util from 'util';
-
+import CadmasWS from '../../websocket/CadmasWS';
 
 
 const mapStateToProps = (state) => {
@@ -30,7 +27,13 @@ class Activity extends Component {
   constructor(props) {
     super(props);
     this.state = { activityID: parseInt(this.props.match.params.activityID, 10) };
-
+    this.getFullMissionAlreadyRequested = false;
+  }
+  componentDidUpdate() {
+    if (!this.getFullMissionAlreadyRequested && this.getSafeMissionID() !== "" && this.getSafeMissionID() !== -1) {
+      this.getFullMissionAlreadyRequested = true;
+      CadmasWS.getFullMission(this.getSafeMissionID());
+    }
   }
 
   getRelativeOrAbsoluteDate(date) {
@@ -95,18 +98,24 @@ class Activity extends Component {
   getSafeMissionName(missionID) {
     return this.getSafe(() => this.getMissionByID(missionID).name, "")
   }
+  getSafeMissionID() {
+    return this.getSafe(() => this.getActivityByID(this.state.activityID).missionID, -1)
+  }
   getMissionByID(missionID) {
     var result = this.props.mission.missions.filter(function (obj) {
       return obj.missionID === missionID;
     });
     return result[0];
   }
+  getSafeMission() {
+    return this.getSafe(() => this.getMissionByID(this.getSafeMissionID()), this.props.mission.missions[0]);
+  }
 
   getLiveActivityTitle(activityID) {
     var res;
     var name = this.getSafeActivityName(activityID);
     var controlButtons = <span className="pull-right">
-      <FlightModeControlButtons activityID={activityID} state={parseInt(this.getSafeActivityState(this.state.activityID), 10)}/></span>
+      <FlightModeControlButtons activityID={activityID} state={parseInt(this.getSafeActivityState(this.state.activityID), 10)} /></span>
     res = <div>{name}{controlButtons}</div>
     return res;
   }
@@ -161,6 +170,27 @@ class Activity extends Component {
     if (this.getSafeTelemetry().route === undefined || this.getSafeTelemetry().route === null)
       return this.props.telemetry[0].route;
     return this.getSafeTelemetry().route;
+  }
+  getSafeWaypoints() {
+    var mission = this.getSafeMission();
+    if (mission === undefined || mission === "" || mission === null)
+      return [{
+        'missionIndex': 0,
+        'type': 'START',
+        'altitude': 0,
+        'lat':0,
+        'lng': 0
+      }];
+    var waypoints = this.getSafe(() => mission.waypoints, "");
+    if (waypoints === undefined || waypoints === null || waypoints === "")
+      return [{
+        'missionIndex': 0,
+        'type': 'START',
+        'altitude': 0,
+        'lat':0,
+        'lng': 0
+        }];
+    return waypoints;
   }
   getSafeActivityDtCreated(activityID) {
     return this.getSafe(() => this.getActivityByID(activityID).dt_created, "")
@@ -223,7 +253,11 @@ class Activity extends Component {
         <Col md={8}>
           <Card title={this.getActivityTitle(this.state.activityID)} category={<span>{this.getDate()}<br />{this.getState()}</span>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
             <div style={{ height: "60%" }}>
-              <Maps />
+              <Maps
+                latitude={this.getSafeWaypoints()[0].lat}
+                longitude={this.getSafeWaypoints()[0].lng}
+                route={JSON.parse(JSON.stringify(this.getSafeWaypoints()))}
+              />
             </div>
 
           } />

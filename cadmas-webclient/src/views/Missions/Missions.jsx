@@ -8,6 +8,7 @@ import Card from 'components/Card/Card.jsx';
 import { connect } from "react-redux";
 import moment from 'moment';
 import localization from 'moment/locale/de'
+import CreateMissionButton from '../../elements/CreateMissionButton/CreateMissionButton';
 //import util from 'util';
 
 
@@ -111,6 +112,11 @@ class Missions extends Component {
     this.setState({ redirect: true, redirectToMission: that._targetInst.return.key });
   }
 
+  getMissionsTitle(){
+    var button = <span className="pull-right"><CreateMissionButton /> </span>
+    return <div>Missions {button}</div>
+  }
+
 
   render() {
     if (this.state.redirect) {
@@ -120,7 +126,7 @@ class Missions extends Component {
       <Grid fluid>
         <Row>
           <Col md={12}>
-            <Card title="Missions" category="That are your missions" ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={<Table striped hover ><thead>
+            <Card title={this.getMissionsTitle()} category="That are your missions" ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={<Table striped hover ><thead>
               <tr>
                 {
                   this.thArray.map((prop, key) => {

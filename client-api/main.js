@@ -56,8 +56,8 @@ function getHandleMethod(method) {
     case "unsubscribeActivity":
       return require('./methods/in/unsubscribeActivity.js')
       break;
-    case "subscribeMission":
-      return require('./methods/in/subscribeMission.js')
+    case "getFullMission":
+      return require('./methods/in/getFullMission.js')
       break;
     case "unsubscribeMission":
       return require('./methods/in/unsubscribeMission.js')

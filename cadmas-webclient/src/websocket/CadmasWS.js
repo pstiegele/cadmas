@@ -1,6 +1,6 @@
 import store from "../store";
-import { setActivities,setActivity } from "../actions/activityActions";
-import { setMissions } from "../actions/missionActions";
+import { setActivities, setActivity } from "../actions/activityActions";
+import { setMissions, setMission } from "../actions/missionActions";
 import { setDrones } from "../actions/droneActions";
 import { setNotifications } from "../actions/notificationActions";
 import { setUser } from "actions/userActions";
@@ -11,7 +11,7 @@ import { setAttitude, setBattery, setHeartbeat, setMissionItem, setMissionState,
 var socket;
 var msgID = 0;
 
-class CadmasWS{
+class CadmasWS {
   callbacks = []
   constructor(props) {
     this.initWS();
@@ -75,10 +75,11 @@ class CadmasWS{
         console.log("parsing error! msg: " + event.data);
         console.log("parsing error! error: " + error);
       }
-      console.log("msg: "+JSON.stringify(msg));
+      //console.log("msg: " + JSON.stringify(msg));
       if (msg !== undefined && msg.hasOwnProperty("method")) {
         switch (msg.method) {
           case "addMissionACK":
+            that.handleCallback(msg.payload);
             break;
           case "addActivityACK":
             that.handleCallback(msg.payload);
@@ -92,6 +93,9 @@ class CadmasWS{
             break;
           case "missions":
             store.dispatch(setMissions(msg.payload));
+            break;
+          case "mission":
+            store.dispatch(setMission(msg.payload));
             break;
           case "drones":
             store.dispatch(setDrones(msg.payload));
@@ -184,21 +188,20 @@ class CadmasWS{
   }
 
   handleCallback(payload) {
+    console.log("handleCallback called");
     if (typeof this.callbacks[payload.ackToID] === "function")
       this.callbacks[payload.ackToID](payload);
   }
 
 
-  addMission(name, note, onConnectionLostMode) {
-    var msg = {
-      "method": "addMission",
-      "payload": {
-        "name": name,
-        "note": note,
-        "onConnectionLostMode": onConnectionLostMode
-      }
+  addMission(name, note, route, onConnectionLostMode, callback) {
+    var payload = {
+      "name": name,
+      "note": note,
+      "route": route,
+      "onConnectionLostMode": onConnectionLostMode
     };
-    socket.send(JSON.stringify(msg));
+    this.packAndSend("addMission", payload, callback);
     console.log("addMission (" + name + ") transmitted");
   }
   addActivity(missionID, droneID, name, state, note, callback) {
@@ -212,6 +215,14 @@ class CadmasWS{
     this.packAndSend("addActivity", payload, callback);
     console.log("addActivity (" + name + ") transmitted");
   }
+  getFullMission(missionID, callback) {
+    var payload = {
+      missionID: missionID
+    };
+    this.packAndSend("getFullMission", payload, callback);
+    console.log("getFullMission (" + missionID + ") transmitted");
+  }
+
   startActivity(activityID, callback) {
     var payload = {
       activityID: activityID
@@ -227,13 +238,13 @@ class CadmasWS{
     console.log("stopActivity (" + activityID + ") transmitted");
   }
 
-  setMode(mode, droneID, callback){
+  setMode(mode, droneID, callback) {
     var payload = {
       mode: mode,
       droneID: droneID
     };
     this.packAndSend("setMode", payload, callback);
-    console.log("setMode ("+mode+") transmitted");
+    console.log("setMode (" + mode + ") transmitted");
   }
 
   packAndSend(method, payload, callback) {
@@ -243,9 +254,29 @@ class CadmasWS{
       method: method,
       payload: payload
     }
-    socket.send(JSON.stringify(msg));
-    this.callbacks[msg.id] = callback;
+    var callbacks = this.callbacks;
+    this.waitForSocketConnection(socket, function(){
+      socket.send(JSON.stringify(msg));
+      callbacks[msg.id] = callback;
+  });  
   }
+
+  waitForSocketConnection(socket, callback){
+    var that = this;
+    setTimeout(
+        function () {
+            if (socket.readyState === 1) {
+                if(callback != null){
+                    callback();
+                }
+                return;
+
+            } else {
+                that.waitForSocketConnection(socket, callback);
+            }
+
+        }, 50); // wait 50 milisecond for the connection...
+}
   addPayloadData(activityID, payloadDeviceID, type, filepath, size) {
     var msg = {
       method: "addPayloadData",
