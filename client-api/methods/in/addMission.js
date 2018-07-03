@@ -12,8 +12,24 @@ module.exports = function (ws, msg, callback) {
         winston.info('mission successfully inserted');
         //parse route
         var parseString = require('xml2js').parseString;
-        parseString(payload.route, function (err, result) {
-            winston.error("xml: " + JSON.stringify(result));
+        parseString(payload.route, function (err, parseResult) {
+            winston.error("xml: " + JSON.stringify(parseResult.kml.Document[0].Placemark[0].LineString[0].coordinates));
+            const regex = /[0-9]+[0-9,.]*/gm;
+            var coordinates = parseResult.kml.Document[0].Placemark[0].LineString[0].coordinates[0].match(regex);
+            for (let i = 0; i < coordinates.length; i++) {
+                const element = coordinates[i];
+                const regexElement = /[0-9.]+/gm;
+                const altitude = element.match(regexElement)[2];
+                const longitude = element.match(regexElement)[0];
+                const latitude = element.match(regexElement)[1];
+                const type = "WAYPOINT";
+                const missionIndex = i;
+                var waypointQuery = "INSERT INTO MissionWaypoints (missionID,altitude,location, type,missionIndex) VALUES (?,?,POINT(?,?),?,?);";
+                //winston.info("altitude: "+altitude+". location: "+location);
+                db.query(waypointQuery, [result.insertId, altitude, latitude, longitude, type, missionIndex], function (errorWaypoint, resultWaypoint) {
+                    if (errorWaypoint) winston.error('error in addMission (in waypoints): ' + errorWaypoint);
+                });
+            }
         });
         var ackPayload = {
             ackToID: msg.id,
