@@ -26,8 +26,18 @@ class Activity extends Component {
     super(props);
     this.state = { missionID: parseInt(this.props.match.params.missionID, 10) };
     this.handleSeeMoreClick = this.handleSeeMoreClick.bind(this);
+    this.getFullMissionAlreadyRequested = false;
+    this.getFullMissionID = -1;
   }
-
+  componentDidUpdate() {
+    console.log("componentDidUpdate executed")
+    if (!this.getFullMissionAlreadyRequested||this.getFullMissionID!==this.state.missionID) {
+      console.log("gib mir die mission executed")
+      this.getFullMissionID = this.state.missionID;
+      this.getFullMissionAlreadyRequested = true;
+      CadmasWS.getFullMission(this.state.missionID);
+    }
+  }
 
   getRelativeOrAbsoluteDate(date) {
     if (new Date() - new Date(date * 1000) < 604800000) {
@@ -157,6 +167,28 @@ class Activity extends Component {
   CadmasWS.addActivity(7, 2, "Activity from Mission", 1, "this is a note", "2017-09-18 16:52:55", "2017-09-18 18:52:55");
   }
 
+  getSafeWaypoints() {
+    var mission = this.getMissionByID(this.state.missionID);
+    if (mission === undefined || mission === "" || mission === null)
+      return [{
+        'missionIndex': 0,
+        'type': 'START',
+        'altitude': 0,
+        'lat':0,
+        'lng': 0
+      }];
+    var waypoints = this.getSafe(() => mission.waypoints, "");
+    if (waypoints === undefined || waypoints === null || waypoints === "")
+      return [{
+        'missionIndex': 0,
+        'type': 'START',
+        'altitude': 0,
+        'lat':0,
+        'lng': 0
+        }];
+    return waypoints;
+  }
+
   render() {
     return (<div className="content">
       <Grid fluid>
@@ -164,7 +196,11 @@ class Activity extends Component {
           <Col md={8}>
             <Card title={this.getMissionTitle(this.state.missionID)} category={"Mission"} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
               <div style={{ height: "60%" }}>
-                <Maps />
+                <Maps 
+                latitude={this.getSafeWaypoints()[0].lat}
+                longitude={this.getSafeWaypoints()[0].lng}
+                route={this.getSafeWaypoints()}
+                />
               </div>
 
             } />

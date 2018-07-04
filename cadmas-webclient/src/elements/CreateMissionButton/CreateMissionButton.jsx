@@ -4,6 +4,7 @@ import Button from 'elements/CustomButton/CustomButton.jsx';
 import { FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import { Redirect } from 'react-router';
 import CadmasWS from '../../websocket/CadmasWS';
+import util from 'util';
 
 class CreateMissionButton extends Component {
 
@@ -19,6 +20,7 @@ class CreateMissionButton extends Component {
         this.setTitle = this.setTitle.bind(this);
         this.setNote = this.setNote.bind(this);
         this.setRoute = this.setRoute.bind(this);
+        this.setFile = this.setFile.bind(this);
     }
 
     handleOnSelectMode(eventKey, data) {
@@ -44,6 +46,9 @@ class CreateMissionButton extends Component {
             route: event.target.value
         });
     }
+    setFile(event) {
+        console.log("setFile:" + util.inspect(event.target.value.getValue));
+    }
     redirect(payload) {
         console.log("redirect from ack called");
         this.setState({
@@ -51,6 +56,7 @@ class CreateMissionButton extends Component {
             missionIDToRedirect: payload.missionID
         });
     }
+
 
     getModalText() {
         return <span >
@@ -71,6 +77,7 @@ class CreateMissionButton extends Component {
                     /><br /><br /><br /><br />
                     <ControlLabel>Insert the content of the KML file which includes the route</ControlLabel>
                     <FormControl
+                        componentClass="textarea"
                         type="text"
                         placeholder="route"
                         onChange={this.setRoute}
