@@ -256,7 +256,7 @@ class Activity extends Component {
               <Maps
                 latitude={this.getSafeWaypoints()[0].lat}
                 longitude={this.getSafeWaypoints()[0].lng}
-                route={JSON.parse(JSON.stringify(this.getSafeWaypoints()))}
+                route={this.getSafeWaypoints()}
               />
             </div>
 
@@ -300,7 +300,8 @@ class Activity extends Component {
               <Maps
                 longitude={this.getSafeTelemetryPosition().longitude}
                 latitude={this.getSafeTelemetryPosition().latitude}
-                route={JSON.parse(JSON.stringify(this.getSafeTelemetryRoute()))
+                route= {this.getSafeWaypoints()}
+                telemetryPath = {JSON.parse(JSON.stringify(this.getSafeTelemetryRoute()))
                 }
 
               />

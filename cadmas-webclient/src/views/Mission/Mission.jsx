@@ -26,19 +26,9 @@ class Activity extends Component {
     super(props);
     this.state = { missionID: parseInt(this.props.match.params.missionID, 10) };
     this.handleSeeMoreClick = this.handleSeeMoreClick.bind(this);
-    this.getFullMissionAlreadyRequested = false;
-    this.getFullMissionID = -1;
+    CadmasWS.getFullMission(this.state.missionID);
   }
-  componentDidUpdate() {
-    console.log("componentDidUpdate executed")
-    if (!this.getFullMissionAlreadyRequested||this.getFullMissionID!==this.state.missionID) {
-      console.log("gib mir die mission executed")
-      this.getFullMissionID = this.state.missionID;
-      this.getFullMissionAlreadyRequested = true;
-      CadmasWS.getFullMission(this.state.missionID);
-    }
-  }
-
+  
   getRelativeOrAbsoluteDate(date) {
     if (new Date() - new Date(date * 1000) < 604800000) {
       return moment(date * 1000).fromNow();
@@ -107,11 +97,11 @@ class Activity extends Component {
     });
     return result[0];
   }
-  getMissionTitle(missionID){
+  getMissionTitle(missionID) {
     var res;
     var name = this.getSafeMissionName(missionID);
     var controlButtons = <span className="pull-right">
-      <MissionTitleControlButtons missionID={this.state.missionID} drones={this.props.drone.drones}/></span>
+      <MissionTitleControlButtons missionID={this.state.missionID} drones={this.props.drone.drones} /></span>
     res = <div>{name}{controlButtons}</div>
     return res;
   }
@@ -163,8 +153,8 @@ class Activity extends Component {
         break;
     }
   }
-  handleSeeMoreClick(){
-  CadmasWS.addActivity(7, 2, "Activity from Mission", 1, "this is a note", "2017-09-18 16:52:55", "2017-09-18 18:52:55");
+  handleSeeMoreClick() {
+    CadmasWS.addActivity(7, 2, "Activity from Mission", 1, "this is a note", "2017-09-18 16:52:55", "2017-09-18 18:52:55");
   }
 
   getSafeWaypoints() {
@@ -174,7 +164,7 @@ class Activity extends Component {
         'missionIndex': 0,
         'type': 'START',
         'altitude': 0,
-        'lat':0,
+        'lat': 0,
         'lng': 0
       }];
     var waypoints = this.getSafe(() => mission.waypoints, "");
@@ -183,10 +173,24 @@ class Activity extends Component {
         'missionIndex': 0,
         'type': 'START',
         'altitude': 0,
-        'lat':0,
+        'lat': 0,
         'lng': 0
-        }];
+      }];
     return waypoints;
+  }
+
+  getSafeStartWaypoint() {
+    var waypoints = this.getSafeWaypoints();
+    if (waypoints === undefined || waypoints === null || waypoints === "" || waypoints[0] === undefined || waypoints[0] === null || waypoints[0] === "")
+      return {
+        'missionIndex': 0,
+        'type': 'START',
+        'altitude': 0,
+        'lat': 0,
+        'lng': 0
+      };
+    return waypoints[0];
+
   }
 
   render() {
@@ -196,10 +200,10 @@ class Activity extends Component {
           <Col md={8}>
             <Card title={this.getMissionTitle(this.state.missionID)} category={"Mission"} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
               <div style={{ height: "60%" }}>
-                <Maps 
-                latitude={this.getSafeWaypoints()[0].lat}
-                longitude={this.getSafeWaypoints()[0].lng}
-                route={this.getSafeWaypoints()}
+                <Maps
+                  latitude={this.getSafeStartWaypoint().lat}
+                  longitude={this.getSafeStartWaypoint().lng}
+                  route={this.getSafeWaypoints()}
                 />
               </div>
 
@@ -228,7 +232,7 @@ class Activity extends Component {
                 </div>
               } />
             </Row> */}
-            
+
           </Col>
         </Row>
 

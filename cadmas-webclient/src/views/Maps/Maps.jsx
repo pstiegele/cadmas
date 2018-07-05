@@ -26,9 +26,17 @@ class Maps extends Component {
         <Marker position={{ lat: this.props.latitude, lng: this.props.longitude }} onClick={this.onMarkerClick} name={'Current location'} />
         
         <Polyline
-          fillColor="#ed8721"
+          fillColor="#D41313"
           fillOpacity={0.35}
           path={this.props.route}
+          strokeColor="#D41313"
+          strokeOpacity={0.8}
+          strokeWeight={3}
+        />
+        <Polyline
+          fillColor="#ed8721"
+          fillOpacity={0.35}
+          path={this.props.telemetryPath}
           strokeColor="#ed8721"
           strokeOpacity={0.8}
           strokeWeight={3}
