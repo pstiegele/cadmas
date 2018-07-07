@@ -29,15 +29,7 @@ module.exports = function (ws, msg, callback) {
     if (global.connector_wss.cadmasConnectors[payload.droneID] !== undefined && global.connector_wss.cadmasConnectors[payload.droneID] !== null) {
             winston.info("setMode sent to client");
             //payload.droneID = ws.droneID;
-            setModeToClient(global.connector_wss.cadmasConnectors[payload.droneID], payload.mode, function (ws, method, res) {
-                res.time = require('moment')().unix();
-                res.id = 0;
-                res.method = method;
-                if (global.connector_wss.cadmasConnectors[payload.droneID].readyState === Websocket.OPEN) {
-                    global.connector_wss.cadmasConnectors[payload.droneID].send(JSON.stringify(res));
-                }
-
-            });
+            setModeToClient(global.connector_wss.cadmasConnectors[payload.droneID], payload.mode);
     }
 
 

@@ -35,25 +35,41 @@ module.exports = function (ws, msg, callback) {
 
 }
 
-function parseMissionPlannerFile(file, missionID){
+function parseMissionPlannerFile(file, missionID) {
     var lines = file.split('\n');
     for (let i = 1; i < lines.length; i++) {
         const element = lines[i].split('\t');
-        if(element.length!==12){
+        if (element.length !== 12) {
             return;
         }
         const altitude = element[10];
         const latitude = element[8];
         const longitude = element[9];
-        const type = element[3];
+        var type = element[3];
         const missionIndex = element[0];
+        if (element[0] === "0" && element[1] === "1") {
+            type = "HOMEPOINT";
+        } else if (type === "21") {
+            type = "LAND";
+        } else if (type === "22") {
+            type = "TAKEOFF";
+        } else if (type === "20") {
+            type = "RTL";
+        } else if (type === "16") {
+            type = "WAYPOINT";
+        } else if (type = "19") {
+            type = "LOITER";
+        } else {
+            type = "INVALID";
+        }
+
         //winston.error("lat: "+latitude+"     long: "+longitude);
         var waypointQuery = "INSERT INTO MissionWaypoints (missionID,altitude,location, type,missionIndex) VALUES (?,?,POINT(?,?),?,?);";
-            //winston.info("altitude: "+altitude+". location: "+location);
-            db.query(waypointQuery, [missionID, altitude, latitude, longitude, type, missionIndex], function (errorWaypoint, resultWaypoint) {
-                if (errorWaypoint) winston.error('error in addMission (in MissionPlanner waypoints): ' + errorWaypoint);
-            });
-        
+        //winston.info("altitude: "+altitude+". location: "+location);
+        db.query(waypointQuery, [missionID, altitude, latitude, longitude, type, missionIndex], function (errorWaypoint, resultWaypoint) {
+            if (errorWaypoint) winston.error('error in addMission (in MissionPlanner waypoints): ' + errorWaypoint);
+        });
+
     }
 }
 
@@ -69,6 +85,15 @@ function parseKMLFile(file, missionID) {
             const altitude = element.match(regexElement)[2];
             const longitude = element.match(regexElement)[0];
             const latitude = element.match(regexElement)[1];
+            if (i === 0) {
+                type = "HOMEPOINT";
+            } else if (i === 1) {
+                type = "TAKEOFF";
+            } else if (i === coordinates.length - 1) {
+                type = "LAND";
+            } else {
+                type = "WAYPOINT";
+            }
             const type = "WAYPOINT";
             const missionIndex = i;
             var waypointQuery = "INSERT INTO MissionWaypoints (missionID,altitude,location, type,missionIndex) VALUES (?,?,POINT(?,?),?,?);";
