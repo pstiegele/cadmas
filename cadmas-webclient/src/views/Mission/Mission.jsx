@@ -201,8 +201,6 @@ class Activity extends Component {
             <Card title={this.getMissionTitle(this.state.missionID)} category={"Mission"} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
               <div style={{ height: "60%" }}>
                 <Maps
-                  latitude={this.getSafeStartWaypoint().lat}
-                  longitude={this.getSafeStartWaypoint().lng}
                   route={this.getSafeWaypoints()}
                 />
               </div>

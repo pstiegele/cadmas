@@ -176,7 +176,7 @@ class Activity extends Component {
     if (mission === undefined || mission === "" || mission === null)
       return [{
         'missionIndex': 0,
-        'type': 'START',
+        'type': 'LAND',
         'altitude': 0,
         'lat':0,
         'lng': 0
@@ -185,7 +185,7 @@ class Activity extends Component {
     if (waypoints === undefined || waypoints === null || waypoints === "")
       return [{
         'missionIndex': 0,
-        'type': 'START',
+        'type': 'LAND',
         'altitude': 0,
         'lat':0,
         'lng': 0
