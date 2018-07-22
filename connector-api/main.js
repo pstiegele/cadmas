@@ -13,10 +13,16 @@ module.exports = function (wss) {
     winston.info("connector connected. droneID: " + ws.droneID + " name: " + ws.name);
     global.connector_wss.cadmasConnectors[ws.droneID] = ws;
     ws.on('message', function incoming(raw_msg) {
-      winston.info('received: %s', raw_msg);
+      
+      
       var msg;
       try {
         msg = JSON.parse(raw_msg);
+        if(msg.method==="cameraImage"){
+          winston.info('received: %s', msg.method);
+        }else{
+          winston.info('received: %s', util.inspect(msg));
+        }
       } catch (e) {
         return console.error(e);
       }
@@ -80,6 +86,9 @@ function getHandleMethod(method) {
       break;
     case "getMission":
       return require('./methods/out/newMission.js')
+      break;
+    case "cameraImage":
+      return require('./methods/in/cameraImage.js');
       break;
     default:
       return require('./methods/invalidMethod.js');

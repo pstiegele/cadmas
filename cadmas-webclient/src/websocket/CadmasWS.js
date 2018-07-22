@@ -6,7 +6,7 @@ import { setNotifications } from "../actions/notificationActions";
 import { setUser } from "actions/userActions";
 import { setPayloads } from "actions/payloadActions";
 import { setPayloadDevices } from "actions/payloadDeviceActions";
-import { setAttitude, setBattery, setHeartbeat, setMissionItem, setMissionState, setPosition, setVelocity } from "actions/telemetryActions";
+import { setAttitude, setBattery, setHeartbeat, setMissionItem, setMissionState, setPosition, setVelocity,setCameraImage } from "actions/telemetryActions";
 
 var socket;
 var msgID = 0;
@@ -132,6 +132,9 @@ class CadmasWS {
             break;
           case "velocity":
             store.dispatch(setVelocity(msg.payload));
+            break;
+          case "cameraImage":
+            store.dispatch(setCameraImage(msg.payload));
             break;
 
           default:

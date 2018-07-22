@@ -42,6 +42,10 @@ const telemetryReducer = (state = {
       'airspeed': 0,
       'climbrate': 0
     },
+    'cameraImage':{
+      'timestamp':0,
+      'img':0
+    },
     'route': []
   }
 }, action) => {
@@ -80,6 +84,17 @@ const telemetryReducer = (state = {
         state[droneID] = {};
       state[droneID].heartbeat = action.payload;
       delete state[droneID].heartbeat.droneID;
+      break;
+    
+      case "SET_CAMERAIMAGE":
+      
+      state = {
+        ...state
+      };
+      if (state[droneID] === undefined || state[droneID] === null)
+        state[droneID] = {};
+      state[droneID].cameraImage = action.payload;
+      delete state[droneID].cameraImage.droneID;
       break;
 
     case "SET_MISSIONITEM":

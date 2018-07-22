@@ -25,4 +25,7 @@ export function setAttitude(attitude) {
   export function setVelocity(velocity) {
     return {type: "SET_VELOCITY", payload: velocity};
   }
+  export function setCameraImage(cameraImage) {
+    return {type: "SET_CAMERAIMAGE", payload: cameraImage};
+  }
   
