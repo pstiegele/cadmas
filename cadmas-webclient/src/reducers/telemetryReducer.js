@@ -42,19 +42,19 @@ const telemetryReducer = (state = {
       'airspeed': 0,
       'climbrate': 0
     },
-    'cameraImage':{
-      'timestamp':0,
-      'img':0
+    'cameraImage': {
+      'timestamp': 0,
+      'img': 0
     },
     'route': []
   }
 }, action) => {
   var droneID;
-  if(action.payload!==undefined)
+  if (action.payload !== undefined)
     droneID = action.payload.droneID;
   switch (action.type) {
     case "SET_ATTITUDE":
-      
+
       state = {
         ...state
       };
@@ -65,7 +65,7 @@ const telemetryReducer = (state = {
       break;
 
     case "SET_BATTERY":
-      
+
       state = {
         ...state
       };
@@ -76,7 +76,7 @@ const telemetryReducer = (state = {
       break;
 
     case "SET_HEARTBEAT":
-      
+
       state = {
         ...state
       };
@@ -85,20 +85,24 @@ const telemetryReducer = (state = {
       state[droneID].heartbeat = action.payload;
       delete state[droneID].heartbeat.droneID;
       break;
-    
-      case "SET_CAMERAIMAGE":
-      
+
+    case "SET_CAMERAIMAGE":
+      var str = "";
+      for (let i = 0; i < action.payload.img.length; i++) {
+        str = str.concat(String.fromCharCode(action.payload.img[i] & 0xFF));
+      }
+      str = btoa(str);
       state = {
         ...state
       };
       if (state[droneID] === undefined || state[droneID] === null)
         state[droneID] = {};
-      state[droneID].cameraImage = action.payload;
+      state[droneID].cameraImage = str;
       delete state[droneID].cameraImage.droneID;
       break;
 
     case "SET_MISSIONITEM":
-      
+
       state = {
         ...state
       };
@@ -109,7 +113,7 @@ const telemetryReducer = (state = {
       break;
 
     case "SET_MISSIONSTATE":
-      
+
       state = {
         ...state
       };
@@ -120,7 +124,7 @@ const telemetryReducer = (state = {
       break;
 
     case "SET_POSITION":
-      
+
       state = {
         ...state
       };
@@ -138,7 +142,7 @@ const telemetryReducer = (state = {
       break;
 
     case "SET_VELOCITY":
-      
+
       state = {
         ...state
       };

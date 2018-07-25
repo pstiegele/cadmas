@@ -134,13 +134,17 @@ class CadmasWS {
             store.dispatch(setVelocity(msg.payload));
             break;
           case "cameraImage":
+          // var testimg = [-1,-40,-1,-32,0,16,74,70,73,70,0];
+          // var str = "";
+          // for (let i = 0; i <testimg.length; i++) {
+          //   str+=String.fromCharCode(testimg[i]& 0xFF);
+          // }
+          // console.log(JSON.stringify(btoa(str)));
             store.dispatch(setCameraImage(msg.payload));
             break;
-
           default:
             break;
         }
-
         console.log("ws received: " + msg.method);
       }
 

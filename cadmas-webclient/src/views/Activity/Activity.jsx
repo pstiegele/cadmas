@@ -166,6 +166,11 @@ class Activity extends Component {
       return this.props.telemetry[0].velocity;
     return this.getSafeTelemetry().velocity;
   }
+  getSafeTelemetryCameraImage() {
+    if (this.getSafeTelemetry().cameraImage === undefined || this.getSafeTelemetry().cameraImage === null)
+      return this.props.telemetry[0].cameraImage;
+    return this.getSafeTelemetry().cameraImage;
+  }
   getSafeTelemetryRoute() {
     if (this.getSafeTelemetry().route === undefined || this.getSafeTelemetry().route === null)
       return this.props.telemetry[0].route;
@@ -330,7 +335,7 @@ class Activity extends Component {
         <Col lg={5}>
           <Col lg={12} >
             <div>
-              <img alt="onboard-camera" src="https://dummyimage.com/300x200/000/51ff00.jpg&text=Onboard+Camera" style={{ verticalAlign: "top", paddingTop: "45px" }}></img>
+              <img alt="onboard-camera" src={"data:image/jpg;base64, "+this.getSafeTelemetryCameraImage()} style={{ verticalAlign: "top", paddingTop: "45px" }}></img>
               <Airspeed showBox={false} size={300} speed={this.getSafeTelemetryVelocity().airspeed} />
             </div>
           </Col>
