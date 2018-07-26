@@ -1,7 +1,17 @@
 import React, {Component} from 'react';
 import {NavItem, Nav, NavDropdown, MenuItem} from 'react-bootstrap';
+import ConnectedDrones from 'elements/ConnectedDrones/ConnectedDrones.jsx';
+import { connect } from "react-redux";
+
+
+
+const mapStateToProps = (state) => {
+  return { drone: state.drone, telemetry: state.telemetry };
+};
+
 
 class HeaderLinks extends Component {
+  
   render() {
     const notification = (<div>
       <i className="fa fa-globe"></i>
@@ -31,6 +41,7 @@ class HeaderLinks extends Component {
         }
       </Nav>
       <Nav pullRight={true}>
+      <ConnectedDrones state={this.props} />
         <NavItem eventKey={1} href="#">User</NavItem>
         {/* <NavDropdown eventKey={2} title="Dropdown" id="basic-nav-dropdown-right">
           <MenuItem eventKey={2.1}>Action</MenuItem>
@@ -42,10 +53,11 @@ class HeaderLinks extends Component {
           <MenuItem eventKey={2.5}>Separated link</MenuItem>
           </NavDropdown> */
         }
-        <NavItem eventKey={3} href="#">Log out</NavItem>
+        <NavItem eventKey={3} href="#" >Log out</NavItem>
       </Nav>
     </div>);
   }
 }
 
-export default HeaderLinks;
+export default connect(mapStateToProps)(HeaderLinks);
+

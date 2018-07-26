@@ -14,28 +14,28 @@ class Maps extends Component {
 
 
   getPositionMarker() {
-    if(this.props.longitude!==undefined&&this.props.latitude!==undefined){
-      
-    return <Marker position={{ lat: this.props.latitude, lng: this.props.longitude }} name={'Current location'} title={'Current location' } 
-    icon={{
-      url: require("assets/img/mapsicons/telemetryPosition.png"),
-      anchor: new window.google.maps.Point(33,56),
-      scaledSize: new window.google.maps.Size(64,64)
-    }}
- />
- 
-}
+    if (this.props.longitude !== undefined && this.props.latitude !== undefined) {
+
+      return <Marker position={{ lat: this.props.latitude, lng: this.props.longitude }} name={'Current location'} title={'Current location'}
+        icon={{
+          url: require("assets/img/mapsicons/telemetryPosition.png"),
+          anchor: new window.google.maps.Point(33, 56),
+          scaledSize: new window.google.maps.Size(64, 64)
+        }}
+      />
+
+    }
   }
   getHomePointMarker() {
     for (let i = 0; i < this.props.route.length; i++) {
       const element = this.props.route[i];
       if (element.type === "HOMEPOINT") {
-        return <Marker position={{ lat: element.lat, lng: element.lng }} name={'Homepoint'} title={'Homepoint'} 
-        icon={{
-          url: require("assets/img/mapsicons/homePoint.png"),
-          anchor: new window.google.maps.Point(33,56),
-          scaledSize: new window.google.maps.Size(64,64)
-        }}
+        return <Marker position={{ lat: element.lat, lng: element.lng }} name={'Homepoint'} title={'Homepoint'}
+          icon={{
+            url: require("assets/img/mapsicons/homePoint.png"),
+            anchor: new window.google.maps.Point(33, 56),
+            scaledSize: new window.google.maps.Size(64, 64)
+          }}
         />
       }
     }
@@ -44,12 +44,12 @@ class Maps extends Component {
     for (let i = 0; i < this.props.route.length; i++) {
       const element = this.props.route[i];
       if (element.type === "TAKEOFF") {
-        return <Marker position={{ lat: element.lat, lng: element.lng }} name={'Takeoff'} title={'Takeoff'} 
-        icon={{
-          url: require("assets/img/mapsicons/takeoff.png"),
-          anchor: new window.google.maps.Point(33,56),
-          scaledSize: new window.google.maps.Size(64,64)
-        }}
+        return <Marker position={{ lat: element.lat, lng: element.lng }} name={'Takeoff'} title={'Takeoff'}
+          icon={{
+            url: require("assets/img/mapsicons/takeoff.png"),
+            anchor: new window.google.maps.Point(33, 56),
+            scaledSize: new window.google.maps.Size(64, 64)
+          }}
         />
       }
     }
@@ -59,11 +59,11 @@ class Maps extends Component {
       const element = this.props.route[i];
       if (element.type === "LAND") {
         return <Marker position={{ lat: element.lat, lng: element.lng }} name={'Land'} title={'Land'}
-        icon={{
-          url: require("assets/img/mapsicons/land.png"),
-          anchor: new window.google.maps.Point(33,56),
-          scaledSize: new window.google.maps.Size(64,64)
-        }}
+          icon={{
+            url: require("assets/img/mapsicons/land.png"),
+            anchor: new window.google.maps.Point(33, 56),
+            scaledSize: new window.google.maps.Size(64, 64)
+          }}
         />
       }
     }
@@ -139,9 +139,24 @@ class Maps extends Component {
       return <Polyline
         fillColor="#D41313"
         fillOpacity={0.35}
-        path={this.props.route}
+        path={this.props.route.filter(coord => coord.type !== "TAKEOFF" && coord.type !== "HOMEPOINT")}
         strokeColor="#D41313"
         strokeOpacity={0.8}
+        strokeWeight={3}
+      />
+    }
+  }
+  getHomePointRoute() {
+    if (Array.isArray(this.props.route)) {
+      var homePointIndex = this.props.route.findIndex(coord => coord.type === "HOMEPOINT");
+      var wayPointIndex = this.props.route.findIndex(coord => coord.type === "WAYPOINT");
+      var homePointPath = [this.props.route[homePointIndex], this.props.route[wayPointIndex]];
+      return <Polyline
+        fillColor="#686868"
+        fillOpacity={0.35}
+        path={homePointPath}
+        strokeColor="#686868"
+        strokeOpacity={0.6}
         strokeWeight={3}
       />
     }
@@ -160,18 +175,36 @@ class Maps extends Component {
     }
 
   }
+  getWaypointDots(){
+    var retRows=[];
+    var p=0;
+    for (let i = 0; i < this.props.route.length; i++) {
+      const element = this.props.route[i];
+      if (element.type === "WAYPOINT") {
+        retRows[p]= <Marker position={{ lat: element.lat, lng: element.lng }} name={'Waypoint'} title={element.altitude+" m"}
+          icon={{
+            url: require("assets/img/mapsicons/WaypointDot.png"),
+            anchor: new window.google.maps.Point(6, 6),
+            scaledSize: new window.google.maps.Size(12, 12)
+          }}
+        />
+        p++;
+      }
+    }
+    return retRows;
+  }
 
-  centerOnNewTelemetry(){
+  centerOnNewTelemetry() {
 
   }
-  getCenterPosition(){
+  getCenterPosition() {
     var pos = this.getInitialZoom().getCenter();
-    console.log("center pos: "+JSON.stringify(pos));
+    console.log("center pos: " + JSON.stringify(pos));
     return pos;
   }
   render() {
     var initalCenterPosition = this.getCenterPosition();
-    console.log("initalCenterPosition: "+JSON.stringify(initalCenterPosition));
+    console.log("initalCenterPosition: " + JSON.stringify(initalCenterPosition));
     return (<div id="map">
       <Map
         center={initalCenterPosition}
@@ -180,22 +213,23 @@ class Maps extends Component {
           width: '100%',
           height: '100%',
           position: 'relative'
-        }} google={this.props.google} 
+        }} google={this.props.google}
         initialCenter={{
           lat: this.props.latitude,
           lng: this.props.longitude
         }}
-        
+
         clickableIcons={false}
-        //bounds={this.getInitialZoom()}
-        //TODO: Center wieder einbauen wenn neue Telemetrie vorliegt
+      //bounds={this.getInitialZoom()}
+      //TODO: Center wieder einbauen wenn neue Telemetrie vorliegt
       >
         {this.getHomePointMarker()}
         {this.getTakeoffMarker()}
         {this.getLandMarker()}
         {this.getPositionMarker()}
-
+        {this.getWaypointDots()}
         {this.getRoute()}
+        {this.getHomePointRoute()}
         {this.getTelemetryPath()}
 
       </Map>
