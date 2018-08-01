@@ -28,8 +28,7 @@
     "serve-favicon": "~2.4.5",
     "winston": "^3.0.0-rc4",
     "ws": "^5.0.0",
-    "xml2js": "^0.4.19",
-    "bcrypt": "latest",
-    "hafljwadlawdjlawd": "latest"
+    "xml2js": "^0.4.19"
+    abc
   }
 }
