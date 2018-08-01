@@ -151,13 +151,17 @@ class Dashboard extends Component {
     };
   }
 
+  getNumberOfCameraImagesThisMonth(){
+    
+  }
+
 
   render() {
     return (<div className="content">
       <Grid fluid>
         <Row>
           <Col lg={3} sm={6}>
-            <StatsCard bigIcon={<i className="pe-7s-server text-warning" > </i>} statsText="Data usage this month" statsValue="35GB" statsIcon={<i className="fa fa-refresh" > </i>} statsIconText="Updated now" />
+            <StatsCard bigIcon={<i className="pe-7s-server text-warning" > </i>} statsText="Camera images this month" statsValue={this.getNumberOfCameraImagesThisMonth()} statsIcon={<i className="fa fa-refresh" > </i>} statsIconText="Updated now" />
           </Col>
           <Col lg={3} sm={6}>
             <StatsCard bigIcon={<i className="pe-7s-world text-success" > </i>} statsText="Activities this month" statsValue={this.getNumberOfActivitiesThisMonth()} statsIcon={<i className="fa fa-calendar-o" > </i>} statsIconText="last 30 days" />

@@ -35,4 +35,33 @@ module.exports = function (ws, msg, callback) {
 
     });
 
+    // query = "SELECT id, UNIX_TIMESTAMP(timestamp) AS timestamp, activityID, img FROM CameraImage"
+    // var fs = require('fs');
+    // var btoa = require('btoa');
+    // db.query(query, function (error, result) {
+    //     if (error) winston.error('error in generate Camera Images: ' + error);
+    //     for (let i = 0; i < result.length; i++) {
+    //         const element = result[i];
+    //         if (element.img != null && element.img !== undefined) {
+
+    //             var str = "";
+    //             for (let j = 0; j < element.img.length; j++) {
+    //                 str = str.concat(String.fromCharCode(element.img[j] & 0xFF));
+    //             }
+    //             //console.log(str);
+    //             str = btoa(str);
+    //             fs.writeFile(__dirname + "/../../../../cameraTest/" + element.timestamp + ".data", element.img, function (err) {
+    //                 if (err) {
+    //                     return console.log(err);
+    //                 }
+
+    //                 console.log("The file was saved!");
+    //             });
+
+    //         }
+    //     }
+
+
+
+    // });
 }
