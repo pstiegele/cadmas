@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import CustomDropdown from '../CustomDropdown/CustomDropdown';
 import CustomModal from '../CustomModal/CustomModal';
+import { Label } from 'react-bootstrap';
 import Button from 'elements/CustomButton/CustomButton.jsx';
 import CadmasWS from '../../websocket/CadmasWS';
 
@@ -16,6 +17,8 @@ class FlightModeControlButtons extends Component {
       changeFlightModeTo: 'AUTO'
     };
   }
+
+
 
   getDropdownModes() {
     var res = [{
@@ -50,10 +53,10 @@ class FlightModeControlButtons extends Component {
     return res;
   }
 
-  getFlightModeNameToKey(eventKey){
-    var res="";
-    this.getDropdownModes().forEach(function(element){
-      if(element.eventKey===eventKey){
+  getFlightModeNameToKey(eventKey) {
+    var res = "";
+    this.getDropdownModes().forEach(function (element) {
+      if (element.eventKey === eventKey) {
         res = element.title;
       }
     });
@@ -143,6 +146,92 @@ class FlightModeControlButtons extends Component {
       trigger: "start"
     })
   }
+
+  getArmedBsStyle(){
+    if(this.props.heartbeat.isArmed){
+      return "danger";
+    }else{
+      return "default"
+    }
+  }
+  getArmedTitle(){
+    if(this.props.heartbeat.isArmed){
+      return "armed";
+    }else{
+      return "disarmed"
+    }
+  }
+  getSafeCustomMode() {
+    if (this.props.heartbeat !== undefined && this.props.heartbeat !== null) {
+      switch (this.props.heartbeat.customMode) {
+        case 0:
+          return "MANUAL"
+          break;
+        case 1:
+          return "CIRCLE"
+          break;
+        case 2:
+          return "STABILIZE"
+          break;
+        case 3:
+          return "TRAINING"
+          break;
+        case 4:
+          return "ACRO"
+          break;
+        case 5:
+          return "FLY BY WIRE THROTTLE MANUAL"
+          break;
+        case 6:
+          return "FLY BY WIRE THROTTLE AUTO"
+          break;
+        case 7:
+          return "CRUISE"
+          break;
+        case 8:
+          return "AUTOTUNE"
+          break;
+        case 10:
+          return "AUTO"
+          break;
+        case 11:
+          return "RTL"
+          break;
+        case 12:
+          return "LOITER"
+          break;
+        case 14:
+          return "AVOID_ADSB"
+          break;
+        case 15:
+          return "GUIDED"
+          break;
+        case 16:
+          return "INITIALISING"
+          break;
+        case 17:
+          return "QSTABILIZE"
+          break;
+        case 18:
+          return "QHOVER"
+          break;
+        case 19:
+          return "QLOITER"
+          break;
+        case 20:
+          return "QLAND"
+          break;
+        case 21:
+          return "QRTL"
+          break;
+        default:
+          break;
+      }
+      return "Error";
+    } else {
+      return "Error";
+    }
+  }
   render() {
     if (this.props.state === 0) {
       return (<span>
@@ -153,7 +242,8 @@ class FlightModeControlButtons extends Component {
       );
     } else if (this.props.state === 1) {
       return (<span>
-        <CustomDropdown title={this.state.activeFlightMode} bsStyle="warning" bsSize="small" dropdownKey="modeDropdown" menuItems={this.getDropdownModes()} onSelect={this.handleOnSelectMode.bind(this)} /> &nbsp;
+        <Label bsStyle={this.getArmedBsStyle()}>{this.getArmedTitle()}</Label> &nbsp;
+        <CustomDropdown title={this.getSafeCustomMode()} bsStyle="warning" bsSize="small" dropdownKey="modeDropdown" menuItems={this.getDropdownModes()} onSelect={this.handleOnSelectMode.bind(this)} /> &nbsp;
         <CustomModal show={this.state.showModal} bsStyle="danger" handleClose={this.handleClose.bind(this)} handleAccept={this.handleAccept.bind(this)} acceptTitle="Yes, I know what I do." title={this.getModalTitle()} text={this.getModalText()} />
         <Button className="pt-1" bsStyle="danger" type="button" bsSize="small" onClick={() => this.handleStopClick()}>
           STOP ACTIVITY

@@ -17,6 +17,8 @@ import Heading from '../../components/FlightInstruments/Heading';
 import TurnCoordinator from '../../components/FlightInstruments/TurnCoordinator';
 import Variometer from '../../components/FlightInstruments/Variometer';
 import CadmasWS from '../../websocket/CadmasWS';
+import Gauge from 'react-svg-gauge';
+
 
 
 const mapStateToProps = (state) => {
@@ -26,9 +28,21 @@ const mapStateToProps = (state) => {
 class Activity extends Component {
   constructor(props) {
     super(props);
-    this.state = { activityID: parseInt(this.props.match.params.activityID, 10) };
+    this.state = {
+      activityID: parseInt(this.props.match.params.activityID, 10),
+      overallMaxBatteryCurrent: 3
+    };
     this.getFullMissionAlreadyRequested = false;
   }
+
+  componentDidMount() {
+    this.interval = setInterval(() => this.setState({ time: Date.now() }), 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+
   componentDidUpdate() {
     if (!this.getFullMissionAlreadyRequested && this.getSafeMissionID() !== "" && this.getSafeMissionID() !== -1) {
       this.getFullMissionAlreadyRequested = true;
@@ -115,7 +129,7 @@ class Activity extends Component {
     var res;
     var name = this.getSafeActivityName(activityID);
     var controlButtons = <span className="pull-right">
-      <FlightModeControlButtons activityID={activityID} state={parseInt(this.getSafeActivityState(this.state.activityID), 10)} /></span>
+      <FlightModeControlButtons activityID={activityID} state={parseInt(this.getSafeActivityState(this.state.activityID), 10)} heartbeat={this.getSafeTelemetryHeartbeat()} /></span>
     res = <div>{name}{controlButtons}</div>
     return res;
   }
@@ -167,7 +181,7 @@ class Activity extends Component {
     return this.getSafeTelemetry().velocity;
   }
   getSafeTelemetryCameraImage() {
-    if (this.getSafeTelemetry().cameraImage === undefined || this.getSafeTelemetry().cameraImage === null){
+    if (this.getSafeTelemetry().cameraImage === undefined || this.getSafeTelemetry().cameraImage === null) {
       return this.props.telemetry[0].cameraImage;
     }
     return this.getSafeTelemetry().cameraImage;
@@ -184,7 +198,7 @@ class Activity extends Component {
         'missionIndex': 0,
         'type': 'LAND',
         'altitude': 0,
-        'lat':0,
+        'lat': 0,
         'lng': 0
       }];
     var waypoints = this.getSafe(() => mission.waypoints, "");
@@ -193,9 +207,9 @@ class Activity extends Component {
         'missionIndex': 0,
         'type': 'LAND',
         'altitude': 0,
-        'lat':0,
+        'lat': 0,
         'lng': 0
-        }];
+      }];
     return waypoints;
   }
   getSafeActivityDtCreated(activityID) {
@@ -233,6 +247,63 @@ class Activity extends Component {
     }
   }
 
+  getMaxBatteryCurrentValue() {
+    var value = this.getSafeTelemetryBattery().current
+    if (this.getSafeTelemetryBattery().current > this.state.overallMaxBatteryCurrent) {
+      this.setState({ overallMaxBatteryCurrent: Math.round(value) + 2 });
+      return value;
+    } else {
+      return this.state.overallMaxBatteryCurrent;
+    }
+
+  }
+
+  getLastTelemetryUpdateTimeDiff() {
+    var tel = this.getSafeTelemetry();
+    var timestamp = 0;
+    moment.relativeTimeThreshold('ss', 2);
+    moment.updateLocale('de', {
+      relativeTime: {
+        future: "in %s",
+        past: "%s ago",
+        s: 'just now',
+        ss: '%d seconds',
+        m: "a minute",
+        mm: "%d minutes",
+        h: "an hour",
+        hh: "%d hours",
+        d: "a day",
+        dd: "%d days",
+        M: "a month",
+        MM: "%d months",
+        y: "a year",
+        yy: "%d years"
+      }
+    });
+
+    Object.keys(tel).forEach(function (key) {
+      if (tel[key].timestamp !== undefined && tel[key].timestamp !== null && tel[key].timestamp > timestamp) {
+        timestamp = tel[key].timestamp;
+      }
+    });
+    if (timestamp === 0) {
+      return <span style={{color:"red", fontSize:"2em", animation:"blinker 1s linear infinite"}}>never</span>;
+    }
+    var ret = moment(timestamp).fromNow();
+    if (ret === "just now ago") {
+      return <span style={{color:"#059900", fontSize:"1.5em", animation:"blinker 1s linear infinite"}}>just now</span>;
+    } else if(ret === "3 seconds ago"||ret === "4 seconds ago"||ret === "5 seconds ago"||ret === "6 seconds ago"||ret === "7 seconds ago"||ret === "8 seconds ago"||ret === "9 seconds ago"){
+      return <div><span style={{color:"#ffc700", fontSize:"2em", animation:"blinker 1s linear infinite"}}>{ret[0]}</span><br /><span style={{color:"black", fontSize:"1em"}}>{ret.substring(1)}</span></div>;
+    }else if(ret.includes("second")){
+      if(ret[1]==="0"||ret[1]==="1"||ret[1]==="2"||ret[1]==="3"||ret[1]==="4"||ret[1]==="5"||ret[1]==="6"||ret[1]==="7"||ret[1]==="8"||ret[1]==="9"){
+        return <div><span style={{color:"#cc0202", fontSize:"2em", animation:"blinker 1s linear infinite"}}>{ret[0]+ret[1]}</span><br /><span style={{color:"black", fontSize:"1em"}}>{ret.substring(2)}</span></div>;
+      }else{
+        return <div><span style={{color:"#cc0202", fontSize:"2em", animation:"blinker 1s linear infinite"}}>{ret[0]}</span><br /><span style={{color:"black", fontSize:"1em"}}>{ret.substring(1)}</span></div>;
+      }
+    }else{
+      return <span style={{color:"#cc0202", fontSize:"1.5em", animation:"blinker 1s linear infinite"}}>{ret}</span>; 
+    }
+  }
   getState() {
     var state = parseInt(this.getSafeActivityState(this.state.activityID), 10);
     switch (state) {
@@ -251,6 +322,42 @@ class Activity extends Component {
       default:
         break;
     }
+  }
+
+  getBatteryGauges() {
+    return <div>
+      <Gauge value={this.getSafeTelemetryBattery().current} width={100} height={130} min="0" max={this.getMaxBatteryCurrentValue()} label="Current" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#bcce00" />
+      <Gauge value={this.getSafeTelemetryBattery().percentage} width={100} height={130} min="0" max="100" label="Percentage" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#0085e5" />
+      <Gauge value={this.getSafeTelemetryBattery().voltage} width={100} height={130} min="9" max="14" label="Voltage" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#e59c00" />
+    </div>;
+  }
+
+  getStyledTelemetryLoss(){
+    var value = this.getSafeTelemetryHeartbeat().messagesLost;
+    if(value<1){
+      return <span style={{color:"#059900", fontSize:"2em"}}>{value}</span>
+    }else if(value < 3){
+      return <span style={{color:"#cc0202", fontSize:"2em"}}>{value}</span>
+    }else{
+      return <span style={{color:"#cc0202", fontSize:"2em"}}>{value}</span>
+    }
+  }
+
+  getDroneConnectorValues() {
+    return <div className="row">
+      <div className="col-lg-3">
+        <Gauge value={this.getSafeTelemetryHeartbeat().cpuTemp} width={100} height={130} min="0" max="90" label="CPU °C" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#e5004c" />
+      </div>
+      <div className="col-lg-5 text-center">
+        Telemetry loss:<br />
+        {this.getStyledTelemetryLoss()}
+      </div>
+      <div className="col-lg-4 text-center">
+        Last Update:<br /> {this.getLastTelemetryUpdateTimeDiff()}
+      </div>
+    </div>;
+
+    <div>CPU-Temp: {this.getSafeTelemetryHeartbeat().cpuTemp} °C</div>;
   }
 
   getNormalActivity() {
@@ -306,8 +413,9 @@ class Activity extends Component {
               <Maps
                 longitude={this.getSafeTelemetryPosition().longitude}
                 latitude={this.getSafeTelemetryPosition().latitude}
-                route= {this.getSafeWaypoints()}
-                telemetryPath = {JSON.parse(JSON.stringify(this.getSafeTelemetryRoute()))
+                route={this.getSafeWaypoints()}
+                currentWaypoint={this.getSafeTelemetryMissionState().currentItem}
+                telemetryPath={JSON.parse(JSON.stringify(this.getSafeTelemetryRoute()))
                 }
 
               />
@@ -318,12 +426,12 @@ class Activity extends Component {
             <TurnCoordinator showBox={false} size={100} turn={this.getSafeTelemetryAttitude().roll} />
           </Col>
           <Col md={5}>
-            <Card title="altitude profile " content={<div>CPU-Temp: {this.getSafeTelemetryHeartbeat().cpuTemp} °C</div>} />
+            <Card title="Drone Connector" content={this.getDroneConnectorValues()} />
           </Col>
           <Col md={5}>
-            <Card title="battery" content={<div>Battery goes here</div>} />
+            <Card title="Battery Overview" content={this.getBatteryGauges()} />
           </Col>
-          <Col md={4}>
+          {/* <Col md={4}>
             <Card title="flight statistics" content={<div>Content here!</div>} />
           </Col>
           <Col md={4}>
@@ -331,12 +439,12 @@ class Activity extends Component {
           </Col>
           <Col md={4}>
             <Card title="payload" content={<div>Payload goes here</div>} />
-          </Col>
+          </Col> */}
         </Col>
         <Col lg={5}>
           <Col lg={12} >
             <div>
-              <img alt="onboard-camera" src={"data:image/jpg;base64, "+this.getSafeTelemetryCameraImage().img} style={{ verticalAlign: "top", paddingTop: "45px" }}></img>
+              <img alt="onboard-camera" src={"data:image/jpg;base64, " + this.getSafeTelemetryCameraImage().img} style={{ verticalAlign: "top", paddingTop: "45px" }}></img>
               <Airspeed showBox={false} size={300} speed={this.getSafeTelemetryVelocity().airspeed} />
             </div>
           </Col>

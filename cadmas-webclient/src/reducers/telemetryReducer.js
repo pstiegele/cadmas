@@ -92,7 +92,7 @@ const telemetryReducer = (state = {
       for (let i = 0; i < action.payload.img.length; i++) {
         str = str.concat(String.fromCharCode(action.payload.img[i] & 0xFF));
       }
-      console.log("str: "+str);
+      //console.log("str: "+str);
       str = btoa(str);
       action.payload.img=str;
       state = {

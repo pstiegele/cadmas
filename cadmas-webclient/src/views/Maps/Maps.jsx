@@ -105,7 +105,7 @@ class Maps extends Component {
       }
       var points = [north, east, south, west]
       var bounds = new this.props.google.maps.LatLngBounds();
-      console.log("bounds: " + JSON.stringify(points));
+      //console.log("bounds: " + JSON.stringify(points));
       // points = [
       //   {lat:-29.94531,
       //   lng: 146.12376
@@ -175,13 +175,13 @@ class Maps extends Component {
     }
 
   }
-  getWaypointDots(){
-    var retRows=[];
-    var p=0;
+  getWaypointDots() {
+    var retRows = [];
+    var p = 0;
     for (let i = 0; i < this.props.route.length; i++) {
       const element = this.props.route[i];
       if (element.type === "WAYPOINT") {
-        retRows[p]= <Marker position={{ lat: element.lat, lng: element.lng }} name={'Waypoint'} title={element.altitude+" m"}
+        retRows[p] = <Marker position={{ lat: element.lat, lng: element.lng }} name={'Waypoint'} title={element.altitude + " m"}
           icon={{
             url: require("assets/img/mapsicons/WaypointDot.png"),
             anchor: new window.google.maps.Point(6, 6),
@@ -194,17 +194,31 @@ class Maps extends Component {
     return retRows;
   }
 
+  getCurrentWaypoint() {
+    console.log("was los: "+this.props.currentWaypoint);
+    if (this.props.currentWaypoint !== undefined && this.props.currentWaypoint !== null && this.props.currentWaypoint < this.props.route.length && this.props.currentWaypoint >= 0) {
+      console.log("betreten: "+this.props.route[this.props.currentWaypoint].lat);
+      return <Marker position={{ lat: this.props.route[this.props.currentWaypoint].lat, lng: this.props.route[this.props.currentWaypoint].lng }} name={'Current Waypoint'} title="Current Waypoint"
+        icon={{
+          url: require("assets/img/mapsicons/currentWaypoint.png"),
+          anchor: new window.google.maps.Point(33, 56),
+          scaledSize: new window.google.maps.Size(64, 64)
+        }}
+      />
+    }
+  }
+
   centerOnNewTelemetry() {
 
   }
   getCenterPosition() {
     var pos = this.getInitialZoom().getCenter();
-    console.log("center pos: " + JSON.stringify(pos));
+    //console.log("center pos: " + JSON.stringify(pos));
     return pos;
   }
   render() {
     var initalCenterPosition = this.getCenterPosition();
-    console.log("initalCenterPosition: " + JSON.stringify(initalCenterPosition));
+    //console.log("initalCenterPosition: " + JSON.stringify(initalCenterPosition));
     return (<div id="map">
       <Map
         center={initalCenterPosition}
@@ -228,6 +242,7 @@ class Maps extends Component {
         {this.getLandMarker()}
         {this.getPositionMarker()}
         {this.getWaypointDots()}
+        {this.getCurrentWaypoint()}
         {this.getRoute()}
         {this.getHomePointRoute()}
         {this.getTelemetryPath()}

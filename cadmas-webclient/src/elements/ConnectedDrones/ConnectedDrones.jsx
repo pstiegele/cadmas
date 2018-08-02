@@ -4,6 +4,13 @@ import util from 'util';
 
 class ConnectedDrones extends Component {
 
+    getDroneName(i){
+        if(this.props.state.drone.drones[i]!==undefined&&this.props.state.drone.drones[i]!==null){
+            return this.props.state.drone.drones[i].name;
+        }else{
+            return "";
+        }
+    }
 
     render() {
         var connectedDrones = [];
@@ -11,10 +18,9 @@ class ConnectedDrones extends Component {
         for (let i = 1; i < Object.keys(this.props.state.telemetry).length; i++) {
             const element = this.props.state.telemetry[i];
             if(element!==null&&element!==undefined){
-                console.log("droneeeee: "+util.inspect(element));
                 connectedDrones[p] = <NavItem eventKey={"droneNav-"+p} href={"/drone/"+i}>
                     <i className="fa fa-dashboard"></i>
-                    <p>{this.props.state.drone.drones[i].name}</p>
+                    <p>{this.getDroneName()}</p>
                 </NavItem>
                 p++;
             }
