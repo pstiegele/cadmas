@@ -16,7 +16,8 @@ const telemetryReducer = (state = {
       'timestamp': 0,
       'baseMode': 0,
       'customMode': 0,
-      'messagesLost': 0
+      'messagesLost': 0,
+      'cpuTemp':0
     },
     'missionItem': {
       'timestamp': 0,

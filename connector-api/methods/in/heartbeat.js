@@ -7,9 +7,9 @@ const Websocket = require('ws');
 module.exports = function (ws, payload, callback) {
     if (ws.activeActivity !== undefined && ws.activeActivity !== null) {
         var db = global.db;
-        var query = "INSERT INTO HeartbeatTelemetry (activityID,timestamp,isArmed,customMode,messagesLost) VALUES (?,?,?,?,?);";
+        var query = "INSERT INTO HeartbeatTelemetry (activityID,timestamp,isArmed,customMode,messagesLost, cpuTemp) VALUES (?,?,?,?,?,?);";
         console.log("timestamp: " + payload.timestamp);
-        db.query(query, [ws.activeActivity, moment(payload.timestamp).format('YYYY-MM-DD HH:mm:ss'), payload.isArmed, payload.customMode, payload.messagesLost], function (error) {
+        db.query(query, [ws.activeActivity, moment(payload.timestamp).format('YYYY-MM-DD HH:mm:ss'), payload.isArmed, payload.customMode, payload.messagesLost, payload.cpuTemp], function (error) {
             if (error) winston.error('error in heartbeat(connector): ' + error);;
             winston.info('heartbeat(connector) successfully inserted');
             ack('heartbeatACK', 0, ws, callback);

@@ -318,7 +318,7 @@ class Activity extends Component {
             <TurnCoordinator showBox={false} size={100} turn={this.getSafeTelemetryAttitude().roll} />
           </Col>
           <Col md={5}>
-            <Card title="altitude profile " content={<div>Bla bla</div>} />
+            <Card title="altitude profile " content={<div>CPU-Temp: {this.getSafeTelemetryHeartbeat().cpuTemp} °C</div>} />
           </Col>
           <Col md={5}>
             <Card title="battery" content={<div>Battery goes here</div>} />
