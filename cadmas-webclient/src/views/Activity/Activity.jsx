@@ -18,6 +18,10 @@ import TurnCoordinator from '../../components/FlightInstruments/TurnCoordinator'
 import Variometer from '../../components/FlightInstruments/Variometer';
 import CadmasWS from '../../websocket/CadmasWS';
 import Gauge from 'react-svg-gauge';
+import NotificationSystem from 'react-notification-system';
+import { style } from "variables/Variables.jsx";
+import util from 'util';
+
 
 
 
@@ -26,16 +30,20 @@ const mapStateToProps = (state) => {
 };
 
 class Activity extends Component {
+  thereWasAlreadyAMissingTelemetryNotification = moment();
+  thereWasMissingTelemetry = false;
   constructor(props) {
     super(props);
     this.state = {
       activityID: parseInt(this.props.match.params.activityID, 10),
-      overallMaxBatteryCurrent: 3
+      overallMaxBatteryCurrent: 3,
+      _notificationSystem: null
     };
     this.getFullMissionAlreadyRequested = false;
   }
 
   componentDidMount() {
+    this.setState({ _notificationSystem: this.refs.notificationSystem });
     this.interval = setInterval(() => this.setState({ time: Date.now() }), 1000);
   }
   componentWillUnmount() {
@@ -287,21 +295,51 @@ class Activity extends Component {
       }
     });
     if (timestamp === 0) {
-      return <span style={{color:"red", fontSize:"2em", animation:"blinker 1s linear infinite"}}>never</span>;
+      if (this.refs.notificationSystem != null && this.refs.notificationSystem != undefined && moment(this.thereWasAlreadyAMissingTelemetryNotification).diff() < -5000) {
+        this.thereWasAlreadyAMissingTelemetryNotification = moment();
+        this.thereWasMissingTelemetry = true;
+        this.refs.notificationSystem.addNotification({
+          title: (<span data-notify="icon" className="pe-7s-hourglass"></span>), message: (<div>
+            So far no telemetry received!
+            </div>), level: 'warning', position: "tr", autoDismiss: 5
+        });
+      }
+      return <span style={{ color: "#e59c00", fontSize: "2em", animation: "blinker 1s linear infinite" }}>never</span>;
     }
     var ret = moment(timestamp).fromNow();
     if (ret === "just now ago") {
-      return <span style={{color:"#059900", fontSize:"1.5em", animation:"blinker 1s linear infinite"}}>just now</span>;
-    } else if(ret === "3 seconds ago"||ret === "4 seconds ago"||ret === "5 seconds ago"||ret === "6 seconds ago"||ret === "7 seconds ago"||ret === "8 seconds ago"||ret === "9 seconds ago"){
-      return <div><span style={{color:"#ffc700", fontSize:"2em", animation:"blinker 1s linear infinite"}}>{ret[0]}</span><br /><span style={{color:"black", fontSize:"1em"}}>{ret.substring(1)}</span></div>;
-    }else if(ret.includes("second")){
-      if(ret[1]==="0"||ret[1]==="1"||ret[1]==="2"||ret[1]==="3"||ret[1]==="4"||ret[1]==="5"||ret[1]==="6"||ret[1]==="7"||ret[1]==="8"||ret[1]==="9"){
-        return <div><span style={{color:"#cc0202", fontSize:"2em", animation:"blinker 1s linear infinite"}}>{ret[0]+ret[1]}</span><br /><span style={{color:"black", fontSize:"1em"}}>{ret.substring(2)}</span></div>;
-      }else{
-        return <div><span style={{color:"#cc0202", fontSize:"2em", animation:"blinker 1s linear infinite"}}>{ret[0]}</span><br /><span style={{color:"black", fontSize:"1em"}}>{ret.substring(1)}</span></div>;
+      if (this.refs.notificationSystem != null && this.refs.notificationSystem != undefined && this.thereWasMissingTelemetry) {
+        this.thereWasMissingTelemetry = false;
+        this.refs.notificationSystem.addNotification({
+          title: (<span data-notify="icon" className="pe-7s-like2"></span>), message: (<div>
+            Received telemetry!
+            </div>), level: 'success', position: "tr", autoDismiss: 10
+        });
       }
-    }else{
-      return <span style={{color:"#cc0202", fontSize:"1.5em", animation:"blinker 1s linear infinite"}}>{ret}</span>; 
+      this.thereWasAlreadyAMissingTelemetryNotification = moment();
+      return <span style={{ color: "#059900", fontSize: "1.5em", animation: "blinker 1s linear infinite" }}>just now</span>;
+    } else if (ret === "3 seconds ago" || ret === "4 seconds ago" || ret === "5 seconds ago" || ret === "6 seconds ago" || ret === "7 seconds ago" || ret === "8 seconds ago" || ret === "9 seconds ago") {
+      return <div><span style={{ color: "#ffc700", fontSize: "2em", animation: "blinker 1s linear infinite" }}>{ret[0]}</span><br /><span style={{ color: "black", fontSize: "1em" }}>{ret.substring(1)}</span></div>;
+    } else {
+      if (this.refs.notificationSystem != null && this.refs.notificationSystem != undefined && moment(this.thereWasAlreadyAMissingTelemetryNotification).diff() < -5000) {
+        this.thereWasAlreadyAMissingTelemetryNotification = moment();
+        this.thereWasMissingTelemetry = true;
+        this.refs.notificationSystem.addNotification({
+          title: (<span data-notify="icon" className="pe-7s-hourglass"></span>), message: (<div>
+            No telemetry for {moment(timestamp).fromNow(true)}!
+            </div>), level: 'error', position: "tr", autoDismiss: 5
+        });
+      }
+      if (ret.includes("second")) {
+        if (ret[1] === "0" || ret[1] === "1" || ret[1] === "2" || ret[1] === "3" || ret[1] === "4" || ret[1] === "5" || ret[1] === "6" || ret[1] === "7" || ret[1] === "8" || ret[1] === "9") {
+          return <div><span style={{ color: "#cc0202", fontSize: "2em", animation: "blinker 1s linear infinite" }}>{ret[0] + ret[1]}</span><br /><span style={{ color: "black", fontSize: "1em" }}>{ret.substring(2)}</span></div>;
+        } else {
+          return <div><span style={{ color: "#cc0202", fontSize: "2em", animation: "blinker 1s linear infinite" }}>{ret[0]}</span><br /><span style={{ color: "black", fontSize: "1em" }}>{ret.substring(1)}</span></div>;
+        }
+      } else {
+
+        return <span style={{ color: "#cc0202", fontSize: "1.5em", animation: "blinker 1s linear infinite" }}>{ret}</span>;
+      }
     }
   }
   getState() {
@@ -326,20 +364,20 @@ class Activity extends Component {
 
   getBatteryGauges() {
     return <div>
-      <Gauge value={this.getSafeTelemetryBattery().current} width={100} height={130} min="0" max={this.getMaxBatteryCurrentValue()} label="Current" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#bcce00" />
+      <Gauge style={{ fillOpacity: "0.2" }} value={this.getSafeTelemetryBattery().current} width={100} height={130} min="0" max={this.getMaxBatteryCurrentValue()} label="Current" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#bcce00" />
       <Gauge value={this.getSafeTelemetryBattery().percentage} width={100} height={130} min="0" max="100" label="Percentage" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#0085e5" />
       <Gauge value={this.getSafeTelemetryBattery().voltage} width={100} height={130} min="9" max="14" label="Voltage" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#e59c00" />
     </div>;
   }
 
-  getStyledTelemetryLoss(){
+  getStyledTelemetryLoss() {
     var value = this.getSafeTelemetryHeartbeat().messagesLost;
-    if(value<1){
-      return <span style={{color:"#059900", fontSize:"2em"}}>{value}</span>
-    }else if(value < 3){
-      return <span style={{color:"#cc0202", fontSize:"2em"}}>{value}</span>
-    }else{
-      return <span style={{color:"#cc0202", fontSize:"2em"}}>{value}</span>
+    if (value < 1) {
+      return <span style={{ color: "#059900", fontSize: "2em" }}>{value}</span>
+    } else if (value < 3) {
+      return <span style={{ color: "#cc0202", fontSize: "2em" }}>{value}</span>
+    } else {
+      return <span style={{ color: "#cc0202", fontSize: "2em" }}>{value}</span>
     }
   }
 
@@ -349,11 +387,11 @@ class Activity extends Component {
         <Gauge value={this.getSafeTelemetryHeartbeat().cpuTemp} width={100} height={130} min="0" max="90" label="CPU °C" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#e5004c" />
       </div>
       <div className="col-lg-5 text-center">
-        Telemetry loss:<br />
+        Telemetry loss<br />
         {this.getStyledTelemetryLoss()}
       </div>
       <div className="col-lg-4 text-center">
-        Last Update:<br /> {this.getLastTelemetryUpdateTimeDiff()}
+        Last Update<br /> {this.getLastTelemetryUpdateTimeDiff()}
       </div>
     </div>;
 
@@ -406,6 +444,7 @@ class Activity extends Component {
 
   getLiveActivity() {
     return <Grid fluid>
+      <NotificationSystem ref="notificationSystem" style={style} />
       <Row>
         <Col lg={7}>
           <Card title={this.getLiveActivityTitle(this.state.activityID)} category={<span>{this.getDate()}<br />{this.getState()}</span>} ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={

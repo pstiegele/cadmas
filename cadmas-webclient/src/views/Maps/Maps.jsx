@@ -195,9 +195,9 @@ class Maps extends Component {
   }
 
   getCurrentWaypoint() {
-    console.log("was los: "+this.props.currentWaypoint);
+   // console.log("was los: "+this.props.currentWaypoint);
     if (this.props.currentWaypoint !== undefined && this.props.currentWaypoint !== null && this.props.currentWaypoint < this.props.route.length && this.props.currentWaypoint >= 0) {
-      console.log("betreten: "+this.props.route[this.props.currentWaypoint].lat);
+      //console.log("betreten: "+this.props.route[this.props.currentWaypoint].lat);
       return <Marker position={{ lat: this.props.route[this.props.currentWaypoint].lat, lng: this.props.route[this.props.currentWaypoint].lng }} name={'Current Waypoint'} title="Current Waypoint"
         icon={{
           url: require("assets/img/mapsicons/currentWaypoint.png"),
