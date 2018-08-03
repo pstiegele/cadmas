@@ -43,15 +43,13 @@ class CreateMissionButton extends Component {
         });
     }
     setRoute(event) {
-        var waypoints = this.parseMissionPlannerFile(this.state.route);
+        var waypoints = this.parseMissionPlannerFile(event.target.value);
         if (waypoints !== undefined) {
             this.setState({
-                waypoints: waypoints
+                waypoints: waypoints,
+                route: event.target.value
             });
         }
-        this.setState({
-            route: event.target.value
-        });
     }
     setFile(event) {
         console.log("setFile:" + util.inspect(event.target.value.getValue));
@@ -68,15 +66,15 @@ class CreateMissionButton extends Component {
         if (this.state.title.length !== 0) {
             if (this.state.route.startsWith('QGC')) {
                 if (this.state.waypoints !== undefined && this.state.waypoints.length > 0) {
-                    return true;
+                    return "success";
                 } else {
-                    return false;
+                    return "error";
                 }
             } else {
-                return false;
+                return "error";
             }
         } else {
-            return false;
+            return "error";
         }
     }
 
@@ -121,7 +119,16 @@ class CreateMissionButton extends Component {
     }
 
     getWaypointInfo() {
-        return <div><br /><span style={{ color: "red" }}>{this.state.waypoints.length}</span> Waypoints erkannt.</div>;
+        if(this.state.waypoints.length!==0){
+            return <div><br /><span style={{ color: "red" }}>{this.state.waypoints.length}</span> waypoint{this.state.waypoints.length===1?"":"s"} detected.
+            <br /><span style={{ color: "red" }}>{this.state.waypoints.filter(waypoint => waypoint.type==="HOMEPOINT").length}</span> homepoint{this.state.waypoints.filter(waypoint => waypoint.type==="HOMEPOINT").length===1?"":"s"}.
+            <br /><span style={{ color: "red" }}>{this.state.waypoints.filter(waypoint => waypoint.type==="TAKEOFF").length}</span> takeoff waypoint{this.state.waypoints.filter(waypoint => waypoint.type==="TAKEOFF").length===1?"":"s"}.
+            <br /><span style={{ color: "red" }}>{this.state.waypoints.filter(waypoint => waypoint.type==="LAND").length}</span> land waypoint{this.state.waypoints.filter(waypoint => waypoint.type==="LAND").length===1?"":"s"}.
+            </div>;
+        }else{
+            return <div><br />No waypoint file detected.</div>;
+        }
+        
     }
 
     getModalText() {
@@ -158,7 +165,10 @@ class CreateMissionButton extends Component {
     }
     handleClose() {
         this.setState({
-            showModal: false
+            showModal: false,
+            waypoints:[],
+            name:"",
+            note:""
         });
     }
     handleAccept() {
