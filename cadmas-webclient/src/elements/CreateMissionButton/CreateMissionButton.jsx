@@ -15,7 +15,8 @@ class CreateMissionButton extends Component {
             title: "",
             note: "",
             route: "",
-            redirect: false
+            redirect: false,
+            waypoints: []
         };
         this.setTitle = this.setTitle.bind(this);
         this.setNote = this.setNote.bind(this);
@@ -42,6 +43,12 @@ class CreateMissionButton extends Component {
         });
     }
     setRoute(event) {
+        var waypoints = this.parseMissionPlannerFile(this.state.route);
+        if (waypoints !== undefined) {
+            this.setState({
+                waypoints: waypoints
+            });
+        }
         this.setState({
             route: event.target.value
         });
@@ -57,12 +64,72 @@ class CreateMissionButton extends Component {
         });
     }
 
+    getValidationState() {
+        if (this.state.title.length !== 0) {
+            if (this.state.route.startsWith('QGC')) {
+                if (this.state.waypoints !== undefined && this.state.waypoints.length > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    parseMissionPlannerFile(file) {
+        var waypoints = [];
+        var lines = file.split('\n');
+        for (let i = 1; i < lines.length; i++) {
+            const element = lines[i].split('\t');
+            if (element.length !== 12) {
+                return waypoints;
+            }
+            
+            const altitude = element[10];
+            const latitude = element[8];
+            const longitude = element[9];
+            var type = element[3];
+            const missionIndex = element[0];
+            if (element[0] === "0" && element[1] === "1") {
+                type = "HOMEPOINT";
+            } else if (type === "21") {
+                type = "LAND";
+            } else if (type === "22") {
+                type = "TAKEOFF";
+            } else if (type === "20") {
+                type = "RTL";
+            } else if (type === "16") {
+                type = "WAYPOINT";
+            } else if (type = "19") {
+                type = "LOITER";
+            } else {
+                type = "INVALID";
+            }
+            waypoints.push({
+                altitude: altitude,
+                latitude: latitude,
+                longitude: longitude,
+                type: type,
+                missionIndex: missionIndex
+            });
+        }
+        return waypoints;
+    }
+
+    getWaypointInfo() {
+        return <div><br /><span style={{ color: "red" }}>{this.state.waypoints.length}</span> Waypoints erkannt.</div>;
+    }
 
     getModalText() {
         return <span >
             <p>You are going to create a new mission.</p><br />
             <form>
-                <FormGroup controlId="getMissionInfoForm">
+                <FormGroup controlId="getMissionInfoForm"
+                    validationState={this.getValidationState()}>
                     <ControlLabel>Set the name of the mission</ControlLabel>
                     <FormControl
                         type="text"
@@ -75,7 +142,7 @@ class CreateMissionButton extends Component {
                         placeholder="note"
                         onChange={this.setNote}
                     /><br /><br /><br /><br />
-                    <ControlLabel>Insert the content of the KML or MissionPlanner waypoint file which includes the route</ControlLabel>
+                    <ControlLabel>Insert the content of the KML or MissionPlanner waypoint file which includes the route{this.getWaypointInfo()}</ControlLabel>
                     <FormControl
                         componentClass="textarea"
                         type="text"
