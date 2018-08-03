@@ -10,7 +10,10 @@ module.exports = function (ws, payload, callback) {
         var query = "INSERT INTO HeartbeatTelemetry (activityID,timestamp,isArmed,customMode,messagesLost, cpuTemp) VALUES (?,?,?,?,?,?);";
         console.log("timestamp: " + payload.timestamp);
         db.query(query, [ws.activeActivity, moment(payload.timestamp).format('YYYY-MM-DD HH:mm:ss'), payload.isArmed, payload.customMode, payload.messagesLost, payload.cpuTemp], function (error) {
-            if (error) winston.error('error in heartbeat(connector): ' + error);;
+            if (error){
+                winston.error('error in heartbeat(connector): ' + error);
+                return;
+            } 
             winston.info('heartbeat(connector) successfully inserted');
             ack('heartbeatACK', 0, ws, callback);
         });

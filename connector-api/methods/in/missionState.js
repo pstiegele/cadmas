@@ -10,7 +10,10 @@ module.exports = function (ws, payload, callback) {
         var db = global.db;
         var query = "INSERT INTO MissionStateTelemetry (activityID,timestamp,currentItem) VALUES (?,?,?);";
         db.query(query, [ws.activeActivity, moment(payload.timestamp).format('YYYY-MM-DD HH:mm:ss'), payload.currentItem], function (error) {
-            if (error) winston.error('error in missionState: ' + error);;
+            if (error){
+                winston.error('error in missionState: ' + error);
+                return;
+            } 
             winston.info('missionState successfully inserted');
             ack('missionStateACK', 0, ws, callback);
         });

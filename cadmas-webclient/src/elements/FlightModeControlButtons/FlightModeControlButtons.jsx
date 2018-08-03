@@ -232,11 +232,21 @@ class FlightModeControlButtons extends Component {
       return "Error";
     }
   }
+  getButtonStatus(){
+    var droneID = this.props.droneID || -1;
+    var res = this.props.activities.filter(activity => activity.droneID===droneID && activity.state==="1");
+    console.log("res"+JSON.stringify(res));
+    if(res===null||res===undefined||res.length===0){
+      return false;
+    }else{
+      return true;
+    }
+  }
   render() {
     if (this.props.state === 0) {
       return (<span>
         <CustomModal show={this.state.showModal} bsStyle="success" handleClose={this.handleClose.bind(this)} handleAccept={this.handleAccept.bind(this)} acceptTitle="Yes, I want to start the drone." title={this.getModalTitle()} text={this.getModalText()} />
-        <Button className="pt-1" bsStyle="success" type="button" bsSize="small" onClick={() => this.handleStartFlightClick()}>
+        <Button disabled={this.getButtonStatus()} className="pt-1" bsStyle="success" type="button" bsSize="small" onClick={() => this.handleStartFlightClick()}>
           START ACTIVITY
     </Button></span>
       );

@@ -11,11 +11,27 @@ const mapStateToProps = (state) => {
 
 
 
+
 class ActivitiesSmall extends Component {
   constructor(props) {
     super(props);
     this.getDroneName = this.getDroneName.bind(this);
   }
+
+  getActivityStyle(state){
+    switch (state) {
+      case "0":
+        return {color: "grey"};
+      case "1":
+        return {color: "red",animation: "blinker 1s linear infinite"};
+      case "2":
+        return {color: "green"};
+    
+      default:
+      return {};
+    }
+  }
+
   getSafe(fn, defaultVal) {
     try {
       return fn();
@@ -40,12 +56,12 @@ class ActivitiesSmall extends Component {
     for (var i = this.props.activity.activities.length - 1; i >= 0 && counter < 8; i--) {
       if (!this.props.droneID || this.props.droneID === this.props.activity.activities[i].droneID) {
         counter++;
-        activities.push(<tr key={this.props.activity.activities[i].activityID}>
+        activities.push(<tr style={this.getActivityStyle(this.props.activity.activities[i].state)} key={this.props.activity.activities[i].activityID}>
           <td>
             <i className="fa fa-fighter-jet"></i>
           </td>
           <td>
-            <NavLink to={"/activities/" + this.props.activity.activities[i].activityID} className="nav-link" activeClassName="active">
+            <NavLink to={"/activity/" + this.props.activity.activities[i].activityID} className="nav-link" activeClassName="active">
               {this.props.activity.activities[i].name}
             </NavLink>
           </td>

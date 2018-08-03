@@ -3,9 +3,12 @@ const send = require("../../main").send;
 
 module.exports = function (ws) {
     var db = global.db;
-    var query = "SELECT id, activityID, payloadDeviceID, type, filepath, size FROM PayloadData";
+    var query = "SELECT PayloadData.id, PayloadData.activityID, PayloadData.payloadDeviceID, PayloadData.type, PayloadData.filepath, PayloadData.size FROM PayloadData LEFT JOIN Activity ON PayloadData.activityID=Activity.id LEFT JOIN Mission ON Activity.missionID=Mission.id WHERE Mission.userID=?";
     db.query(query, ws.userID, function (error, results) {
-        if (error||results===undefined) winston.error('error in payloads: ' + error);
+        if (error||results===undefined){
+            winston.error('error in payloads: ' + error);
+            return;
+        }
         var res = [];
         winston.info('build payloads');
         for (let index = 0; index < results.length; index++) {

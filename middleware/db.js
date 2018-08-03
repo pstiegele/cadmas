@@ -10,7 +10,10 @@ module.exports = function() {
       } else {
         winston.log('info', 'Error connecting database');
       }
+      if(connection!==undefined){
         connection.release();
+      }
+        
     
       });
   }

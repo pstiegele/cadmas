@@ -6,7 +6,7 @@ import { setNotifications } from "../actions/notificationActions";
 import { setUser } from "actions/userActions";
 import { setPayloads } from "actions/payloadActions";
 import { setPayloadDevices } from "actions/payloadDeviceActions";
-import { setAttitude, setBattery, setHeartbeat, setMissionItem, setMissionState, setPosition, setVelocity,setCameraImage } from "actions/telemetryActions";
+import { setAttitude, setBattery, setHeartbeat, setMissionItem, setMissionState, setPosition, setVelocity, setCameraImage } from "actions/telemetryActions";
 
 var socket;
 var msgID = 0;
@@ -64,6 +64,10 @@ class CadmasWS {
       socket = new WebSocket("wss://" + hostname + ":8081/client?token=" + token, token);
     } else {
       socket = new WebSocket("ws://" + hostname + "/client?token=" + token, token);
+    }
+
+    socket.onclose = function (event) {
+      setTimeout(function(){that.initClientAPI(token)}, 5000);
     }
 
 
@@ -134,12 +138,12 @@ class CadmasWS {
             store.dispatch(setVelocity(msg.payload));
             break;
           case "cameraImage":
-          // var testimg = [-1,-40,-1,-32,0,16,74,70,73,70,0];
-          // var str = "";
-          // for (let i = 0; i <testimg.length; i++) {
-          //   str+=String.fromCharCode(testimg[i]& 0xFF);
-          // }
-          // console.log(JSON.stringify(btoa(str)));
+            // var testimg = [-1,-40,-1,-32,0,16,74,70,73,70,0];
+            // var str = "";
+            // for (let i = 0; i <testimg.length; i++) {
+            //   str+=String.fromCharCode(testimg[i]& 0xFF);
+            // }
+            // console.log(JSON.stringify(btoa(str)));
             store.dispatch(setCameraImage(msg.payload));
             break;
           default:
@@ -262,28 +266,28 @@ class CadmasWS {
       payload: payload
     }
     var callbacks = this.callbacks;
-    this.waitForSocketConnection(socket, function(){
+    this.waitForSocketConnection(socket, function () {
       socket.send(JSON.stringify(msg));
       callbacks[msg.id] = callback;
-  });  
+    });
   }
 
-  waitForSocketConnection(socket, callback){
+  waitForSocketConnection(socket, callback) {
     var that = this;
     setTimeout(
-        function () {
-            if (socket.readyState === 1) {
-                if(callback != null){
-                    callback();
-                }
-                return;
+      function () {
+        if (socket.readyState === 1) {
+          if (callback != null) {
+            callback();
+          }
+          return;
 
-            } else {
-                that.waitForSocketConnection(socket, callback);
-            }
+        } else {
+          that.waitForSocketConnection(socket, callback);
+        }
 
-        }, 50); // wait 50 milisecond for the connection...
-}
+      }, 50); // wait 50 milisecond for the connection...
+  }
   addPayloadData(activityID, payloadDeviceID, type, filepath, size) {
     var msg = {
       method: "addPayloadData",

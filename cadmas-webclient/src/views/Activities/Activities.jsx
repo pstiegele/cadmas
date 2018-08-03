@@ -84,6 +84,20 @@ class Activities extends Component {
   handleClick(that){
     this.setState({redirect: true, redirectToActivity: that._targetInst.return.key});
   }
+
+  getActivityStyle(state){
+    switch (state) {
+      case "0":
+        return {color: "grey"};
+      case "1":
+        return {color: "red",animation: "blinker 1s linear infinite"};
+      case "2":
+        return {color: "green"};
+    
+      default:
+      return {};
+    }
+  }
   
 
   render() {
@@ -107,11 +121,11 @@ class Activities extends Component {
                 {
                   this.props.activity.activities.slice(0).reverse().map((prop, key) => {
 
-                    return (<tr key={prop.activityID} onClick={this.handleClick.bind(this)}>
+                    return (<tr key={prop.activityID} style={this.getActivityStyle(prop.state)} onClick={this.handleClick.bind(this)}>
 
                       <td key={prop.activityID + "-icon"}>
                         <NavLink to="/dashboard" className="nav-link" activeClassName="active">
-                          <i className="fa fa-fighter-jet"></i>
+                          <i style={this.getActivityStyle(prop.state)} className="fa fa-fighter-jet"></i>
                         </NavLink>
                       </td>
                       <td key={prop.activityID + "-date"}>{this.getRelativeOrAbsoluteDate(prop.dt_created)}</td>

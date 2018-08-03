@@ -145,7 +145,7 @@ class Activity extends Component {
     var res;
     var name = this.getSafeActivityName(activityID);
     var controlButtons = <span className="pull-right">
-      <FlightModeControlButtons activityID={activityID} state={parseInt(this.getSafeActivityState(this.state.activityID), 10)} /></span>
+      <FlightModeControlButtons activityID={activityID} activities={this.props.activity.activities} droneID={parseInt(this.getSafeDroneID(this.getActivityByID(this.state.activityID)), 10)} state={parseInt(this.getSafeActivityState(this.state.activityID), 10)} /></span>
     res = <div>{name}{controlButtons}</div>
     return res;
   }
@@ -322,7 +322,7 @@ class Activity extends Component {
     } else if (ret === "3 seconds ago" || ret === "4 seconds ago" || ret === "5 seconds ago" || ret === "6 seconds ago" || ret === "7 seconds ago" || ret === "8 seconds ago" || ret === "9 seconds ago") {
       return <div><span style={{ color: "#ffc700", fontSize: "2em", animation: "blinker 1s linear infinite" }}>{ret[0]}</span><br /><span style={{ color: "black", fontSize: "1em" }}>{ret.substring(1)}</span></div>;
     } else {
-      if (this.refs.notificationSystem != null && this.refs.notificationSystem != undefined && moment(this.thereWasAlreadyAMissingTelemetryNotification).diff() < -5000) {
+      if (this.refs.notificationSystem != null && this.refs.notificationSystem != undefined && moment(this.thereWasAlreadyAMissingTelemetryNotification).diff() < -15000) {
         this.thereWasAlreadyAMissingTelemetryNotification = moment();
         this.thereWasMissingTelemetry = true;
         this.refs.notificationSystem.addNotification({
@@ -384,15 +384,15 @@ class Activity extends Component {
 
   getDroneConnectorValues() {
     return <div className="row">
-      <div className="col-lg-4">
+      <div className="col-lg-4 text-center">
         <Gauge value={this.getSafeTelemetryHeartbeat().cpuTemp} width={100} height={130} min="0" max="90" label="CPU °C" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#e5004c" />
       </div>
-      <div className="col-lg-4 text-center">
+      <div className="col-lg-4 text-center" style={{minWidth:"140px"}}>
         <span>Telemetry loss</span>
         <div style={{height:"50px"}}></div>
         {this.getStyledTelemetryLoss()}
       </div>
-      <div className="col-lg-4 text-center">
+      <div className="col-lg-4 text-center" style={{minWidth:"140px"}}>
       <span>Last Update</span>
       <div style={{height:"50px"}}></div>
       {this.getLastTelemetryUpdateTimeDiff()}

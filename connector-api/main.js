@@ -13,20 +13,20 @@ module.exports = function (wss) {
     winston.info("connector connected. droneID: " + ws.droneID + " name: " + ws.name);
     global.connector_wss.cadmasConnectors[ws.droneID] = ws;
     ws.on('message', function incoming(raw_msg) {
-      
-      
+
+
       var msg;
       try {
         msg = JSON.parse(raw_msg);
-        if(msg.method==="cameraImage"){
+        if (msg.method === "cameraImage") {
           winston.info('received: %s', msg.method);
-        }else{
+        } else {
           winston.info('received: %s', util.inspect(msg));
         }
       } catch (e) {
         return console.error(e);
       }
-      getHandleMethod(msg.method)(ws, msg.payload,send);
+      getHandleMethod(msg.method)(ws, msg.payload, send);
     });
 
     ws.on('close', function (reason) {
@@ -118,18 +118,11 @@ function getUserIDByDroneID(ws) {
 }
 
 function getActiveActivity(ws) {
-  var queryGetActiveActivity = "SELECT activeActivity FROM Drone WHERE id=?";
+  var queryGetActiveActivity = "SELECT activeActivity FROM Drone LEFT JOIN Activity ON Drone.activeActivity=Activity.id WHERE Drone.id=? AND state=1";
   db.query(queryGetActiveActivity, ws.droneID, function (errActiveActivity, resultsActiveActivity) {
     if (errActiveActivity === null && resultsActiveActivity.length == 1) {
-      var queryGetActivityStatus = "SELECT state FROM Activity WHERE id=?";
-      db.query(queryGetActivityStatus, resultsActiveActivity[0].activeActivity, function (errActivityStatus, resultsActivityStatus) {
-        if (errActivityStatus === null && resultsActivityStatus.length == 1) {
-          if (resultsActivityStatus[0].state === "1") {
-            ws.activeActivity = resultsActiveActivity[0].activeActivity;
-            winston.info("activeActivity: "+ws.activeActivity);
-          }
-        }
-      });
+      ws.activeActivity = resultsActiveActivity[0].activeActivity;
+      winston.info("activeActivity: " + ws.activeActivity);
     }
   });
 }

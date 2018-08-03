@@ -3,9 +3,12 @@ const send = require("../../main").send;
 
 module.exports = function (ws, missionID, fullMission) {
     var db = global.db;
-    var query = "SELECT id, name, note, UNIX_TIMESTAMP(dtCreated) AS dt_created, thumbnailpath, onConnectionLostMode, route FROM Mission WHERE id = ?";
+    var query = "SELECT id, name, note, UNIX_TIMESTAMP(dtCreated) AS dt_created, thumbnailpath, onConnectionLostMode, route, userID FROM Mission WHERE id = ?";
     db.query(query, missionID, function (error, results) {
-        if (error || results === undefined || results.length != 1) winston.error('error in mission: ' + error);
+        if (error || results === undefined || results.length != 1||results[0].userID!==ws.userID){
+            winston.error('error in mission: ' + error);
+            return;
+        }
         winston.info('build mission');
         var res = {
             'missionID': results[0].id,

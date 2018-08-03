@@ -10,7 +10,10 @@ module.exports = function (ws, payload, callback) {
         var db = global.db;
         var query = "INSERT INTO BatteryTelemetry (activityID,timestamp,voltage,current,percentage) VALUES (?,?,?,?,?);";
         db.query(query, [ws.activeActivity, moment(payload.timestamp).format('YYYY-MM-DD HH:mm:ss'), payload.voltage, payload.current, payload.percentage], function (error) {
-            if (error) winston.error('error in battery: ' + error);;
+            if (error) {
+                winston.error('error in battery: ' + error);
+                return;
+            }
             winston.info('battery successfully inserted');
             ack('batteryACK', 0, ws, callback);
         });

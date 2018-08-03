@@ -161,7 +161,7 @@ class Dashboard extends Component {
       <Grid fluid>
         <Row>
           <Col lg={3} sm={6}>
-            <StatsCard bigIcon={<i className="pe-7s-server text-warning" > </i>} statsText="Camera images" statsValue={this.getNumberOfCameraImagesThisMonth()} statsIcon={<i className="fa fa-calendar-o" > </i>} statsIconText="last 30 days" />
+            <StatsCard bigIcon={<i className="pe-7s-camera text-warning" > </i>} statsText="Camera images" statsValue={this.getNumberOfCameraImagesThisMonth()} statsIcon={<i className="fa fa-calendar-o" > </i>} statsIconText="last 30 days" />
           </Col>
           <Col lg={3} sm={6}>
             <StatsCard bigIcon={<i className="pe-7s-world text-success" > </i>} statsText="Activities this month" statsValue={this.getNumberOfActivitiesThisMonth()} statsIcon={<i className="fa fa-calendar-o" > </i>} statsIconText="last 30 days" />

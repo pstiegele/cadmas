@@ -11,7 +11,10 @@ module.exports = function (ws, payload, callback) {
         var db = global.db;
         var query = "INSERT INTO VelocityTelemetry (activityID,timestamp,groundspeed,airspeed,climbrate) VALUES (?,?,?,?,?);";
         db.query(query, [ws.activeActivity, moment(payload.timestamp).format('YYYY-MM-DD HH:mm:ss'), payload.groundspeed, payload.airspeed, payload.climbrate], function (error) {
-            if (error) winston.error('error in velocity: ' + error);
+            if (error){
+                winston.error('error in velocity: ' + error);
+                return;
+            }
             winston.info('velocity successfully inserted');
             ack('velocityACK', 0, ws, callback);
         });

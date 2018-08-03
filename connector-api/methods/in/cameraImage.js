@@ -11,7 +11,10 @@ module.exports = function (ws, payload, callback) {
     var db = global.db;
     var query = "INSERT INTO CameraImage (activityID,timestamp,img) VALUES (?,?,?);";
     db.query(query, [ws.activeActivity, moment(payload.timestamp).format('YYYY-MM-DD HH:mm:ss'), JSON.stringify(payload.img)], function (error) {
-        if (error) winston.error('error in cameraImage: ' + error);;
+        if (error){
+            winston.error('error in cameraImage: ' + error);
+            return;
+        } 
         winston.info('cameraImage successfully inserted');
         ack('cameraImageACK', 0, ws, callback);
     });
