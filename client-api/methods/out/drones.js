@@ -5,7 +5,7 @@ module.exports = function (ws) {
     var db = global.db;
     var query = "SELECT * FROM Drone";
     db.query(query, function (error, results) {
-        if (error) winston.error('error in drones: ' + error);
+        if (error||results===undefined) winston.error('error in drones: ' + error);
         var res = [];
         winston.info('build drones');
         for (let index = 0; index < results.length; index++) {

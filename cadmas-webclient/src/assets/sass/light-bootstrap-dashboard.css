@@ -18,9 +18,8 @@
 /* Paul */
 @keyframes blinker {
   50% {
-    opacity: 0.3;
-  }
-}
+    opacity: 0.3; } }
+
 /* Paul Ende */
 @keyframes spin {
   from {

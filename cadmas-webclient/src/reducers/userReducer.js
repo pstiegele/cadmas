@@ -1,20 +1,19 @@
 const userReducer = (state = {
   username: "username",
+  cameraImagesLast30Days: 0,
+  email:"email",
+  firstname: "Firstname",
+  lastname: "Lastname",
+  registrationdate:"1970-01-01T00:00:00.000Z",
+  thumbnailpath: "",
+  userID: 0,
   mapIsShown: true
 }, action) => {
  
   switch (action.type) {
     
     case "SET_USER":
-      state = {
-        ...state,
-        username: action.payload.username,
-        registrationdate: action.payload.registrationdate,
-        email: action.payload.email,
-        thumbnailpath: action.payload.thumbnailpath,
-        firstname: action.payload.firstname,
-        lastname: action.payload.lastname
-      };
+      state = action.payload;
       break;
     case "SET_MAP_IS_SHOWN":
       state = {

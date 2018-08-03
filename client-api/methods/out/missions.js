@@ -5,7 +5,7 @@ module.exports = function (ws) {
     var db = global.db;
     var query = "SELECT id,name,note,UNIX_TIMESTAMP(dtCreated) AS dtCreated,thumbnailpath,onConnectionLostMode FROM Mission";
     db.query(query, function (error, results) {
-        if (error) winston.error('error in missions: ' + error);
+        if (error||results===undefined) winston.error('error in missions: ' + error);
         var res = [];
         winston.info('build missions');
         for (let index = 0; index < results.length; index++) {

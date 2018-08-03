@@ -2,6 +2,7 @@ const ack = require('../out/ack');
 const winston = require('../../../middleware/logger');
 const moment = require("moment");
 const cameraImage = require('../../../client-api/methods/out/cameraImage');
+const user = require('../../../client-api/methods/out/user');
 const Websocket = require('ws');
 
 
@@ -21,6 +22,7 @@ if (global.client_wss.cadmasClients[ws.userID] !== undefined && global.client_ws
         winston.info("cameraImage sent to client");
         payload.droneID = ws.droneID;
         cameraImage(value1, payload);
+        user(value1);
     });
 }
 

@@ -201,7 +201,7 @@ class Activity extends Component {
   }
   getSafeWaypoints() {
     var mission = this.getSafeMission();
-    if (mission === undefined || mission === "" || mission === null)
+    if (mission === undefined || mission === "" || mission === null) {
       return [{
         'missionIndex': 0,
         'type': 'LAND',
@@ -209,8 +209,9 @@ class Activity extends Component {
         'lat': 0,
         'lng': 0
       }];
+    }
     var waypoints = this.getSafe(() => mission.waypoints, "");
-    if (waypoints === undefined || waypoints === null || waypoints === "")
+    if (waypoints === undefined || waypoints === null || waypoints === "" || waypoints.length === 0)
       return [{
         'missionIndex': 0,
         'type': 'LAND',
@@ -295,7 +296,7 @@ class Activity extends Component {
       }
     });
     if (timestamp === 0) {
-      if (this.refs.notificationSystem != null && this.refs.notificationSystem != undefined && moment(this.thereWasAlreadyAMissingTelemetryNotification).diff() < -5000) {
+      if (this.refs.notificationSystem != null && this.refs.notificationSystem != undefined && this.thereWasMissingTelemetry===false) {
         this.thereWasAlreadyAMissingTelemetryNotification = moment();
         this.thereWasMissingTelemetry = true;
         this.refs.notificationSystem.addNotification({
@@ -304,7 +305,7 @@ class Activity extends Component {
             </div>), level: 'warning', position: "tr", autoDismiss: 5
         });
       }
-      return <span style={{ color: "#e59c00", fontSize: "2em", animation: "blinker 1s linear infinite" }}>never</span>;
+      return <span style={{ color: "#e59c00", fontSize: "2em", animation: "blinker 1s linear infinite"}}>never</span>;
     }
     var ret = moment(timestamp).fromNow();
     if (ret === "just now ago") {
@@ -317,7 +318,7 @@ class Activity extends Component {
         });
       }
       this.thereWasAlreadyAMissingTelemetryNotification = moment();
-      return <span style={{ color: "#059900", fontSize: "1.5em", animation: "blinker 1s linear infinite" }}>just now</span>;
+      return <span style={{ color: "#059900", fontSize: "1.5em", animation: "blinker 1s linear infinite"}}>just now</span>;
     } else if (ret === "3 seconds ago" || ret === "4 seconds ago" || ret === "5 seconds ago" || ret === "6 seconds ago" || ret === "7 seconds ago" || ret === "8 seconds ago" || ret === "9 seconds ago") {
       return <div><span style={{ color: "#ffc700", fontSize: "2em", animation: "blinker 1s linear infinite" }}>{ret[0]}</span><br /><span style={{ color: "black", fontSize: "1em" }}>{ret.substring(1)}</span></div>;
     } else {
@@ -332,13 +333,13 @@ class Activity extends Component {
       }
       if (ret.includes("second")) {
         if (ret[1] === "0" || ret[1] === "1" || ret[1] === "2" || ret[1] === "3" || ret[1] === "4" || ret[1] === "5" || ret[1] === "6" || ret[1] === "7" || ret[1] === "8" || ret[1] === "9") {
-          return <div><span style={{ color: "#cc0202", fontSize: "2em", animation: "blinker 1s linear infinite" }}>{ret[0] + ret[1]}</span><br /><span style={{ color: "black", fontSize: "1em" }}>{ret.substring(2)}</span></div>;
+          return <div ><span style={{ color: "#cc0202", fontSize: "2em", animation: "blinker 1s linear infinite" }}>{ret[0] + ret[1]}</span><br /><span style={{ color: "black", fontSize: "1em" }}>{ret.substring(2)}</span></div>;
         } else {
-          return <div><span style={{ color: "#cc0202", fontSize: "2em", animation: "blinker 1s linear infinite" }}>{ret[0]}</span><br /><span style={{ color: "black", fontSize: "1em" }}>{ret.substring(1)}</span></div>;
+          return <div ><span style={{ color: "#cc0202", fontSize: "2em", animation: "blinker 1s linear infinite" }}>{ret[0]}</span><br /><span style={{ color: "black", fontSize: "1em" }}>{ret.substring(1)}</span></div>;
         }
       } else {
 
-        return <span style={{ color: "#cc0202", fontSize: "1.5em", animation: "blinker 1s linear infinite" }}>{ret}</span>;
+        return <span style={{ color: "#cc0202", fontSize: "1.5em", animation: "blinker 1s linear infinite"}}>{ret}</span>;
       }
     }
   }
@@ -363,39 +364,40 @@ class Activity extends Component {
   }
 
   getBatteryGauges() {
-    return <div>
-      <Gauge style={{ fillOpacity: "0.2" }} value={this.getSafeTelemetryBattery().current} width={100} height={130} min="0" max={this.getMaxBatteryCurrentValue()} label="Current" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#bcce00" />
-      <Gauge value={this.getSafeTelemetryBattery().percentage} width={100} height={130} min="0" max="100" label="Percentage" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#0085e5" />
-      <Gauge value={this.getSafeTelemetryBattery().voltage} width={100} height={130} min="9" max="14" label="Voltage" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#e59c00" />
+    return <div className="text-center">
+      <Gauge className="col-lg-4 text-center" value={this.getSafeTelemetryBattery().current} width={100} height={130} min="0" max={this.getMaxBatteryCurrentValue()} label="Current" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#bcce00" />
+      <Gauge className="col-lg-4 text-center" value={this.getSafeTelemetryBattery().percentage} width={100} height={130} min="0" max="100" label="Percentage" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#0085e5" />
+      <Gauge className="col-lg-4 text-center" value={this.getSafeTelemetryBattery().voltage} width={100} height={130} min="9" max="14" label="Voltage" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#e59c00" />
     </div>;
   }
 
   getStyledTelemetryLoss() {
     var value = this.getSafeTelemetryHeartbeat().messagesLost;
     if (value < 1) {
-      return <span style={{ color: "#059900", fontSize: "2em" }}>{value}</span>
+      return <span style={{ color: "#059900", fontSize: "2em"}}>{value}</span>
     } else if (value < 3) {
-      return <span style={{ color: "#cc0202", fontSize: "2em" }}>{value}</span>
+      return <span style={{ color: "#cc0202", fontSize: "2em"}}>{value}</span>
     } else {
-      return <span style={{ color: "#cc0202", fontSize: "2em" }}>{value}</span>
+      return <span style={{ color: "#cc0202", fontSize: "2em"}}>{value}</span>
     }
   }
 
   getDroneConnectorValues() {
     return <div className="row">
-      <div className="col-lg-3">
+      <div className="col-lg-4">
         <Gauge value={this.getSafeTelemetryHeartbeat().cpuTemp} width={100} height={130} min="0" max="90" label="CPU °C" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#e5004c" />
       </div>
-      <div className="col-lg-5 text-center">
-        Telemetry loss<br />
+      <div className="col-lg-4 text-center">
+        <span>Telemetry loss</span>
+        <div style={{height:"50px"}}></div>
         {this.getStyledTelemetryLoss()}
       </div>
       <div className="col-lg-4 text-center">
-        Last Update<br /> {this.getLastTelemetryUpdateTimeDiff()}
+      <span>Last Update</span>
+      <div style={{height:"50px"}}></div>
+      {this.getLastTelemetryUpdateTimeDiff()}
       </div>
     </div>;
-
-    <div>CPU-Temp: {this.getSafeTelemetryHeartbeat().cpuTemp} °C</div>;
   }
 
   getNormalActivity() {
@@ -461,13 +463,13 @@ class Activity extends Component {
             </div>
 
           } />
-          <Col lg={2}>
+          {/* <Col lg={2}>
             <TurnCoordinator showBox={false} size={100} turn={this.getSafeTelemetryAttitude().roll} />
-          </Col>
-          <Col md={5}>
+          </Col> */}
+          <Col md={6}>
             <Card title="Drone Connector" content={this.getDroneConnectorValues()} />
           </Col>
-          <Col md={5}>
+          <Col md={6}>
             <Card title="Battery Overview" content={this.getBatteryGauges()} />
           </Col>
           {/* <Col md={4}>

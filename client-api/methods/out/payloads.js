@@ -5,7 +5,7 @@ module.exports = function (ws) {
     var db = global.db;
     var query = "SELECT id, activityID, payloadDeviceID, type, filepath, size FROM PayloadData";
     db.query(query, ws.userID, function (error, results) {
-        if (error) winston.error('error in payloads: ' + error);
+        if (error||results===undefined) winston.error('error in payloads: ' + error);
         var res = [];
         winston.info('build payloads');
         for (let index = 0; index < results.length; index++) {

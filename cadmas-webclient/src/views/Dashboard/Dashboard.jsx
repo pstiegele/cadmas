@@ -12,7 +12,7 @@ import moment from 'moment';
 
 
 const mapStateToProps = (state) => {
-  return { mission: state.mission, drone: state.drone, activity: state.activity };
+  return { mission: state.mission, drone: state.drone, activity: state.activity, user: state.user };
 };
 
 class Dashboard extends Component {
@@ -152,7 +152,7 @@ class Dashboard extends Component {
   }
 
   getNumberOfCameraImagesThisMonth(){
-    
+    return this.props.user.cameraImagesLast30Days.toLocaleString('de');
   }
 
 
@@ -161,7 +161,7 @@ class Dashboard extends Component {
       <Grid fluid>
         <Row>
           <Col lg={3} sm={6}>
-            <StatsCard bigIcon={<i className="pe-7s-server text-warning" > </i>} statsText="Camera images this month" statsValue={this.getNumberOfCameraImagesThisMonth()} statsIcon={<i className="fa fa-refresh" > </i>} statsIconText="Updated now" />
+            <StatsCard bigIcon={<i className="pe-7s-server text-warning" > </i>} statsText="Camera images" statsValue={this.getNumberOfCameraImagesThisMonth()} statsIcon={<i className="fa fa-calendar-o" > </i>} statsIconText="last 30 days" />
           </Col>
           <Col lg={3} sm={6}>
             <StatsCard bigIcon={<i className="pe-7s-world text-success" > </i>} statsText="Activities this month" statsValue={this.getNumberOfActivitiesThisMonth()} statsIcon={<i className="fa fa-calendar-o" > </i>} statsIconText="last 30 days" />
