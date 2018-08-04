@@ -8,15 +8,15 @@ const calibrate = require('../../../connector-api/methods/out/calibrate');
 const setHomePosition = require('../../../connector-api/methods/out/setHomePosition');
 const setMission = require('../../../connector-api/methods/out/setMission');
 const arm = require('../../../connector-api/methods/out/arm');
+const moment = require("moment");
 
 
 
 module.exports = function (ws, msg, callback) {
   var payload = msg.payload;
   var db = global.db;
-  var query = "UPDATE Activity SET state=1 WHERE id=?";
-  
-  db.query(query, payload.activityID, function (error, result) {
+  var query = "UPDATE Activity SET state=1,dt_started=? WHERE id=?";
+  db.query(query, [moment().utc().format('YYYY-MM-DD HH:mm:ss'), payload.activityID], function (error, result) {
     if (error) winston.error('error in startActivity: ' + error);
     winston.info('startActivity successfully executed');
     var ackPayload = {
@@ -34,14 +34,14 @@ module.exports = function (ws, msg, callback) {
   });
 
 
-  
+
   var query = "SELECT droneID, missionID FROM Activity WHERE id=?";
   db.query(query, payload.activityID, function (error, result) {
     if (error || result.length !== 1) winston.error('error in startActivity (in select droneID): ' + error);
-     //set activeActivity to Drone
-     db.query("UPDATE Drone SET activeActivity=? WHERE id=?",[payload.activityID, result[0].droneID], function(error){
-      if(error)
-        winston.error("error in set activeActivity (in startActivity): "+error);
+    //set activeActivity to Drone
+    db.query("UPDATE Drone SET activeActivity=? WHERE id=?", [payload.activityID, result[0].droneID], function (error) {
+      if (error)
+        winston.error("error in set activeActivity (in startActivity): " + error);
     });
     if (global.connector_wss.cadmasConnectors[result[0].droneID] !== undefined && global.connector_wss.cadmasConnectors[result[0].droneID] !== null) {
       setMode(global.connector_wss.cadmasConnectors[result[0].droneID], "AUTO");

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { NavItem, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
-import util from 'util';
+import { NavItem } from 'react-bootstrap';
+//import util from 'util';
 
 class ConnectedDrones extends Component {
 

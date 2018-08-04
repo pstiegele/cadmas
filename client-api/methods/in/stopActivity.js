@@ -4,12 +4,14 @@ const winston = require('../../../middleware/logger');
 const { send } = require('../../main');
 const activity = require('../out/activity');
 const disarm = require('../../../connector-api/methods/out/disarm');
+const moment = require("moment");
+
 
 module.exports = function (ws, msg, callback) {
     var payload = msg.payload;
     var db = global.db;
-    var query = "UPDATE Activity SET state=2 WHERE id=?";
-    db.query(query, payload.activityID, function (error, result) {
+    var query = "UPDATE Activity SET state=2,dt_ended=? WHERE id=?";
+    db.query(query, [moment().utc().format('YYYY-MM-DD HH:mm:ss'), payload.activityID], function (error, result) {
         if (error) winston.error('error in stopActivity: ' + error);
         winston.info('stopActivity successfully executed');
         var ackPayload = {

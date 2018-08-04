@@ -16,7 +16,7 @@ class Maps extends Component {
   getPositionMarker() {
     if (this.props.longitude !== undefined && this.props.latitude !== undefined) {
 
-      return <Marker position={{ lat: this.props.latitude, lng: this.props.longitude }} name={'Current location'} title={'Current location'}
+      return <Marker key={"position"} position={{ lat: this.props.latitude, lng: this.props.longitude }} name={'Current location'} title={'Current location'}
         icon={{
           url: require("assets/img/mapsicons/telemetryPosition.png"),
           anchor: new window.google.maps.Point(33, 56),
@@ -30,7 +30,7 @@ class Maps extends Component {
     for (let i = 0; i < this.props.route.length; i++) {
       const element = this.props.route[i];
       if (element.type === "HOMEPOINT") {
-        return <Marker position={{ lat: element.lat, lng: element.lng }} name={'Homepoint'} title={'Homepoint'}
+        return <Marker key={"homePoint-" + i} position={{ lat: element.lat, lng: element.lng }} name={'Homepoint'} title={'Homepoint'}
           icon={{
             url: require("assets/img/mapsicons/homePoint.png"),
             anchor: new window.google.maps.Point(33, 56),
@@ -44,7 +44,7 @@ class Maps extends Component {
     for (let i = 0; i < this.props.route.length; i++) {
       const element = this.props.route[i];
       if (element.type === "TAKEOFF") {
-        return <Marker position={{ lat: element.lat, lng: element.lng }} name={'Takeoff'} title={'Takeoff'}
+        return <Marker key={"takeoff-" + i} position={{ lat: element.lat, lng: element.lng }} name={'Takeoff'} title={'Takeoff'}
           icon={{
             url: require("assets/img/mapsicons/takeoff.png"),
             anchor: new window.google.maps.Point(33, 56),
@@ -58,7 +58,7 @@ class Maps extends Component {
     for (let i = 0; i < this.props.route.length; i++) {
       const element = this.props.route[i];
       if (element.type === "LAND") {
-        return <Marker position={{ lat: element.lat, lng: element.lng }} name={'Land'} title={'Land'}
+        return <Marker key={"land-" + i} position={{ lat: element.lat, lng: element.lng }} name={'Land'} title={'Land'}
           icon={{
             url: require("assets/img/mapsicons/land.png"),
             anchor: new window.google.maps.Point(33, 56),
@@ -135,7 +135,7 @@ class Maps extends Component {
     //TODO: disable auto center
   }
   getRoute() {
-    if (Array.isArray(this.props.route)) {
+    if (Array.isArray(this.props.route.filter(coord => coord.type !== "TAKEOFF" && coord.type !== "HOMEPOINT"))) {
       return <Polyline
         fillColor="#D41313"
         fillOpacity={0.35}
@@ -151,14 +151,16 @@ class Maps extends Component {
       var homePointIndex = this.props.route.findIndex(coord => coord.type === "HOMEPOINT");
       var wayPointIndex = this.props.route.findIndex(coord => coord.type === "WAYPOINT");
       var homePointPath = [this.props.route[homePointIndex], this.props.route[wayPointIndex]];
-      return <Polyline
-        fillColor="#686868"
-        fillOpacity={0.35}
-        path={homePointPath}
-        strokeColor="#686868"
-        strokeOpacity={0.6}
-        strokeWeight={3}
-      />
+      if (Array.isArray(homePointPath) && homePointPath.length >= 2 && homePointPath[0] != null && homePointPath[1] != null) {
+        return <Polyline
+          fillColor="#686868"
+          fillOpacity={0.35}
+          path={homePointPath}
+          strokeColor="#686868"
+          strokeOpacity={0.6}
+          strokeWeight={3}
+        />
+      }
     }
   }
 
@@ -181,7 +183,7 @@ class Maps extends Component {
     for (let i = 0; i < this.props.route.length; i++) {
       const element = this.props.route[i];
       if (element.type === "WAYPOINT") {
-        retRows[p] = <Marker position={{ lat: element.lat, lng: element.lng }} name={'Waypoint'} title={element.altitude + " m"}
+        retRows[p] = <Marker key={"waypoint-" + i} position={{ lat: element.lat, lng: element.lng }} name={'Waypoint'} title={element.altitude + " m"}
           icon={{
             url: require("assets/img/mapsicons/WaypointDot.png"),
             anchor: new window.google.maps.Point(6, 6),
@@ -195,10 +197,10 @@ class Maps extends Component {
   }
 
   getCurrentWaypoint() {
-   // console.log("was los: "+this.props.currentWaypoint);
+    // console.log("was los: "+this.props.currentWaypoint);
     if (this.props.currentWaypoint !== undefined && this.props.currentWaypoint !== null && this.props.currentWaypoint < this.props.route.length && this.props.currentWaypoint >= 0) {
       //console.log("betreten: "+this.props.route[this.props.currentWaypoint].lat);
-      return <Marker position={{ lat: this.props.route[this.props.currentWaypoint].lat, lng: this.props.route[this.props.currentWaypoint].lng }} name={'Current Waypoint'} title="Current Waypoint"
+      return <Marker key={"currentWaypoint"} position={{ lat: this.props.route[this.props.currentWaypoint].lat, lng: this.props.route[this.props.currentWaypoint].lng }} name={'Current Waypoint'} title="Current Waypoint"
         icon={{
           url: require("assets/img/mapsicons/currentWaypoint.png"),
           anchor: new window.google.maps.Point(33, 56),
@@ -213,12 +215,22 @@ class Maps extends Component {
   }
   getCenterPosition() {
     var pos = this.getInitialZoom().getCenter();
+    var p = {
+      lat: pos.lat(),
+      lng: pos.lng()
+      // lat: Number.parseFloat(pos.lat.toString()),
+      // lng: Number.parseFloat(pos.lng.toString())
+    }
     //console.log("center pos: " + JSON.stringify(pos));
-    return pos;
+    return p;
   }
   render() {
     var initalCenterPosition = this.getCenterPosition();
-    //console.log("initalCenterPosition: " + JSON.stringify(initalCenterPosition));
+    console.log("initalCenterPosition: " + JSON.stringify(initalCenterPosition) + " ty: " + typeof initalCenterPosition.lat);
+    // if (initalCenterPosition.lat !== "number") {
+    //   console.log("ABBRUCH; ABBRUCH");
+    //   return null;
+    // }
     return (<div id="map">
       <Map
         center={initalCenterPosition}
@@ -228,10 +240,7 @@ class Maps extends Component {
           height: '100%',
           position: 'relative'
         }} google={this.props.google}
-        initialCenter={{
-          lat: this.props.latitude,
-          lng: this.props.longitude
-        }}
+        initialCenter={initalCenterPosition}
 
         clickableIcons={false}
       //bounds={this.getInitialZoom()}

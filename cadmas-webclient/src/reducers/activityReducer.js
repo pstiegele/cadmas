@@ -7,6 +7,7 @@ const activityReducer = (state = {
     'state': 'completed',
     'note': 'No Websocket Connection established',
     'dt_created': 6381021024,
+    'dt_started': 6381021124,
     'dt_ended': 639191291,
     'duration': 10,
     'thumbnailpath': ''

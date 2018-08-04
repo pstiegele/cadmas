@@ -14,13 +14,13 @@ import Airspeed from '../../components/FlightInstruments/Airspeed';
 import Altimeter from '../../components/FlightInstruments/Altimeter';
 import Attitude from '../../components/FlightInstruments/Attitude';
 import Heading from '../../components/FlightInstruments/Heading';
-import TurnCoordinator from '../../components/FlightInstruments/TurnCoordinator';
+//import TurnCoordinator from '../../components/FlightInstruments/TurnCoordinator';
 import Variometer from '../../components/FlightInstruments/Variometer';
 import CadmasWS from '../../websocket/CadmasWS';
 import Gauge from 'react-svg-gauge';
 import NotificationSystem from 'react-notification-system';
 import { style } from "variables/Variables.jsx";
-import util from 'util';
+//import util from 'util';
 
 
 
@@ -224,6 +224,9 @@ class Activity extends Component {
   getSafeActivityDtCreated(activityID) {
     return this.getSafe(() => this.getActivityByID(activityID).dt_created, "")
   }
+  getSafeActivityDtStarted(activityID) {
+    return this.getSafe(() => this.getActivityByID(activityID).dt_started, "")
+  }
   getSafeActivityDtEnded(activityID) {
     return this.getSafe(() => this.getActivityByID(activityID).dt_ended, "")
   }
@@ -245,8 +248,7 @@ class Activity extends Component {
   getDate() {
     var start;
     if (parseInt(this.getSafeActivityState(this.state.activityID), 10) === 2) {
-
-      start = parseInt(this.getSafeActivityDtCreated(this.state.activityID), 10);
+      start = parseInt(this.getSafeActivityDtStarted(this.state.activityID), 10);
       var end = parseInt(this.getSafeActivityDtEnded(this.state.activityID), 10);
       return this.getAbsoluteDate(start) + " - " + this.getAbsoluteEndDate(start, end) + " (" + this.getRelativeDate(start) + ", duration: " + this.getDuration(end - start) + ")";
     } else {
@@ -296,7 +298,7 @@ class Activity extends Component {
       }
     });
     if (timestamp === 0) {
-      if (this.refs.notificationSystem != null && this.refs.notificationSystem != undefined && this.thereWasMissingTelemetry===false) {
+      if (this.refs.notificationSystem !== null && this.refs.notificationSystem !== undefined && this.thereWasMissingTelemetry===false) {
         this.thereWasAlreadyAMissingTelemetryNotification = moment();
         this.thereWasMissingTelemetry = true;
         this.refs.notificationSystem.addNotification({
@@ -309,7 +311,7 @@ class Activity extends Component {
     }
     var ret = moment(timestamp).fromNow();
     if (ret === "just now ago") {
-      if (this.refs.notificationSystem != null && this.refs.notificationSystem != undefined && this.thereWasMissingTelemetry) {
+      if (this.refs.notificationSystem !== null && this.refs.notificationSystem !== undefined && this.thereWasMissingTelemetry) {
         this.thereWasMissingTelemetry = false;
         this.refs.notificationSystem.addNotification({
           title: (<span data-notify="icon" className="pe-7s-like2"></span>), message: (<div>
@@ -322,7 +324,7 @@ class Activity extends Component {
     } else if (ret === "3 seconds ago" || ret === "4 seconds ago" || ret === "5 seconds ago" || ret === "6 seconds ago" || ret === "7 seconds ago" || ret === "8 seconds ago" || ret === "9 seconds ago") {
       return <div><span style={{ color: "#ffc700", fontSize: "2em", animation: "blinker 1s linear infinite" }}>{ret[0]}</span><br /><span style={{ color: "black", fontSize: "1em" }}>{ret.substring(1)}</span></div>;
     } else {
-      if (this.refs.notificationSystem != null && this.refs.notificationSystem != undefined && moment(this.thereWasAlreadyAMissingTelemetryNotification).diff() < -15000) {
+      if (this.refs.notificationSystem !== null && this.refs.notificationSystem !== undefined && moment(this.thereWasAlreadyAMissingTelemetryNotification).diff() < -15000) {
         this.thereWasAlreadyAMissingTelemetryNotification = moment();
         this.thereWasMissingTelemetry = true;
         this.refs.notificationSystem.addNotification({

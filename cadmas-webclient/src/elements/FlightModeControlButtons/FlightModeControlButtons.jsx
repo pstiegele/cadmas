@@ -147,17 +147,17 @@ class FlightModeControlButtons extends Component {
     })
   }
 
-  getArmedBsStyle(){
-    if(this.props.heartbeat.isArmed){
+  getArmedBsStyle() {
+    if (this.props.heartbeat.isArmed) {
       return "danger";
-    }else{
+    } else {
       return "default"
     }
   }
-  getArmedTitle(){
-    if(this.props.heartbeat.isArmed){
+  getArmedTitle() {
+    if (this.props.heartbeat.isArmed) {
       return "armed";
-    }else{
+    } else {
       return "disarmed"
     }
   }
@@ -166,64 +166,63 @@ class FlightModeControlButtons extends Component {
       switch (this.props.heartbeat.customMode) {
         case 0:
           return "MANUAL"
-          break;
         case 1:
           return "CIRCLE"
-          break;
+
         case 2:
           return "STABILIZE"
-          break;
+
         case 3:
           return "TRAINING"
-          break;
+
         case 4:
           return "ACRO"
-          break;
+
         case 5:
           return "FLY BY WIRE THROTTLE MANUAL"
-          break;
+
         case 6:
           return "FLY BY WIRE THROTTLE AUTO"
-          break;
+
         case 7:
           return "CRUISE"
-          break;
+
         case 8:
           return "AUTOTUNE"
-          break;
+
         case 10:
           return "AUTO"
-          break;
+
         case 11:
           return "RTL"
-          break;
+
         case 12:
           return "LOITER"
-          break;
+
         case 14:
           return "AVOID_ADSB"
-          break;
+
         case 15:
           return "GUIDED"
-          break;
+
         case 16:
           return "INITIALISING"
-          break;
+
         case 17:
           return "QSTABILIZE"
-          break;
+
         case 18:
           return "QHOVER"
-          break;
+
         case 19:
           return "QLOITER"
-          break;
+
         case 20:
           return "QLAND"
-          break;
+
         case 21:
           return "QRTL"
-          break;
+
         default:
           break;
       }
@@ -232,13 +231,13 @@ class FlightModeControlButtons extends Component {
       return "Error";
     }
   }
-  getButtonStatus(){
+  getButtonStatus() {
     var droneID = this.props.droneID || -1;
-    var res = this.props.activities.filter(activity => activity.droneID===droneID && activity.state==="1");
-    console.log("res"+JSON.stringify(res));
-    if(res===null||res===undefined||res.length===0){
+    var res = this.props.activities.filter(activity => activity.droneID === droneID && activity.state === "1");
+    console.log("res" + JSON.stringify(res));
+    if (res === null || res === undefined || res.length === 0) {
       return false;
-    }else{
+    } else {
       return true;
     }
   }

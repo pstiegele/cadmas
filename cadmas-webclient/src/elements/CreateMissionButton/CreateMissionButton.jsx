@@ -86,7 +86,7 @@ class CreateMissionButton extends Component {
             if (element.length !== 12) {
                 return waypoints;
             }
-            
+
             const altitude = element[10];
             const latitude = element[8];
             const longitude = element[9];
@@ -102,7 +102,7 @@ class CreateMissionButton extends Component {
                 type = "RTL";
             } else if (type === "16") {
                 type = "WAYPOINT";
-            } else if (type = "19") {
+            } else if (type === "19") {
                 type = "LOITER";
             } else {
                 type = "INVALID";
@@ -119,30 +119,29 @@ class CreateMissionButton extends Component {
     }
 
     getWaypointInfo() {
-        if(this.state.waypoints.length!==0){
-            return <div><br /><span style={{ color: "red" }}>{this.state.waypoints.length}</span> waypoint{this.state.waypoints.length===1?"":"s"} detected.
-            <br /><span style={{ color: "red" }}>{this.state.waypoints.filter(waypoint => waypoint.type==="HOMEPOINT").length}</span> homepoint{this.state.waypoints.filter(waypoint => waypoint.type==="HOMEPOINT").length===1?"":"s"}.
-            <br /><span style={{ color: "red" }}>{this.state.waypoints.filter(waypoint => waypoint.type==="TAKEOFF").length}</span> takeoff waypoint{this.state.waypoints.filter(waypoint => waypoint.type==="TAKEOFF").length===1?"":"s"}.
-            <br /><span style={{ color: "red" }}>{this.state.waypoints.filter(waypoint => waypoint.type==="LAND").length}</span> land waypoint{this.state.waypoints.filter(waypoint => waypoint.type==="LAND").length===1?"":"s"}.
+        if (this.state.waypoints.length !== 0) {
+            return <div><br /><span style={{ color: "red" }}>{this.state.waypoints.length}</span> point{this.state.waypoints.length === 1 ? "" : "s"} detected.
+            <br /><span style={{ color: "red" }}>{this.state.waypoints.filter(waypoint => waypoint.type === "HOMEPOINT").length}</span> homepoint{this.state.waypoints.filter(waypoint => waypoint.type === "HOMEPOINT").length === 1 ? "" : "s"}.
+            <br /><span style={{ color: "red" }}>{this.state.waypoints.filter(waypoint => waypoint.type === "TAKEOFF").length}</span> takeoff waypoint{this.state.waypoints.filter(waypoint => waypoint.type === "TAKEOFF").length === 1 ? "" : "s"}.
+            <br /><span style={{ color: "red" }}>{this.state.waypoints.filter(waypoint => waypoint.type === "LAND").length}</span> land waypoint{this.state.waypoints.filter(waypoint => waypoint.type === "LAND").length === 1 ? "" : "s"}.
             </div>;
-        }else{
+        } else {
             return <div><br />No waypoint file detected.</div>;
         }
-        
+
     }
 
     getModalText() {
         return <span >
             <p>You are going to create a new mission.</p><br />
             <form>
-                <FormGroup controlId="getMissionInfoForm"
-                    validationState={this.getValidationState()}>
+                <FormGroup controlId="getMissionInfoForm" >
                     <ControlLabel>Set the name of the mission</ControlLabel>
                     <FormControl
                         type="text"
                         placeholder="name"
                         onChange={this.setTitle}
-                    /><br /><br />
+                    /> <br /><br />
                     <ControlLabel>Set a note of the mission</ControlLabel>
                     <FormControl
                         type="text"
@@ -155,10 +154,11 @@ class CreateMissionButton extends Component {
                         type="text"
                         placeholder="route"
                         onChange={this.setRoute}
+                        validationState={this.getValidationState()}
                     />
                 </FormGroup>
             </form>
-        </span>;
+        </span >;
     }
     getModalTitle() {
         return "Create a new mission";
@@ -166,16 +166,20 @@ class CreateMissionButton extends Component {
     handleClose() {
         this.setState({
             showModal: false,
-            waypoints:[],
-            name:"",
-            note:""
+            waypoints: [],
+            name: "",
+            note: ""
         });
     }
     handleAccept() {
-        this.setState({
-            showModal: false
-        });
-        CadmasWS.addMission(this.state.title, this.state.note, this.state.route, "RTL", this.redirect.bind(this));
+        if (this.state.title.length !== 0 && this.state.waypoints.length !== 0) {
+            this.setState({
+                showModal: false
+            });
+            CadmasWS.addMission(this.state.title, this.state.note, this.state.route, this.redirect.bind(this));
+        }else{
+            alert("Title and Mission with at least one waypoint neccessary to continue.");
+        }
     }
 
     handleStopClick() {

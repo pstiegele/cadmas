@@ -5,7 +5,9 @@ const missionReducer = (state = {
     'note': 'No Websocket Connection established',
     'dt_created': 1503751670,
     'thumbnailpath': '',
-    'onConnectionLostMode': 'RTL',
+    'distance':0,
+    'route':[],
+    'location':"",
     'waypoints': [{
       'missionIndex': 0,
       'type': 'START',

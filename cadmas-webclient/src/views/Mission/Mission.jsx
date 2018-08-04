@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 
-import ActivitySummary from 'components/ActivitySummary/ActivitySummary';
+//import ActivitySummary from 'components/ActivitySummary/ActivitySummary';
 import MissionSummary from 'components/MissionSummary/MissionSummary';
+import AltitudeProfile from 'components/AltitudeProfile/AltitudeProfile';
 import Card from 'components/Card/Card.jsx';
 import { connect } from "react-redux";
 import moment from 'moment';
@@ -28,7 +29,7 @@ class Activity extends Component {
     this.handleSeeMoreClick = this.handleSeeMoreClick.bind(this);
     CadmasWS.getFullMission(this.state.missionID);
   }
-  
+
   getRelativeOrAbsoluteDate(date) {
     if (new Date() - new Date(date * 1000) < 604800000) {
       return moment(date * 1000).fromNow();
@@ -206,22 +207,25 @@ class Activity extends Component {
               </div>
 
             } />
-            <Col md={4}>
-              <Card title="Height Profile" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length - 1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length - 1].dt_created * 1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
-            </Col>
           </Col>
-          <Col md={4}>
+          <Col lg={4}>
             <Row>
               <Card title="Mission summary" content={<div><MissionSummary missionToShow={this.getMissionByID(this.state.missionID)} /></div>} />
             </Row>
-            {/* <Row>
+            <Row>
+              <Card title="Altitude Profile" category="relative altitudes in meter" content={<div><AltitudeProfile missionToShow={this.getMissionByID(this.state.missionID)}  /></div>} />
+            </Row>
+
+          </Col>
+
+          {/* <Row>
               <Card title="Mission is set to" category="2 drones" content={
                 <div>
                   <SetMissionToDrone missionToSet={this.state.missionID} />
                 </div>
               } />
             </Row> */}
-            {/* <Row>
+          {/* <Row>
               <Card title="Start Mission" category="on Skywalker X-8" content={
                 <div>
                   <Button className="pt-1" bsStyle="danger" type="button" bsSize="small" pullRight={true} fill={true} onClick={() => this.handleSeeMoreClick()}>
@@ -231,7 +235,7 @@ class Activity extends Component {
               } />
             </Row> */}
 
-          </Col>
+
         </Row>
 
       </Grid>

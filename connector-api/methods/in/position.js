@@ -8,7 +8,7 @@ const Websocket = require('ws');
 module.exports = function (ws, payload, callback) {
     if (ws.activeActivity !== undefined && ws.activeActivity !== null) {
         var db = global.db;
-        var position = "POINT(" + payload.latitude + " " + payload.longitude + " 5)";
+        var position = "POINT(" + payload.latitude + " " + payload.longitude + ")";
         var query = "INSERT INTO PositionTelemetry (activityID,timestamp,position, altitudeAbsolute,altitudeRelative) VALUES (?,?,ST_GeomFromText(?),?,?);";
         db.query(query, [ws.activeActivity, moment(payload.timestamp).format('YYYY-MM-DD HH:mm:ss'), position, payload.altitudeAbsolute, payload.altitudeRelative], function (error) {
             if (error){

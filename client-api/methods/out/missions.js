@@ -3,7 +3,7 @@ const send = require("../../main").send;
 
 module.exports = function (ws) {
     var db = global.db;
-    var query = "SELECT id,name,note,UNIX_TIMESTAMP(dtCreated) AS dtCreated,thumbnailpath,onConnectionLostMode FROM Mission WHERE userID=?";
+    var query = "SELECT id,name,note,UNIX_TIMESTAMP(dtCreated) AS dtCreated,thumbnailpath,distance,route,location FROM Mission WHERE userID=?";
     db.query(query, ws.userID, function (error, results) {
         if (error||results===undefined){
             winston.error('error in missions: ' + error);
@@ -19,7 +19,9 @@ module.exports = function (ws) {
                 'note': element.note,
                 'dt_created': element.dtCreated,
                 'thumbnailpath': element.thumbnailpath,
-                'onConnectionLostMode': element.onConnectionLostMode
+                'distance':element.distance,
+                'route':element.route,
+                'location':element.location
             }
             );
         }

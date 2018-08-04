@@ -31,8 +31,7 @@ class Missions extends Component {
     "location",
     "waypoints",
     "distance",
-    "usage",
-    "set to"
+    "usage"
   ];
 
   getRelativeOrAbsoluteDate(date) {
@@ -72,20 +71,34 @@ class Missions extends Component {
 
   getUsage(missionID) {
     var counter = 0;
-    for(var i=0;i<this.props.activity.activities.length;i++){
+    for (var i = 0; i < this.props.activity.activities.length; i++) {
       if (this.props.activity.activities[i].missionID === missionID) {
         counter++
       }
     }
-    if(counter===1){
+    if (counter === 1) {
       return counter + " time";
-    }else{
+    } else {
       return counter + " times";
     }
   }
 
-  getSetTo(missionID){
-    var res=[]
+  getDistance(missionID) {
+    var mission = this.getMissionByID(missionID);
+    if (mission !== undefined && mission.distance !== undefined && mission.distance !== null) {
+      var d = mission.distance;
+      if (d > 1000) {
+        return (mission.distance / 1000).toFixed(2) + " km";
+      } else {
+        return Math.round(mission.distance) + " m";
+      }
+
+    }
+    return "";
+  }
+
+  getSetTo(missionID) {
+    var res = []
     // for(var i=0;i<this.props.drone.drones.length;i++){
     //   if(this.props.drone.drones[i].activeMission===missionID){
     //     res.push(this.props.drone.drones[i].name);
@@ -94,25 +107,27 @@ class Missions extends Component {
     return res;
   }
 
-  getLocation(missionID){
-    return "Würzburg";
+  getLocation(missionID) {
+    var mission = this.getMissionByID(missionID);
+    if (mission !== undefined && mission.location !== undefined && mission.location !== null) {
+      return mission.location;
+    }
+    return "";
   }
 
-  getNumberOfWaypoints(missionID){
-    var counter = 3;
-    if(counter===1){
-      return counter + " item";
-    }else{
-      return counter + " items";
+  getNumberOfWaypoints(missionID) {
+    var mission = this.getMissionByID(missionID);
+    if (mission !== undefined && mission.route !== undefined && mission.route !== null) {
+      return mission.route.length + " items";
     }
-    
+    return "";
   }
 
   handleClick(that) {
     this.setState({ redirect: true, redirectToMission: that._targetInst.return.key });
   }
 
-  getMissionsTitle(){
+  getMissionsTitle() {
     var button = <span className="pull-right"><CreateMissionButton /> </span>
     return <div>Missions {button}</div>
   }
@@ -150,9 +165,8 @@ class Missions extends Component {
                       <td key={prop.missionID + "-name"}>{prop.name}</td>
                       <td key={prop.missionID + "-location"}>{this.getLocation(prop.missionID)}</td>
                       <td key={prop.missionID + "-waypoints"}>{this.getNumberOfWaypoints(prop.missionID)}</td>
-                      <td key={prop.missionID + "-distance"}>{"12 km"}</td>
+                      <td key={prop.missionID + "-distance"}>{this.getDistance(prop.missionID)}</td>
                       <td key={prop.missionID + "-usage"}>{this.getUsage(prop.missionID)}</td>
-                      <td key={prop.missionID + "-setto"}>{this.getSetTo(prop.missionID)}</td>
                     </tr>)
                   })
                 }
