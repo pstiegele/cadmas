@@ -16,7 +16,7 @@ class CadmasWS {
   constructor(props) {
     this.initWS();
   }
-  initAuthAPI() {
+  initAuthAPI(username, password, callback) {
     var that = this;
     console.log("authenticate first! ");
     var authSocket;
@@ -33,12 +33,16 @@ class CadmasWS {
           if (msg.payload.successful) {
             localStorage.setItem('token', msg.payload.token);
             console.log("authenticated successfully");
-            that.initClientAPI(msg.payload.token);
+            that.initClientAPI(msg.payload.token, callback);
           } else {
             console.log("authentication failed");
+            if (callback !== undefined)
+              callback(false);
           }
           break;
         default:
+          if (callback !== undefined)
+            callback(false);
           break;
       }
 
@@ -48,8 +52,8 @@ class CadmasWS {
       var msg = {
         "method": "authenticate",
         "payload": {
-          "username": "ps",
-          "password": "123"
+          "username": username,   //ps
+          "password": password   //123
         }
       };
       authSocket.send(JSON.stringify(msg));
@@ -57,7 +61,7 @@ class CadmasWS {
 
     };
   }
-  initClientAPI(token) {
+  initClientAPI(token, callback) {
     var that = this;
     var hostname = window.location.hostname;
     if (window.location.hostname !== "localhost" && !window.location.hostname.startsWith("192")) {
@@ -159,6 +163,8 @@ class CadmasWS {
 
     }
     socket.onopen = function (event) {
+      if (callback !== undefined)
+        callback(true);
       //console.log("onOpen called: " + JSON.stringify(this));
       //   for (var i = 0; i < 350; i++) {
       //     var activityID = Math.floor(Math.random() * (296 - 1 + 1) + 1);
@@ -191,7 +197,7 @@ class CadmasWS {
   initWS() {
     var token = localStorage.getItem("token");
     if (!token) {
-      this.initAuthAPI();
+      // this.initAuthAPI();
     } else {
       this.initClientAPI(token);
     }

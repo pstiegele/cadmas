@@ -5,6 +5,7 @@ import NotificationSystem from 'react-notification-system';
 import Header from 'components/Header/Header';
 import Footer from 'components/Footer/Footer';
 import Sidebar from 'components/Sidebar/Sidebar';
+import LandingPage from 'components/LandingPage/LandingPage';
 
 //import CadmasWS from '../websocket/CadmasWS';
 
@@ -98,7 +99,9 @@ componentDidUpdate(e) {
   }
 }
 render() {
-  
+  if(!localStorage.getItem("token")||localStorage.getItem("token")===undefined || localStorage.getItem("token")===null||localStorage.getItem("token")===""){
+    return <LandingPage />;
+  }
   return (<div className="wrapper">
     <NotificationSystem ref="notificationSystem" style={style} />
     <Sidebar {...this.props} />
@@ -107,10 +110,10 @@ render() {
       <Switch>
         {
           appRoutes.map((prop, key) => {
-            if (prop.name === "Notifications")
-              return (<Route path={prop.path} key={key} render={routeProps => <prop.component {...routeProps} handleClick={this.handleNotificationClick} />} />);
-            if (prop.redirect)
-              return (<Redirect from={prop.path} to={prop.to} key={key} />);
+            // if (prop.name === "Notifications")
+            //   return (<Route path={prop.path} key={key} render={routeProps => <prop.component {...routeProps} handleClick={this.handleNotificationClick} />} />);
+             if (prop.redirect)
+               return (<Redirect from={prop.path} to={prop.to} key={key} />);
             return (<Route path={prop.path} component={prop.component} key={key} />);
           })
         }
