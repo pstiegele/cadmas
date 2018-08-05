@@ -58,6 +58,7 @@ class MissionTitleControlButtons extends Component {
                 <FormGroup controlId="getActivityInfoForm">
                     <ControlLabel>Set the name of the activity</ControlLabel>
                     <FormControl
+                        autoFocus
                         type="text"
                         placeholder="name"
                         onChange={this.setTitle}
@@ -79,17 +80,23 @@ class MissionTitleControlButtons extends Component {
         });
     }
     handleAccept() {
-        var droneID = this.state.droneID;
-        this.setState({
-            showModal: false
-        });
-        if(droneID===undefined){
-            droneID = this.props.drones[0].droneID;
+        if (this.state.title === null || this.state.title === undefined || this.state.title === "" || this.state.title.length === 0) {
+            alert("Please give the activity a title.");
+        } else {
+
+            var droneID = this.state.droneID;
             this.setState({
-                droneID: this.props.drones[0].droneID
+                showModal: false
             });
+            if (droneID === undefined) {
+                droneID = this.props.drones[0].droneID;
+                this.setState({
+                    droneID: this.props.drones[0].droneID
+                });
+            }
+            CadmasWS.addActivity(this.props.missionID, droneID, this.state.title, 0, this.state.note, this.redirect.bind(this));
+
         }
-        CadmasWS.addActivity(this.props.missionID, droneID, this.state.title, 0, this.state.note, this.redirect.bind(this));
     }
 
     redirect(payload) {

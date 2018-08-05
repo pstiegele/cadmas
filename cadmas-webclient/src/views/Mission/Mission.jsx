@@ -213,7 +213,7 @@ class Activity extends Component {
               <Card title="Mission summary" content={<div><MissionSummary missionToShow={this.getMissionByID(this.state.missionID)} /></div>} />
             </Row>
             <Row>
-              <Card title="Altitude Profile" category="relative altitudes in meter" content={<div><AltitudeProfile missionToShow={this.getMissionByID(this.state.missionID)}  /></div>} />
+              <Card title="Altitude Profile" category="relative altitudes in meter" content={<AltitudeProfile missionToShow={this.getMissionByID(this.state.missionID)}  />} />
             </Row>
 
           </Col>

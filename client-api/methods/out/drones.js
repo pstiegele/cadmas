@@ -21,10 +21,12 @@ module.exports = function (ws) {
                 'softwareVersion': element.softwareVersion,
                 'note': element.note,
                 'dt_created': element.dt_created,
+                'connectorType': element.connectorType,
                 'vehicleType': element.vehicleType,
                 'manufacturer': element.manufacturer,
                 'color':element.color,
-                'activeMission': element.activeMission
+                'activeMission': element.activeMission,
+                'connected':global.connector_wss.cadmasConnectors[element.id]!==undefined?true:false
             }
             );
         }

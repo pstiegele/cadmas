@@ -20,6 +20,22 @@ const droneReducer = (state = {
            drones: action.payload
          };
          break;
+         case "SET_DRONE":
+         state = {
+           ...state,
+         };
+         var successful = false;
+         for (var i = 0; i < state.drones.length; i++) {
+           if (state.drones[i].droneID === action.payload.droneID) {
+             state.drones[i] = action.payload;
+             successful = true;
+             break;
+           }
+         }
+         if (!successful) {
+           state.drones[state.drones.length] = action.payload;
+         }
+         break;
        
        default:
          break;

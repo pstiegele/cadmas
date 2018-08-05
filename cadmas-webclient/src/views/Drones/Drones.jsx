@@ -6,6 +6,7 @@ import ActivitiesSmall from 'components/ActivitiesSmall/ActivitiesSmall.jsx';
 import Button from 'elements/CustomButton/CustomButton.jsx';
 import { connect } from "react-redux";
 import moment from "moment";
+import DroneSmall from 'components/DroneSmall/DroneSmall';
 
 
 const mapStateToProps = (state) => {
@@ -32,15 +33,17 @@ class Drones extends Component {
 
   }
 
-  getDroneContent(prop){
-    return <Col md={6} key={prop.droneID+"-col"}><Card title={prop.name} category={prop.vehicleType} stats={"last flight: " + moment(this.getLastFlightDate(prop.droneID) * 1000).fromNow()} statsIcon="fa fa-clock-o" content={
+  getDroneContent(prop) {
+    return <Col md={6} key={prop.droneID + "-col"}><Card title={prop.name} category={prop.vehicleType} stats={"last flight: " + moment(this.getLastFlightDate(prop.droneID) * 1000).fromNow()} statsIcon="fa fa-clock-o" content={
       <div>
         <div className="row">
-          <div className="col-lg-4"><img width="180px" src={"dronethumbs/" + prop.thumbnailpath} alt={prop.name} /></div>
-          <div className="col-lg-7"><div className="table-full-width" > <table className="table">
+          {/* <div className="col-lg-4"><img width="180px" src={"dronethumbs/" + prop.thumbnailpath} alt={prop.name} /></div> */}
+          <DroneSmall droneToShow={prop} />
+        </div>
+        <div style={{paddingTop:"20px"}} className="row">
+          <table className="table">
             <ActivitiesSmall filterDrone={true} droneID={prop.droneID} />
           </table>
-          </div></div>
         </div>
         <div className="row">
           {/* <div className="col-lg-10 h5">Statistics<br />5.4 GB data usage this month</div> */}
@@ -54,17 +57,17 @@ class Drones extends Component {
           </div>
         </div>
       </div>
-     
+
     } />
-      </Col>
+    </Col>
   }
 
   render() {
-    var res=[];
+    var res = [];
     this.props.drone.drones.map((prop, key) => {
-      if(key%2!==0){
-        res.push(<Row key={prop.droneID+"-row"}>{this.getDroneContent(prop)}</Row>);
-      }else{
+      if (key % 2 !== 0) {
+        res.push(<Row key={prop.droneID + "-row"}>{this.getDroneContent(prop)}</Row>);
+      } else {
         res.push(this.getDroneContent(prop));
       }
       return null;
@@ -72,7 +75,7 @@ class Drones extends Component {
     return (
       <div className="content">
         <Grid fluid>
-        {res} 
+          {res}
         </Grid>
       </div>
 

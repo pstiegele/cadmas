@@ -138,6 +138,7 @@ class CreateMissionButton extends Component {
                 <FormGroup controlId="getMissionInfoForm" >
                     <ControlLabel>Set the name of the mission</ControlLabel>
                     <FormControl
+                        autoFocus
                         type="text"
                         placeholder="name"
                         onChange={this.setTitle}
@@ -177,7 +178,7 @@ class CreateMissionButton extends Component {
                 showModal: false
             });
             CadmasWS.addMission(this.state.title, this.state.note, this.state.route, this.redirect.bind(this));
-        }else{
+        } else {
             alert("Title and Mission with at least one waypoint neccessary to continue.");
         }
     }

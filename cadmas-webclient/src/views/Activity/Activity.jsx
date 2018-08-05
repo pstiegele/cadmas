@@ -20,6 +20,7 @@ import CadmasWS from '../../websocket/CadmasWS';
 import Gauge from 'react-svg-gauge';
 import NotificationSystem from 'react-notification-system';
 import { style } from "variables/Variables.jsx";
+import AltitudeProfile from 'components/AltitudeProfile/AltitudeProfile';
 //import util from 'util';
 
 
@@ -107,6 +108,9 @@ class Activity extends Component {
   getSafeDroneID(activity) {
     return this.getSafe(() => activity.droneID, 0)
   }
+  getSafeDroneConnectStatus(activity) {
+    return this.getSafe(() => this.getSafeDrone(activity.droneID).connected, false)
+  }
   getSafeDroneVehicleType(droneID) {
     return this.getSafe(() => this.getDroneByID(droneID).vehicleType, "")
   }
@@ -137,7 +141,7 @@ class Activity extends Component {
     var res;
     var name = this.getSafeActivityName(activityID);
     var controlButtons = <span className="pull-right">
-      <FlightModeControlButtons activityID={activityID} state={parseInt(this.getSafeActivityState(this.state.activityID), 10)} heartbeat={this.getSafeTelemetryHeartbeat()} /></span>
+      <FlightModeControlButtons activityID={activityID} droneConnected={this.getSafeDroneConnectStatus(this.getActivityByID(this.state.activityID))} state={parseInt(this.getSafeActivityState(this.state.activityID), 10)} heartbeat={this.getSafeTelemetryHeartbeat()} /></span>
     res = <div>{name}{controlButtons}</div>
     return res;
   }
@@ -145,7 +149,7 @@ class Activity extends Component {
     var res;
     var name = this.getSafeActivityName(activityID);
     var controlButtons = <span className="pull-right">
-      <FlightModeControlButtons activityID={activityID} activities={this.props.activity.activities} droneID={parseInt(this.getSafeDroneID(this.getActivityByID(this.state.activityID)), 10)} state={parseInt(this.getSafeActivityState(this.state.activityID), 10)} /></span>
+      <FlightModeControlButtons activityID={activityID} activities={this.props.activity.activities} droneConnected={this.getSafeDroneConnectStatus(this.getActivityByID(this.state.activityID))} droneID={parseInt(this.getSafeDroneID(this.getActivityByID(this.state.activityID)), 10)} state={parseInt(this.getSafeActivityState(this.state.activityID), 10)} /></span>
     res = <div>{name}{controlButtons}</div>
     return res;
   }
@@ -224,6 +228,9 @@ class Activity extends Component {
   getSafeActivityDtCreated(activityID) {
     return this.getSafe(() => this.getActivityByID(activityID).dt_created, "")
   }
+  getSafeActivityMissionID(activityID) {
+    return this.getSafe(() => this.getActivityByID(activityID).missionID, 0)
+  }
   getSafeActivityDtStarted(activityID) {
     return this.getSafe(() => this.getActivityByID(activityID).dt_started, "")
   }
@@ -231,7 +238,7 @@ class Activity extends Component {
     return this.getSafe(() => this.getActivityByID(activityID).dt_ended, "")
   }
   getSafeActivityState(activityID) {
-    return this.getSafe(() => this.getActivityByID(activityID).state, "")
+    return this.getSafe(() => this.getActivityByID(activityID).state, 0)
   }
   getActivityByID(activityID) {
     var result = this.props.activity.activities.filter(function (obj) {
@@ -298,7 +305,7 @@ class Activity extends Component {
       }
     });
     if (timestamp === 0) {
-      if (this.refs.notificationSystem !== null && this.refs.notificationSystem !== undefined && this.thereWasMissingTelemetry===false) {
+      if (this.refs.notificationSystem !== null && this.refs.notificationSystem !== undefined && this.thereWasMissingTelemetry === false) {
         this.thereWasAlreadyAMissingTelemetryNotification = moment();
         this.thereWasMissingTelemetry = true;
         this.refs.notificationSystem.addNotification({
@@ -307,7 +314,7 @@ class Activity extends Component {
             </div>), level: 'warning', position: "tr", autoDismiss: 5
         });
       }
-      return <span style={{ color: "#e59c00", fontSize: "2em", animation: "blinker 1s linear infinite"}}>never</span>;
+      return <span style={{ color: "#e59c00", fontSize: "2em", animation: "blinker 1s linear infinite" }}>never</span>;
     }
     var ret = moment(timestamp).fromNow();
     if (ret === "just now ago") {
@@ -320,7 +327,7 @@ class Activity extends Component {
         });
       }
       this.thereWasAlreadyAMissingTelemetryNotification = moment();
-      return <span style={{ color: "#059900", fontSize: "1.5em", animation: "blinker 1s linear infinite"}}>just now</span>;
+      return <span style={{ color: "#059900", fontSize: "1.5em", animation: "blinker 1s linear infinite" }}>just now</span>;
     } else if (ret === "3 seconds ago" || ret === "4 seconds ago" || ret === "5 seconds ago" || ret === "6 seconds ago" || ret === "7 seconds ago" || ret === "8 seconds ago" || ret === "9 seconds ago") {
       return <div><span style={{ color: "#ffc700", fontSize: "2em", animation: "blinker 1s linear infinite" }}>{ret[0]}</span><br /><span style={{ color: "black", fontSize: "1em" }}>{ret.substring(1)}</span></div>;
     } else {
@@ -341,7 +348,7 @@ class Activity extends Component {
         }
       } else {
 
-        return <span style={{ color: "#cc0202", fontSize: "1.5em", animation: "blinker 1s linear infinite"}}>{ret}</span>;
+        return <span style={{ color: "#cc0202", fontSize: "1.5em", animation: "blinker 1s linear infinite" }}>{ret}</span>;
       }
     }
   }
@@ -376,11 +383,11 @@ class Activity extends Component {
   getStyledTelemetryLoss() {
     var value = this.getSafeTelemetryHeartbeat().messagesLost;
     if (value < 1) {
-      return <span style={{ color: "#059900", fontSize: "2em"}}>{value}</span>
+      return <span style={{ color: "#059900", fontSize: "2em" }}>{value}</span>
     } else if (value < 3) {
-      return <span style={{ color: "#cc0202", fontSize: "2em"}}>{value}</span>
+      return <span style={{ color: "#cc0202", fontSize: "2em" }}>{value}</span>
     } else {
-      return <span style={{ color: "#cc0202", fontSize: "2em"}}>{value}</span>
+      return <span style={{ color: "#cc0202", fontSize: "2em" }}>{value}</span>
     }
   }
 
@@ -389,15 +396,15 @@ class Activity extends Component {
       <div className="col-lg-4 text-center">
         <Gauge value={this.getSafeTelemetryHeartbeat().cpuTemp} width={100} height={130} min="0" max="90" label="CPU °C" topLabelStyle={{ fontSize: "1em" }} valueLabelStyle={{ fontSize: "0.8em" }} minMaxLabelStyle={{ fontSize: "0.8em" }} color="#e5004c" />
       </div>
-      <div className="col-lg-4 text-center" style={{minWidth:"140px"}}>
+      <div className="col-lg-4 text-center" style={{ minWidth: "140px" }}>
         <span>Telemetry loss</span>
-        <div style={{height:"50px"}}></div>
+        <div style={{ height: "50px" }}></div>
         {this.getStyledTelemetryLoss()}
       </div>
-      <div className="col-lg-4 text-center" style={{minWidth:"140px"}}>
-      <span>Last Update</span>
-      <div style={{height:"50px"}}></div>
-      {this.getLastTelemetryUpdateTimeDiff()}
+      <div className="col-lg-4 text-center" style={{ minWidth: "140px" }}>
+        <span>Last Update</span>
+        <div style={{ height: "50px" }}></div>
+        {this.getLastTelemetryUpdateTimeDiff()}
       </div>
     </div>;
   }
@@ -416,30 +423,28 @@ class Activity extends Component {
             </div>
 
           } />
-          <Col md={4}>
+          {/* <Col md={4}>
             <Card title="Battery Usage" category={0} stats="~ 12 % per hour" statsIcon="fa fa-clock-o" content={<div><BatteryUsage activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
           </Col>
           <Col md={4}>
             <Card title="Notifications" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length - 1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length - 1].dt_created * 1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
-          </Col>
-          <Col md={4}>
-            <Card title="Height Profile" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length - 1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length - 1].dt_created * 1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
+          </Col> */}
+          <Col md={12}>
+            <Card title="Altitude Profile" category="relative altitudes in meter" content={<AltitudeProfile missionToShow={this.getMissionByID(this.getSafeActivityMissionID(this.state.activityID))} />} />
           </Col>
         </Col>
         <Col md={4}>
           <Row>
-            <Card title="Activity summary" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
+            <Card title={this.getSafeActivityState(this.state.activityID) === "0" ? "Mission \"" + this.getSafeMissionName(this.getSafeActivityMissionID(this.state.activityID)) + "\"" : "Activity summary"} content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
           </Row>
           <Row>
             <Card title={this.getSafeDroneName(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} category={this.getSafeDroneVehicleType(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} content={
-              <div>
                 <DroneSmall droneToShow={this.getSafeDrone(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} />
-              </div>
             } />
           </Row>
-          <Row>
+          {/* <Row>
             <Card title="Payload" category={this.getSafeDroneName(this.props.activity.activities[this.props.activity.activities.length - 1].droneID)} stats={moment(this.props.activity.activities[this.props.activity.activities.length - 1].dt_created * 1000).fromNow()} statsIcon="fa fa-clock-o" content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
-          </Row>
+          </Row> */}
         </Col>
       </Row>
 

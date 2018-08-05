@@ -232,9 +232,29 @@ class FlightModeControlButtons extends Component {
     }
   }
   getButtonStatus() {
+    if (this.otherActivityRunning()) {
+      return true;
+    } else {
+      return !this.getDroneIsConnected();
+    }
+  }
+  getDroneIsConnected() {
+    if (this.props.droneConnected !== undefined && this.props.droneConnected !== null && this.props.droneConnected === true) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  getDroneConnectedStyle(){
+    if(this.getDroneIsConnected()){
+      return "success";
+    }else{
+      return "default";
+    }
+  }
+  otherActivityRunning(){
     var droneID = this.props.droneID || -1;
     var res = this.props.activities.filter(activity => activity.droneID === droneID && activity.state === "1");
-    console.log("res" + JSON.stringify(res));
     if (res === null || res === undefined || res.length === 0) {
       return false;
     } else {
@@ -245,12 +265,15 @@ class FlightModeControlButtons extends Component {
     if (this.props.state === 0) {
       return (<span>
         <CustomModal show={this.state.showModal} bsStyle="success" handleClose={this.handleClose.bind(this)} handleAccept={this.handleAccept.bind(this)} acceptTitle="Yes, I want to start the drone." title={this.getModalTitle()} text={this.getModalText()} />
+        {this.otherActivityRunning()?<Label bsStyle="danger">there is another running activity on this drone</Label>:""}&nbsp;
+        <Label bsStyle={this.getDroneConnectedStyle()}>{this.getDroneIsConnected()?"drone connected":"drone not connected"}</Label> &nbsp;
         <Button disabled={this.getButtonStatus()} className="pt-1" bsStyle="success" type="button" bsSize="small" onClick={() => this.handleStartFlightClick()}>
           START ACTIVITY
     </Button></span>
       );
     } else if (this.props.state === 1) {
       return (<span>
+        <Label bsStyle={this.getDroneConnectedStyle()}>{this.getDroneIsConnected()?"drone connected":"drone not connected"}</Label> &nbsp;
         <Label bsStyle={this.getArmedBsStyle()}>{this.getArmedTitle()}</Label> &nbsp;
         <CustomDropdown title={this.getSafeCustomMode()} bsStyle="warning" bsSize="small" dropdownKey="modeDropdown" menuItems={this.getDropdownModes()} onSelect={this.handleOnSelectMode.bind(this)} /> &nbsp;
         <CustomModal show={this.state.showModal} bsStyle="danger" handleClose={this.handleClose.bind(this)} handleAccept={this.handleAccept.bind(this)} acceptTitle="Yes, I know what I do." title={this.getModalTitle()} text={this.getModalText()} />

@@ -32,7 +32,7 @@ class MissionSummary extends Component {
       }
 
     }
-    return "";
+    return "-";
   }
 
   getNumberOfWaypoints() {
@@ -40,7 +40,7 @@ class MissionSummary extends Component {
     if (mission !== undefined && mission.route !== undefined && mission.route !== null) {
       return mission.route.length + " waypoints";
     }
-    return "";
+    return "-";
   }
 
   getRelativeOrAbsoluteDate() {
@@ -53,7 +53,7 @@ class MissionSummary extends Component {
         return moment(date * 1000).locale("de", localization).format("LL")
       }
     }
-    return "";
+    return "-";
   }
 
   getSafeNote() {
@@ -68,7 +68,7 @@ class MissionSummary extends Component {
     if (mission !== undefined && mission.location !== undefined && mission.location !== null) {
       return mission.location;
     }
-    return "";
+    return "-";
   }
 
   getUsage() {
@@ -90,50 +90,39 @@ class MissionSummary extends Component {
 
   render() {
     var MissionSummary = <div>
-      <div className="row">
-        <div className="col-lg-8">
-          {this.props.showMissionName ?
-            <div>
-              <p>
-                <i className="fa fa-globe"></i>
-                &nbsp;&nbsp;{this.getSafe(() => this.props.missionToShow.name, "")}</p>
-            </div> : ""}
-          <div>
-            <p>
-              <i className="fa fa-calendar"></i>
-              &nbsp;&nbsp;{this.getRelativeOrAbsoluteDate()}</p>
-          </div>
-          <div>
-            <p>
-              <i className="fa fa-globe"></i>
-              &nbsp;&nbsp;{this.getLocation()}</p>
-          </div>
-
-          <div>
-            <p>
-              <i className="fa fa-road"></i>
-              &nbsp;&nbsp;{this.getDistance()}</p>
-          </div>
-          <div>
-            <p>
-              <i className="fa fa-map-marker"></i>
-              &nbsp;&nbsp;{this.getNumberOfWaypoints()}</p>
-          </div>
-          <div>
-            <p>
-              <i className="fa fa-plane"></i>
-              &nbsp;&nbsp;{this.getUsage()}</p>
-          </div>
-          <div>
-            <p>
-              <i className="fa fa-sticky-note"></i>
-              &nbsp;&nbsp;{this.getSafeNote()}</p>
-          </div>
-
-
-        </div>
-
+      <div>
+        <p>
+          <i className="fa fa-calendar"></i>
+          &nbsp;&nbsp;{this.getRelativeOrAbsoluteDate()}</p>
       </div>
+      <div>
+        <p>
+          <i className="fa fa-globe"></i>
+          &nbsp;&nbsp;{this.getLocation()}</p>
+      </div>
+
+      <div>
+        <p>
+          <i className="fa fa-road"></i>
+          &nbsp;&nbsp;{this.getDistance()}</p>
+      </div>
+      <div>
+        <p>
+          <i className="fa fa-map-marker"></i>
+          &nbsp;&nbsp;{this.getNumberOfWaypoints()}</p>
+      </div>
+      <div>
+        <p>
+          <i className="fa fa-plane"></i>
+          &nbsp;&nbsp;{this.getUsage()}</p>
+      </div>
+      <div>
+        <p>
+          <i className="fa fa-sticky-note"></i>
+          &nbsp;&nbsp;{this.getSafeNote()}</p>
+      </div>
+
+
     </div>;
     return (MissionSummary);
   }

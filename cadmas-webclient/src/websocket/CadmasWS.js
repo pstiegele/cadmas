@@ -1,7 +1,7 @@
 import store from "../store";
 import { setActivities, setActivity } from "../actions/activityActions";
 import { setMissions, setMission } from "../actions/missionActions";
-import { setDrones } from "../actions/droneActions";
+import { setDrones, setDrone } from "../actions/droneActions";
 import { setNotifications } from "../actions/notificationActions";
 import { setUser } from "actions/userActions";
 import { setPayloads } from "actions/payloadActions";
@@ -104,6 +104,9 @@ class CadmasWS {
           case "drones":
             store.dispatch(setDrones(msg.payload));
             break;
+          case "drone":
+            store.dispatch(setDrone(msg.payload));
+            break;
           case "notifications":
             store.dispatch(setNotifications(msg.payload));
             break;
@@ -205,12 +208,11 @@ class CadmasWS {
   }
 
 
-  addMission(name, note, route, onConnectionLostMode, callback) {
+  addMission(name, note, route, callback) {
     var payload = {
       "name": name,
       "note": note,
-      "route": route,
-      "onConnectionLostMode": onConnectionLostMode
+      "route": route
     };
     this.packAndSend("addMission", payload, callback);
     console.log("addMission (" + name + ") transmitted");

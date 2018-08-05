@@ -39,15 +39,22 @@ class AltitudeProfile extends Component {
         var altitudes = [];
         var mission = this.props.missionToShow;
         if (mission !== undefined && mission !== null && mission.waypoints !== undefined) {
-            var waypoints = mission.waypoints.filter(waypoint => waypoint.type!=="HOMEPOINT"&&waypoint.type!=="TAKEOFF");
+            var waypoints = mission.waypoints.filter(waypoint => waypoint.type !== "HOMEPOINT");
             for (let i = 0; i < waypoints.length; i++) {
-                waypointNumbers.push(i);
+                if(waypoints[i].type==="LAND"){
+                    waypointNumbers.push("LAND");
+                }else if(waypoints[i].type==="TAKEOFF"){
+                    waypointNumbers.push("TAKEOFF");
+                }else{
+                  waypointNumbers.push("WP "+(i));
+                }
+                
                 altitudes.push(waypoints[i].altitude);
             }
         }
 
 
-
+       // console.log("wa: " + waypointNumbers.length + " series: " + altitudes.length);
         return {
             labels: waypointNumbers,
             series: [altitudes]
@@ -58,10 +65,10 @@ class AltitudeProfile extends Component {
         return {
             seriesBarDistance: 10,
             axisX: {
-                showGrid: true
+                showGrid: false
             },
-            axisY:{
-                showGrid: true
+            axisY: {
+                showGrid: false
             },
             height: "285px",
             low: 0

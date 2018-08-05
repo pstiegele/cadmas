@@ -226,7 +226,7 @@ class Maps extends Component {
   }
   render() {
     var initalCenterPosition = this.getCenterPosition();
-    console.log("initalCenterPosition: " + JSON.stringify(initalCenterPosition) + " ty: " + typeof initalCenterPosition.lat);
+    //console.log("initalCenterPosition: " + JSON.stringify(initalCenterPosition) + " ty: " + typeof initalCenterPosition.lat);
     // if (initalCenterPosition.lat !== "number") {
     //   console.log("ABBRUCH; ABBRUCH");
     //   return null;

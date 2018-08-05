@@ -1,6 +1,7 @@
 const winston = require('../middleware/logger');
 const util = require('util');
 const Websocket = require('ws');
+const drone = require('../client-api/methods/out/drone');
 
 var msgID = 0;
 module.exports = function (wss) {
@@ -12,8 +13,8 @@ module.exports = function (wss) {
     delete require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol];
     winston.info("connector connected. droneID: " + ws.droneID + " name: " + ws.name);
     global.connector_wss.cadmasConnectors[ws.droneID] = ws;
+   
     ws.on('message', function incoming(raw_msg) {
-
 
       var msg;
       try {
@@ -31,6 +32,7 @@ module.exports = function (wss) {
 
     ws.on('close', function (reason) {
       delete global.connector_wss.cadmasConnectors[ws.droneID];
+      notifyClients(ws);
       winston.info("connector connection closed. droneID: " + ws.droneID + " name: " + ws.name);
 
     });
@@ -113,6 +115,7 @@ function getUserIDByDroneID(ws) {
   db.query(query, ws.droneID, function (err, results) {
     if (err === null && results.length == 1) {
       ws.userID = results[0].userID;
+      notifyClients(ws);
     }
   });
 }
@@ -125,4 +128,13 @@ function getActiveActivity(ws) {
       winston.info("activeActivity: " + ws.activeActivity);
     }
   });
+}
+
+function notifyClients(ws) {
+  if (global.client_wss.cadmasClients[ws.userID] !== undefined && global.client_wss.cadmasClients[ws.userID] !== null) {
+    global.client_wss.cadmasClients[ws.userID].forEach((value1, value2, set) => {
+      winston.info("notify client about drone");
+      drone(value1, ws.droneID);
+    });
+  }
 }
