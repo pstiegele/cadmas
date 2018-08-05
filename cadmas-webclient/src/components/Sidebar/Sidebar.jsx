@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {NavLink} from 'react-router-dom';
+import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 
 import HeaderLinks from '../Header/HeaderLinks.jsx';
 
@@ -21,7 +21,7 @@ class Sidebar extends Component {
       : '';
   }
   updateDimensions() {
-    this.setState({width: window.innerWidth});
+    this.setState({ width: window.innerWidth });
   }
   componentDidMount() {
     this.updateDimensions();
@@ -34,12 +34,13 @@ class Sidebar extends Component {
     return (<div id="sidebar" className="sidebar" data-color="black" data-image={imagine}>
       <div className="sidebar-background" style={sidebarBackground}></div>
       <div className="logo">
-        <a href="/" className="simple-text logo-mini">
-          <div className="logo-img">
-            <img src={logo} alt="logo_image"/>
-          </div>
-
-        </a>
+        <NavLink to="/dashboard" className="navItem">
+          <a href="/" className="simple-text logo-mini">
+            <div className="logo-img">
+              <img src={logo} alt="logo_image" />
+            </div>
+          </a>
+        </NavLink>
         <a href="/" className="simple-text logo-normal">&nbsp;</a>
 
       </div>
@@ -47,17 +48,17 @@ class Sidebar extends Component {
         <ul className="nav">
           {
             this.state.width <= 991
-              ? (<HeaderLinks/>)
+              ? (<HeaderLinks />)
               : null
           }
           {
             appRoutes.map((prop, key) => {
-              if(!prop.showInSidebar)
+              if (!prop.showInSidebar)
                 return null;
-              if (!prop.redirect) 
+              if (!prop.redirect)
                 return (<li className={prop.upgrade
-                    ? "active active-pro"
-                    : this.activeRoute(prop.path)} key={key}>
+                  ? "active active-pro"
+                  : this.activeRoute(prop.path)} key={key}>
                   <NavLink to={prop.path} className="nav-link" activeClassName="active">
                     <i className={prop.icon}></i>
                     <p>{prop.name}</p>
