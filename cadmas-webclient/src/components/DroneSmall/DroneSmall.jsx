@@ -111,7 +111,7 @@ class DroneSmall extends Component {
 
             <Row>
                 <Col xs={5} style={{ minWidth: "180px" }}>
-                    <img src={"dronethumbs/" + this.getSafe(() => this.props.droneToShow.thumbnailpath, "")} alt={this.getSafe(() => this.props.droneToShow.name, "")} />
+                    <img src={"/dronethumbs/" + this.getSafe(() => this.props.droneToShow.thumbnailpath, "")} alt={this.getSafe(() => this.props.droneToShow.name, "")} />
                 </Col>
                 <Col xs={7}>
                     <div style={{paddingBottom:"20px"}}>

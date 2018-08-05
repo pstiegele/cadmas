@@ -107,7 +107,7 @@ class UserProfile extends Component {
             </form>} />
           </Col>
           <Col md={4}>
-            <UserCard bgImage="https://ununsplash.imgix.net/photo-1431578500526-4d9613015464?fit=crop&fm=jpg&h=300&q=75&w=400" avatar={"userthumbs/" + this.props.user.thumbnailpath} name={this.props.user.firstname + " " + this.props.user.lastname} userName={this.props.user.username} description={<span > {this.getDroneNames()} </span>} socials={<div > <Button simple>
+            <UserCard bgImage="https://ununsplash.imgix.net/photo-1431578500526-4d9613015464?fit=crop&fm=jpg&h=300&q=75&w=400" avatar={"/userthumbs/" + this.props.user.thumbnailpath} name={this.props.user.firstname + " " + this.props.user.lastname} userName={this.props.user.username} description={<span > {this.getDroneNames()} </span>} socials={<div > <Button simple>
               Delete Profile
               </Button>
 
