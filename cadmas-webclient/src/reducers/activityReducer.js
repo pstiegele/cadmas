@@ -4,7 +4,7 @@ const activityReducer = (state = {
     'missionID': 2,
     'droneID': 1,
     'name': 'No Websocket Connection!',
-    'state': 'completed',
+    'state': 0,
     'note': 'No Websocket Connection established',
     'dt_created': 6381021024,
     'dt_started': 6381021124,
