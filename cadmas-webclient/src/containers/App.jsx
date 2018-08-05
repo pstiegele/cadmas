@@ -98,6 +98,7 @@ componentDidUpdate(e) {
   }
 }
 render() {
+  
   return (<div className="wrapper">
     <NotificationSystem ref="notificationSystem" style={style} />
     <Sidebar {...this.props} />

@@ -27,7 +27,7 @@ module.exports = function (ws, msg, callback) {
     if (global.client_wss.cadmasClients[ws.userID] !== undefined && global.client_wss.cadmasClients[ws.userID] !== null) {
       global.client_wss.cadmasClients[ws.userID].forEach((value1, value2, set) => {
         winston.info("start activity sent to client");
-        activity(value1, payload.activityID, send);
+        activity(value1, payload.activityID, send, false);
       });
     }
 
@@ -40,10 +40,14 @@ module.exports = function (ws, msg, callback) {
     if (error || result.length !== 1) winston.error('error in startActivity (in select droneID): ' + error);
     //set activeActivity to Drone
     db.query("UPDATE Drone SET activeActivity=? WHERE id=?", [payload.activityID, result[0].droneID], function (error) {
-      if (error)
+      if (error) {
         winston.error("error in set activeActivity (in startActivity): " + error);
+        return;
+      }
+      
     });
     if (global.connector_wss.cadmasConnectors[result[0].droneID] !== undefined && global.connector_wss.cadmasConnectors[result[0].droneID] !== null) {
+      global.connector_wss.cadmasConnectors[result[0].droneID].activeActivity = payload.activityID;
       setMode(global.connector_wss.cadmasConnectors[result[0].droneID], "AUTO");
       calibrate(global.connector_wss.cadmasConnectors[result[0].droneID]);
       setMission(global.connector_wss.cadmasConnectors[result[0].droneID], result[0].missionID, function () {

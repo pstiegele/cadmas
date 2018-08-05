@@ -21,7 +21,7 @@ module.exports = function (ws, msg, callback) {
     if (global.client_wss.cadmasClients[ws.userID] !== undefined && global.client_wss.cadmasClients[ws.userID] !== null) {
       global.client_wss.cadmasClients[ws.userID].forEach((value1, value2, set) => {
         winston.info("new activity sent to client");
-        activity(value1, result.insertId, send);
+        activity(value1, result.insertId, send, false);
       });
     }
   });

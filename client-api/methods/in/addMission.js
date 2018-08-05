@@ -7,22 +7,27 @@ const request = require('request');
 module.exports = function (ws, msg, callback) {
     var db = global.db;
     payload = msg.payload;
-    var query = "INSERT INTO Mission (name,note,userID) VALUES (?,?,?,?);";
+    var query = "INSERT INTO Mission (name,note,userID) VALUES (?,?,?);";
     db.query(query, [payload.name, payload.note, ws.userID], function (error, result) {
-        if (error) winston.error('error in addMission: ' + error);
+        if (error) {
+            winston.error('error in addMission: ' + error);
+            return;
+        }
         winston.info('mission successfully inserted');
         //parse route
         if (payload.route.startsWith('QGC')) {
-            parseMissionPlannerFile(payload.route, result.insertId);
+            parseMissionPlannerFile(payload.route, result.insertId, function () {
+                var ackPayload = {
+                    ackToID: msg.id,
+                    missionID: result.insertId
+                };
+                ack('addMissionACK', ackPayload, ws, callback);
+            });
         } else {
             // parseKMLFile(payload.route, result.insertId);
         }
 
-        var ackPayload = {
-            ackToID: msg.id,
-            missionID: result.insertId
-        };
-        ack('addMissionACK', ackPayload, ws, callback);
+
 
 
         //send new mission to every client
@@ -38,10 +43,10 @@ module.exports = function (ws, msg, callback) {
 
 function calcDistance(lat1, lat2, lng1, lng2) {
     var R = 6371e3; // earth radius in m
-    var lat1inRadian = lat1*Math.PI/180.0;
-    var lat2inRadian = lat2*Math.PI/180.0;
-    var deltaLat = (lat2 - lat1)*Math.PI/180.0;
-    var deltaLng = (lng2 - lng1)*Math.PI/180.0;
+    var lat1inRadian = lat1 * Math.PI / 180.0;
+    var lat2inRadian = lat2 * Math.PI / 180.0;
+    var deltaLat = (lat2 - lat1) * Math.PI / 180.0;
+    var deltaLng = (lng2 - lng1) * Math.PI / 180.0;
 
     var a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
         Math.cos(lat1inRadian) * Math.cos(lat2inRadian) *
@@ -51,7 +56,7 @@ function calcDistance(lat1, lat2, lng1, lng2) {
     return d;
 }
 
-function parseMissionPlannerFile(file, missionID) {
+function parseMissionPlannerFile(file, missionID, callback) {
     var lines = file.split('\n');
     var distance = 0;
     var lastWaypoint = { lat: 0, lng: 0, alt: 0 };
@@ -77,7 +82,7 @@ function parseMissionPlannerFile(file, missionID) {
         if (element[0] === "0" && element[1] === "1") {
             type = "HOMEPOINT";
         } else if (type === "21") {
-            distance += calcDistance(lastWaypoint.lat,latitude,lastWaypoint.lng,longitude);
+            distance += calcDistance(lastWaypoint.lat, latitude, lastWaypoint.lng, longitude);
             lastWaypoint = { lat: latitude, lng: longitude, alt: altitude };
             route = route.concat(latitude + " " + longitude + ",");
             type = "LAND";
@@ -85,12 +90,12 @@ function parseMissionPlannerFile(file, missionID) {
             type = "TAKEOFF";
         } else if (type === "20") {
             route = route.concat(latitude + " " + longitude + ",");
-            distance += calcDistance(lastWaypoint.lat,latitude,lastWaypoint.lng,longitude);
+            distance += calcDistance(lastWaypoint.lat, latitude, lastWaypoint.lng, longitude);
             lastWaypoint = { lat: latitude, lng: longitude, alt: altitude };
             type = "RTL";
         } else if (type === "16") {
             route = route.concat(latitude + " " + longitude + ",");
-            distance += calcDistance(lastWaypoint.lat,latitude,lastWaypoint.lng,longitude);
+            distance += calcDistance(lastWaypoint.lat, latitude, lastWaypoint.lng, longitude);
             lastWaypoint = { lat: latitude, lng: longitude, alt: altitude };
             type = "WAYPOINT";
         } else if (type = "19") {
@@ -130,6 +135,7 @@ function parseMissionPlannerFile(file, missionID) {
         var query = "UPDATE Mission SET distance=?,route=ST_GeomFromText(?),location=? WHERE id=?";
         db.query(query, [distance, route.substring(0, route.length - 1) + ")", location, missionID], function (error) {
             if (error) winston.error('error in addMission (in MissionPlanner (add distance)): ' + error);
+            callback();
         });
     });
 

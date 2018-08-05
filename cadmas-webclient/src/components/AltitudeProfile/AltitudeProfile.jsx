@@ -41,20 +41,19 @@ class AltitudeProfile extends Component {
         if (mission !== undefined && mission !== null && mission.waypoints !== undefined) {
             var waypoints = mission.waypoints.filter(waypoint => waypoint.type !== "HOMEPOINT");
             for (let i = 0; i < waypoints.length; i++) {
-                if(waypoints[i].type==="LAND"){
-                    waypointNumbers.push("LAND");
-                }else if(waypoints[i].type==="TAKEOFF"){
-                    waypointNumbers.push("TAKEOFF");
-                }else{
-                  waypointNumbers.push("WP "+(i));
+                if (waypoints[i].type === "LAND") {
+                    waypointNumbers.push('<i class="fa fa-plane-arrival"></i>');
+                } else if (waypoints[i].type === "TAKEOFF") {
+                    waypointNumbers.push('<i class="fa fa-plane-departure"></i>');
+                } else {
+                    waypointNumbers.push('<i class="fa fa-map-marker-alt"></i>');
                 }
-                
                 altitudes.push(waypoints[i].altitude);
             }
         }
 
 
-       // console.log("wa: " + waypointNumbers.length + " series: " + altitudes.length);
+        // console.log("wa: " + waypointNumbers.length + " series: " + altitudes.length);
         return {
             labels: waypointNumbers,
             series: [altitudes]
@@ -89,14 +88,22 @@ class AltitudeProfile extends Component {
         ];
     }
 
-
+    
     render() {
+        var listener = {
+            draw: function (data) {
+                if (data.type === 'label') {
+                    data.element.empty()._node.innerHTML = data.text;
+                }
+            }
+        };
         var AltitudeProfile = <div>
             <ChartistGraph
                 data={this.getChartData()}
                 type="Line"
                 options={this.getChartOptionsBar()}
                 responsiveOptions={this.getChartResponsiveBar()}
+                listener={listener}
             />
         </div>;
         return (AltitudeProfile);

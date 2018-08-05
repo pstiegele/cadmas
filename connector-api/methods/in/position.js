@@ -2,10 +2,10 @@ const ack = require('../out/ack');
 const winston = require('../../../middleware/logger');
 const moment = require("moment");
 const positionClient = require('../../../client-api/methods/out/position');
-const Websocket = require('ws');
 
 
 module.exports = function (ws, payload, callback) {
+    console.log("actAct: "+ws.activeActivity);
     if (ws.activeActivity !== undefined && ws.activeActivity !== null) {
         var db = global.db;
         var position = "POINT(" + payload.latitude + " " + payload.longitude + ")";

@@ -175,7 +175,18 @@ class Maps extends Component {
         strokeWeight={3}
       />
     }
-
+  }
+  getHistoryTelemetryPositions() {
+    if (Array.isArray(this.props.historyTelemetryPositions)) {
+      return <Polyline
+        fillColor="#ed8721"
+        fillOpacity={0.35}
+        path={this.props.historyTelemetryPositions}
+        strokeColor="#ed8721"
+        strokeOpacity={0.8}
+        strokeWeight={3}
+      />
+    }
   }
   getWaypointDots() {
     var retRows = [];
@@ -255,6 +266,7 @@ class Maps extends Component {
         {this.getRoute()}
         {this.getHomePointRoute()}
         {this.getTelemetryPath()}
+        {this.getHistoryTelemetryPositions()}
 
       </Map>
     </div>);

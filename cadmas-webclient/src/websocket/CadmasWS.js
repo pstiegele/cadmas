@@ -67,7 +67,7 @@ class CadmasWS {
     }
 
     socket.onclose = function (event) {
-      setTimeout(function(){that.initClientAPI(token)}, 5000);
+      setTimeout(function () { that.initClientAPI(token) }, 5000);
     }
 
 
@@ -152,7 +152,9 @@ class CadmasWS {
           default:
             break;
         }
-        console.log("ws received: " + msg.method);
+        if (process.env.REACT_APP_DEVELOPMENT === "true") {
+          console.log("ws received: " + msg.method);
+        }
       }
 
     }
@@ -234,6 +236,13 @@ class CadmasWS {
     };
     this.packAndSend("getFullMission", payload, callback);
     console.log("getFullMission (" + missionID + ") transmitted");
+  }
+  getFullActivity(activityID, callback) {
+    var payload = {
+      activityID: activityID
+    };
+    this.packAndSend("getFullActivity", payload, callback);
+    console.log("getFullActivity (" + activityID + ") transmitted");
   }
 
   startActivity(activityID, callback) {

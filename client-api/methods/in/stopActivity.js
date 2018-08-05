@@ -23,7 +23,7 @@ module.exports = function (ws, msg, callback) {
         if (global.client_wss.cadmasClients[ws.userID] !== undefined && global.client_wss.cadmasClients[ws.userID] !== null) {
             global.client_wss.cadmasClients[ws.userID].forEach((value1, value2, set) => {
                 winston.info("stop activity transmitted to client");
-                activity(value1, payload.activityID, send);
+                activity(value1, payload.activityID, send, false);
             });
         }
     });
@@ -32,6 +32,7 @@ module.exports = function (ws, msg, callback) {
     db.query(query, payload.activityID, function (error, result) {
         if (error || result.length !== 1) winston.error('error in stopActivity (in select droneID): ' + error);
         if (global.connector_wss.cadmasConnectors[result[0].droneID] !== undefined && global.connector_wss.cadmasConnectors[result[0].droneID] !== null) {
+            global.connector_wss.cadmasConnectors[result[0].droneID].activeActivity = null;
             disarm(global.connector_wss.cadmasConnectors[result[0].droneID]);
         }
 

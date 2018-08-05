@@ -10,6 +10,7 @@ const activityReducer = (state = {
     'dt_started': 6381021124,
     'dt_ended': 639191291,
     'duration': 10,
+    'historyTelemetryPositions':[],
     'thumbnailpath': ''
   }]
 }, action) => {

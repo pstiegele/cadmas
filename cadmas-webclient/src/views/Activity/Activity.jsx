@@ -4,7 +4,6 @@ import FlightModeControlButtons from 'elements/FlightModeControlButtons/FlightMo
 
 import ActivitySummary from 'components/ActivitySummary/ActivitySummary';
 import DroneSmall from 'components/DroneSmall/DroneSmall';
-import BatteryUsage from 'components/BatteryUsage/BatteryUsage';
 import Card from 'components/Card/Card.jsx';
 import { connect } from "react-redux";
 import moment from 'moment';
@@ -41,6 +40,7 @@ class Activity extends Component {
       _notificationSystem: null
     };
     this.getFullMissionAlreadyRequested = false;
+    this.getFullActivityAlreadyRequested = false;
   }
 
   componentDidMount() {
@@ -56,6 +56,10 @@ class Activity extends Component {
     if (!this.getFullMissionAlreadyRequested && this.getSafeMissionID() !== "" && this.getSafeMissionID() !== -1) {
       this.getFullMissionAlreadyRequested = true;
       CadmasWS.getFullMission(this.getSafeMissionID());
+    }
+    if (!this.getFullActivityAlreadyRequested && this.state.activityID !== "" && this.state.activityID !== -1) {
+      this.getFullActivityAlreadyRequested = true;
+      CadmasWS.getFullActivity(this.state.activityID);
     }
   }
 
@@ -202,6 +206,14 @@ class Activity extends Component {
     if (this.getSafeTelemetry().route === undefined || this.getSafeTelemetry().route === null)
       return this.props.telemetry[0].route;
     return this.getSafeTelemetry().route;
+  }
+  getSafeHistoryTelemetryPositions() {
+    var res = this.getSafe(() => this.getActivityByID(this.state.activityID).historyTelemetryPositions, "");
+    if(res===undefined||res===null||res===""||res===[]){
+      return [];
+    }else{
+      return res;
+    }
   }
   getSafeWaypoints() {
     var mission = this.getSafeMission();
@@ -419,6 +431,7 @@ class Activity extends Component {
                 latitude={this.getSafeWaypoints()[0].lat}
                 longitude={this.getSafeWaypoints()[0].lng}
                 route={this.getSafeWaypoints()}
+                historyTelemetryPositions={JSON.parse(JSON.stringify(this.getSafeHistoryTelemetryPositions()))}
               />
             </div>
 
@@ -439,7 +452,7 @@ class Activity extends Component {
           </Row>
           <Row>
             <Card title={this.getSafeDroneName(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} category={this.getSafeDroneVehicleType(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} content={
-                <DroneSmall droneToShow={this.getSafeDrone(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} />
+              <DroneSmall droneToShow={this.getSafeDrone(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} />
             } />
           </Row>
           {/* <Row>
@@ -463,8 +476,8 @@ class Activity extends Component {
                 latitude={this.getSafeTelemetryPosition().latitude}
                 route={this.getSafeWaypoints()}
                 currentWaypoint={this.getSafeTelemetryMissionState().currentItem}
-                telemetryPath={JSON.parse(JSON.stringify(this.getSafeTelemetryRoute()))
-                }
+                telemetryPath={JSON.parse(JSON.stringify(this.getSafeTelemetryRoute()))}
+                historyTelemetryPositions={JSON.parse(JSON.stringify(this.getSafeHistoryTelemetryPositions()))}
 
               />
             </div>

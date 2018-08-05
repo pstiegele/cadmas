@@ -155,7 +155,7 @@ class CreateMissionButton extends Component {
                         type="text"
                         placeholder="route"
                         onChange={this.setRoute}
-                        validationState={this.getValidationState()}
+                        validationstate={this.getValidationState()}
                     />
                 </FormGroup>
             </form>
