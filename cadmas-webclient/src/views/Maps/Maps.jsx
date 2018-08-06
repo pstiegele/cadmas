@@ -4,6 +4,13 @@ import { Map, Polyline, Marker, GoogleApiWrapper } from 'google-maps-react';
 class Maps extends Component {
   //initalZoomExecuted = false;
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      mapDragged: false
+    }
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     if (this.props.longitude !== nextProps.longitude || this.props.latitude !== nextProps.latitude || this.props.route !== nextProps.route) {
       return true;
@@ -105,7 +112,7 @@ class Maps extends Component {
       }
       var points = [north, east, south, west]
       var bounds = new this.props.google.maps.LatLngBounds();
-      //console.log("bounds: " + JSON.stringify(points));
+      // console.log("bounds: " + JSON.stringify(points));
       // points = [
       //   {lat:-29.94531,
       //   lng: 146.12376
@@ -132,7 +139,7 @@ class Maps extends Component {
   }
 
   mapDragged() {
-    //TODO: disable auto center
+    this.setState({ mapDragged: true });
   }
   getRoute() {
     if (Array.isArray(this.props.route.filter(coord => coord.type !== "TAKEOFF" && coord.type !== "HOMEPOINT"))) {
@@ -235,41 +242,78 @@ class Maps extends Component {
     //console.log("center pos: " + JSON.stringify(pos));
     return p;
   }
-  render() {
+
+  getMap(mapDragged){
     var initalCenterPosition = this.getCenterPosition();
+    if(mapDragged){
+      return <Map
+      mapTypeControl={true}
+      mapType="HYBRID"
+      center={initalCenterPosition}
+      onDragend={this.mapDragged.bind(this)}
+      style={{
+        width: '100%',
+        height: '100%',
+        position: 'relative'
+      }} google={this.props.google}
+      initialCenter={initalCenterPosition}
+      clickableIcons={false}
+      bounds={this.getInitialZoom()}
+    //TODO: Center wieder einbauen wenn neue Telemetrie vorliegt
+    >
+      {this.getHomePointMarker()}
+      {this.getTakeoffMarker()}
+      {this.getLandMarker()}
+      {this.getPositionMarker()}
+      {this.getWaypointDots()}
+      {this.getCurrentWaypoint()}
+      {this.getRoute()}
+      {this.getHomePointRoute()}
+      {this.getTelemetryPath()}
+      {this.getHistoryTelemetryPositions()}
+
+    </Map>
+    }else{
+      return <Map
+      mapTypeControl={true}
+      mapType="HYBRID"
+      center={initalCenterPosition}
+      onDragend={this.mapDragged.bind(this)}
+      scaleControl={false}
+      zoomControl={false}
+      panControl={false}
+      style={{
+        width: '100%',
+        height: '100%',
+        position: 'relative'
+      }} google={this.props.google}
+      initialCenter={initalCenterPosition}
+      clickableIcons={false}
+      bounds={this.getInitialZoom()}
+    //TODO: Center wieder einbauen wenn neue Telemetrie vorliegt
+    >
+      {this.getHomePointMarker()}
+      {this.getTakeoffMarker()}
+      {this.getLandMarker()}
+      {this.getPositionMarker()}
+      {this.getWaypointDots()}
+      {this.getCurrentWaypoint()}
+      {this.getRoute()}
+      {this.getHomePointRoute()}
+      {this.getTelemetryPath()}
+      {this.getHistoryTelemetryPositions()}
+
+    </Map>
+    }
+  }
+  render() {
+    
     //console.log("initalCenterPosition: " + JSON.stringify(initalCenterPosition) + " ty: " + typeof initalCenterPosition.lat);
     // if (initalCenterPosition.lat !== "number") {
     //   console.log("ABBRUCH; ABBRUCH");
     //   return null;
     // }
-    return (<div id="map">
-      <Map
-        center={initalCenterPosition}
-        onDragend={this.mapDragged}
-        style={{
-          width: '100%',
-          height: '100%',
-          position: 'relative'
-        }} google={this.props.google}
-        initialCenter={initalCenterPosition}
-
-        clickableIcons={false}
-      //bounds={this.getInitialZoom()}
-      //TODO: Center wieder einbauen wenn neue Telemetrie vorliegt
-      >
-        {this.getHomePointMarker()}
-        {this.getTakeoffMarker()}
-        {this.getLandMarker()}
-        {this.getPositionMarker()}
-        {this.getWaypointDots()}
-        {this.getCurrentWaypoint()}
-        {this.getRoute()}
-        {this.getHomePointRoute()}
-        {this.getTelemetryPath()}
-        {this.getHistoryTelemetryPositions()}
-
-      </Map>
-    </div>);
+    return (<div id="map">{this.state.mapDragged===true?this.getMap(true):this.getMap(true)}</div>);
   }
 
 }

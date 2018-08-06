@@ -1,6 +1,7 @@
 const userReducer = (state = {
   username: "username",
   cameraImagesLast30Days: 0,
+  overalldistance: 0,
   email:"email",
   firstname: "Firstname",
   lastname: "Lastname",

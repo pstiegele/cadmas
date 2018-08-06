@@ -34,12 +34,10 @@ class Sidebar extends Component {
     return (<div id="sidebar" className="sidebar" data-color="black" data-image={imagine}>
       <div className="sidebar-background" style={sidebarBackground}></div>
       <div className="logo">
-        <NavLink to="/dashboard" className="navItem">
-          <a href="/" className="simple-text logo-mini">
+        <NavLink to="/dashboard" className="navItem simple-text logo-mini">
             <div className="logo-img">
               <img src={logo} alt="logo_image" />
             </div>
-          </a>
         </NavLink>
         <a href="/" className="simple-text logo-normal">&nbsp;</a>
 

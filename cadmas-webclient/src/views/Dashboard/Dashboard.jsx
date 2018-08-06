@@ -12,7 +12,7 @@ import moment from 'moment';
 
 
 const mapStateToProps = (state) => {
-  return { mission: state.mission, drone: state.drone, activity: state.activity, user: state.user };
+  return { mission: state.mission, drone: state.drone, notification: state.notification, activity: state.activity, user: state.user };
 };
 
 class Dashboard extends Component {
@@ -154,23 +154,36 @@ class Dashboard extends Component {
   getNumberOfCameraImagesThisMonth(){
     return this.props.user.cameraImagesLast30Days.toLocaleString('de');
   }
+  getNumberOfNotifications() {
+    if (this.props.activity.activities[this.props.activity.activities.length-1] != null) {
+      var not = this.props.notification.notifications.filter(notification => notification.activityID === this.props.activity.activities[this.props.activity.activities.length-1].activityID);
+      return not.length;
+    }
+  }
 
+  getOverallDistance(){
+    if(this.props.user!=null&&this.props.user.overallDistance!=null){
+      return (this.props.user.overallDistance/1000.0).toFixed(0)+" km";
+    }else{
+      return 0;
+    }
+  }
 
   render() {
     return (<div className="content">
       <Grid fluid>
         <Row>
           <Col lg={3} sm={6}>
-            <StatsCard bigIcon={<i className="pe-7s-camera text-warning" > </i>} statsText="Camera images" statsValue={this.getNumberOfCameraImagesThisMonth()} statsIcon={<i className="fa fa-calendar-o" > </i>} statsIconText="last 30 days" />
+            <StatsCard bigIcon={<i className="pe-7s-camera text-warning" > </i>} statsText="Camera images" statsValue={this.getNumberOfCameraImagesThisMonth()} statsIcon={<i className="fa fa-calendar" > </i>} statsIconText="last 30 days" />
           </Col>
           <Col lg={3} sm={6}>
-            <StatsCard bigIcon={<i className="pe-7s-world text-success" > </i>} statsText="Activities this month" statsValue={this.getNumberOfActivitiesThisMonth()} statsIcon={<i className="fa fa-calendar-o" > </i>} statsIconText="last 30 days" />
+            <StatsCard bigIcon={<i className="pe-7s-world text-success" > </i>} statsText="Activities this month" statsValue={this.getNumberOfActivitiesThisMonth()} statsIcon={<i className="fa fa-calendar" > </i>} statsIconText="last 30 days" />
           </Col>
           <Col lg={3} sm={6}>
-            <StatsCard bigIcon={<i className="fa  fa-exclamation-circle text-danger" > </i>} statsText="Errors" statsValue="2" statsIcon={<i className="fa fa-clock-o" > </i>} statsIconText={"on: "+this.props.activity.activities[this.props.activity.activities.length-1].name} />
+            <StatsCard bigIcon={<i className="fa  fa-exclamation text-danger" > </i>} statsText="Notifications" statsValue={this.getNumberOfNotifications()} statsIcon={<i className="fa fa-compass" > </i>} statsIconText={"on: "+this.props.activity.activities[this.props.activity.activities.length-1].name} />
           </Col>
           <Col lg={3} sm={6}>
-            <StatsCard bigIcon={<i className="fa fa-plane text-info" > </i>} statsText="Distance traveled" statsValue="45 km" statsIcon={<i className="fa fa-refresh" > </i>} statsIconText="Updated now" />
+            <StatsCard bigIcon={<i className="fa fa-plane text-info" > </i>} statsText="Distance traveled" statsValue={this.getOverallDistance()} statsIcon={<i className="fa fa-refresh" > </i>} statsIconText="Updated now" />
           </Col>
         </Row>
         <Row>
@@ -195,7 +208,7 @@ class Dashboard extends Component {
         </Row>
 
         <Row>
-          <Col md={3}>
+          <Col md={4}>
             <Card title="Latest Activity" category="a short summary" content={<div><ActivitySummary showMap={true} showSeeMoreButton={true} showActivityName={true} activityToShow={this.props.activity.activities[this.props.activity.activities.length-1]}/></div>} />
           </Col>
           <Col md={5}>
@@ -204,8 +217,8 @@ class Dashboard extends Component {
             </table>
             </div>} />
           </Col>
-          <Col md={4}>
-            <Card id="chartActivity" title="Overall Activities" category="All activities of all drones of the last year" stats={Math.round(this.getNumberOfActivitiesThisYear()/12)+" activities per month"} statsIcon="fa fa-check" content={<div className="ct-chart" > <ChartistGraph data={this.getChartData()} type="Bar" options={this.getChartOptionsBar()} responsiveOptions={this.getChartResponsiveBar()} />
+          <Col md={3}>
+            <Card id="chartActivity" title="Overall Activities" category="All activities of all drones of the last year" stats={Math.round(this.getNumberOfActivitiesThisYear()/12)+" activities per month"} statsIcon="fa fa-balance-scale" content={<div className="ct-chart" > <ChartistGraph data={this.getChartData()} type="Bar" options={this.getChartOptionsBar()} responsiveOptions={this.getChartResponsiveBar()} />
             </div>} legend={<div className="legend" > {
               this.createLegend(this.getChartLegendBar())
             }

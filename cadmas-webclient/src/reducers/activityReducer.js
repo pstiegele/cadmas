@@ -1,15 +1,15 @@
 const activityReducer = (state = {
   activities: [{
-    'activityID': 0,
-    'missionID': 2,
-    'droneID': 1,
+    'activityID': -1,
+    'missionID': -1,
+    'droneID': -1,
     'name': 'No Websocket Connection!',
     'state': 0,
     'note': 'No Websocket Connection established',
-    'dt_created': 6381021024,
-    'dt_started': 6381021124,
-    'dt_ended': 639191291,
-    'duration': 10,
+    'dt_created': 0,
+    'dt_started': 0,
+    'dt_ended': 0,
+    'duration': 0,
     'historyTelemetryPositions':[],
     'thumbnailpath': ''
   }]

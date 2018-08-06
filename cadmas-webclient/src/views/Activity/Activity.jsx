@@ -448,7 +448,7 @@ class Activity extends Component {
         </Col>
         <Col md={4}>
           <Row>
-            <Card title={this.getSafeActivityState(this.state.activityID) === "0" ? "Mission \"" + this.getSafeMissionName(this.getSafeActivityMissionID(this.state.activityID)) + "\"" : "Activity summary"} content={<div><ActivitySummary activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
+            <Card title="Activity summary" content={<div><ActivitySummary showName={false} showMap={false} activityToShow={this.getActivityByID(this.state.activityID)} /></div>} />
           </Row>
           <Row>
             <Card title={this.getSafeDroneName(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} category={this.getSafeDroneVehicleType(this.getSafeDroneID(this.getActivityByID(this.state.activityID)))} content={

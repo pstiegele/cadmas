@@ -3,15 +3,27 @@ import { connect } from "react-redux";
 import moment from 'moment';
 import localization from 'moment/locale/de'
 import { Col } from 'react-bootstrap';
+import Maps from '../../views/Maps/Maps';
+import CadmasWS from '../../websocket/CadmasWS';
 
 const mapStateToProps = (state) => {
-  return { user: state.user, mission: state.mission, drone: state.drone, activity: state.activity, notification: state.notification };
+  return { user: state.user, mission: state.mission, drone: state.drone, telemetry: state.telemetry, activity: state.activity, notification: state.notification };
 };
 
 
 class ActivitySummary extends Component {
-  componentDidMount() {
+  getFullActivityAlreadyRequested = false;
+  getFullMissionAlreadyRequested = false;
 
+  componentDidUpdate() {
+    if (!this.getFullMissionAlreadyRequested && this.getSafeMissionID() !== "" && this.getSafeMissionID() !== -1) {
+      this.getFullMissionAlreadyRequested = true;
+      CadmasWS.getFullMission(this.getSafeMissionID());
+    }
+    if (!this.getFullActivityAlreadyRequested && this.props.activityToShow != null && this.props.activityToShow.activityID !== "" && this.props.activityToShow.activityID !== -1) {
+      this.getFullActivityAlreadyRequested = true;
+      CadmasWS.getFullActivity(this.props.activityToShow.activityID);
+    }
   }
 
   getSafe(fn, defaultVal) {
@@ -30,7 +42,7 @@ class ActivitySummary extends Component {
   }
 
   getSafeMissionID() {
-    return this.getSafe(() => this.props.activityToShow.missionID, 0)
+    return this.getSafe(() => this.props.activityToShow.missionID, -1)
   }
 
   getSafeMission() {
@@ -172,9 +184,13 @@ class ActivitySummary extends Component {
 
   getDroneName() {
     if (this.props.activityToShow != null) {
-      return this.getSafe(() => this.props.drone.drones[this.props.activityToShow.droneID].name, null);
+      var droneName = this.props.drone.drones.filter(drone => drone.droneID === this.props.activityToShow.droneID);
+      if (droneName[0] != null) {
+        return droneName[0].name;
+      }
     }
   }
+
 
   getNumberOfNotifications() {
     if (this.props.activityToShow != null) {
@@ -236,9 +252,64 @@ class ActivitySummary extends Component {
 
   // }
 
+  getSafeWaypoints() {
+    var mission = this.getSafeMission();
+    if (mission === undefined || mission === "" || mission === null) {
+      return [{
+        'missionIndex': 0,
+        'type': 'LAND',
+        'altitude': 0,
+        'lat': 0,
+        'lng': 0
+      }];
+    }
+    var waypoints = this.getSafe(() => mission.waypoints, "");
+    if (waypoints === undefined || waypoints === null || waypoints === "" || waypoints.length === 0)
+      return [{
+        'missionIndex': 0,
+        'type': 'LAND',
+        'altitude': 0,
+        'lat': 0,
+        'lng': 0
+      }];
+    return waypoints;
+  }
+
+  getSafeHistoryTelemetryPositions() {
+    var res = this.getSafe(() => this.props.activityToShow.historyTelemetryPositions, "");
+    if (res === undefined || res === null || res === "" || res === []) {
+      return [];
+    } else {
+      return res;
+    }
+  }
+
+  getSafeTelemetry() {
+    var telemetry = this.getSafe(() => this.props.telemetry[this.props.activityToShow.droneID], this.props.telemetry[0]);
+    if (telemetry === undefined || telemetry === null)
+      return this.props.telemetry[0];
+    return telemetry;
+  }
+
+  getSafeTelemetryPosition() {
+    if (this.getSafeTelemetry().position === undefined || this.getSafeTelemetry().position === null)
+      return this.props.telemetry[0].position;
+    return this.getSafeTelemetry().position;
+  }
+  getSafeTelemetryMissionState() {
+    if (this.getSafeTelemetry().missionState === undefined || this.getSafeTelemetry().missionState === null)
+      return this.props.telemetry[0].missionState;
+    return this.getSafeTelemetry().missionState;
+  }
+  getSafeTelemetryRoute() {
+    if (this.getSafeTelemetry().route === undefined || this.getSafeTelemetry().route === null)
+      return this.props.telemetry[0].route;
+    return this.getSafeTelemetry().route;
+  }
+
   render() {
     var activitySummary = <div>
-      {this.getName() !== null ? <div><p><i className="fa fa-flag"></i>&nbsp;&nbsp;{this.getName()}</p></div> : ""}
+      {this.getName() !== null && (this.props.showName === undefined || this.props.showName === true) ? <div><p><i className="fa fa-flag"></i>&nbsp;&nbsp;{this.getName()}</p></div> : ""}
       {this.getState()}
       <div>
         <p>
@@ -281,7 +352,33 @@ class ActivitySummary extends Component {
     //       <canvas className="activityPath">{this.getRoute()}</canvas>
     //     </Col></div>;
     // }
-    return activitySummary;
+    
+
+    if (this.props.showMap === undefined || this.props.showMap === true) {
+      return <div style={{ height: "420px" }}><Col lg={6}>
+        {activitySummary}</Col>
+        <Col lg={6}>
+          {this.getSafeActivityState() === "1" ?
+            <Maps
+              longitude={this.getSafeTelemetryPosition().longitude}
+              latitude={this.getSafeTelemetryPosition().latitude}
+              route={this.getSafeWaypoints()}
+              currentWaypoint={this.getSafeTelemetryMissionState().currentItem}
+              telemetryPath={JSON.parse(JSON.stringify(this.getSafeTelemetryRoute()))}
+              historyTelemetryPositions={JSON.parse(JSON.stringify(this.getSafeHistoryTelemetryPositions()))}
+
+            /> :
+            <Maps
+              latitude={this.getSafeWaypoints()[0].lat}
+              longitude={this.getSafeWaypoints()[0].lng}
+              route={this.getSafeWaypoints()}
+              historyTelemetryPositions={this.getSafeHistoryTelemetryPositions()}
+            />}
+        </Col></div>;
+    } else {
+      return activitySummary;
+    }
+
   }
 }
 

@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { NavLink } from 'react-router-dom';
 import moment from 'moment';
 
+
 const mapStateToProps = (state) => {
   return { activity: state.activity, drone: state.drone };
 };
@@ -16,19 +17,21 @@ class ActivitiesSmall extends Component {
   constructor(props) {
     super(props);
     this.getDroneName = this.getDroneName.bind(this);
+    
   }
 
-  getActivityStyle(state){
+  
+  getActivityStyle(state) {
     switch (state) {
       case "0":
-        return {color: "grey"};
+        return { color: "grey" };
       case "1":
-        return {color: "red",animation: "blinker 1s linear infinite"};
+        return { color: "red", animation: "blinker 1s linear infinite" };
       case "2":
-        return {color: "green"};
-    
+        return { color: "green" };
+
       default:
-      return {};
+        return {};
     }
   }
 
@@ -82,16 +85,13 @@ class ActivitiesSmall extends Component {
 
           <td className="td-actions text-right">
             <OverlayTrigger placement="top" overlay={view}>
-              <Button bsStyle="info" simple type="button" bsSize="xs">
-                <i className="fa fa-search"></i>
-              </Button>
+              <NavLink to={"/activity/" + this.props.activity.activities[i].activityID} className="nav-link" activeClassName="active">
+                <Button bsStyle="info" simple type="button" bsSize="xs">
+                  <i className="fa fa-search"></i>
+                </Button>
+              </NavLink>
             </OverlayTrigger>
 
-            <OverlayTrigger placement="top" overlay={remove}>
-              <Button bsStyle="danger" simple type="button" bsSize="xs">
-                <i className="fa fa-times"></i>
-              </Button>
-            </OverlayTrigger>
 
           </td>
         </tr>);

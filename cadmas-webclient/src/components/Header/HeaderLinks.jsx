@@ -17,7 +17,8 @@ class HeaderLinks extends Component {
   constructor() {
     super();
     this.state = {
-      logout: false
+      logout: false,
+      goToUser: false
     };
   }
 
@@ -53,6 +54,11 @@ class HeaderLinks extends Component {
         logout: true
       });
     }
+    if (key === "navItem-1") {
+      this.setState({
+        goToUser: true
+      });
+    }
   }
 
   render() {
@@ -64,6 +70,9 @@ class HeaderLinks extends Component {
     // </div>);
     if (this.state.logout) {
       return <Redirect push to="#" />
+    }
+    if (this.state.goToUser) {
+      return <Redirect push to="/user" />
     }
     return (<div>
       {/* <Nav>
@@ -88,7 +97,7 @@ class HeaderLinks extends Component {
       </Nav> */}
       <Nav pullRight={true} onSelect={key => this.handleSelect(key)}>
         {/* <ConnectedDrones state={this.props} /> */}
-        <NavItem eventKey={"navItem-1"}><NavLink style={{ color: "#9A9A9A" }} eventKey={"navLink-1"} to="/user" className="navItem">{this.getUser()}</NavLink></NavItem>
+        <NavItem eventKey={"navItem-1"}>{this.getUser()}</NavItem>
         {/* <NavDropdown eventKey={2} title="Dropdown" id="basic-nav-dropdown-right">
           <MenuItem eventKey={2.1}>Action</MenuItem>
           <MenuItem eventKey={2.2}>Another action</MenuItem>
