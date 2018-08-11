@@ -139,7 +139,7 @@ class Maps extends Component {
   }
 
   mapDragged() {
-    this.setState({ mapDragged: true });
+    this.setState({ mapDragged: true, lastPosition: this.getCenterPosition() });
   }
   getRoute() {
     if (Array.isArray(this.props.route.filter(coord => coord.type !== "TAKEOFF" && coord.type !== "HOMEPOINT"))) {
@@ -243,77 +243,63 @@ class Maps extends Component {
     return p;
   }
 
-  getMap(mapDragged){
-    var initalCenterPosition = this.getCenterPosition();
-    if(mapDragged){
-      return <Map
-      mapTypeControl={true}
-      mapType="HYBRID"
-      center={initalCenterPosition}
-      onDragend={this.mapDragged.bind(this)}
-      style={{
-        width: '100%',
-        height: '100%',
-        position: 'relative'
-      }} google={this.props.google}
-      initialCenter={initalCenterPosition}
-      clickableIcons={false}
-      bounds={this.getInitialZoom()}
-    //TODO: Center wieder einbauen wenn neue Telemetrie vorliegt
-    >
-      {this.getHomePointMarker()}
-      {this.getTakeoffMarker()}
-      {this.getLandMarker()}
-      {this.getPositionMarker()}
-      {this.getWaypointDots()}
-      {this.getCurrentWaypoint()}
-      {this.getRoute()}
-      {this.getHomePointRoute()}
-      {this.getTelemetryPath()}
-      {this.getHistoryTelemetryPositions()}
+  getZoom() {
+    var bounds = this.getInitialZoom();
+    console.log("b: " + JSON.stringify(bounds["south"]));
+    if (bounds != null && bounds.south != null && bounds.north != null && bounds.west != null && bounds.east != null) {
 
-    </Map>
-    }else{
-      return <Map
-      mapTypeControl={true}
-      mapType="HYBRID"
-      center={initalCenterPosition}
-      onDragend={this.mapDragged.bind(this)}
-      scaleControl={false}
-      zoomControl={false}
-      panControl={false}
-      style={{
-        width: '100%',
-        height: '100%',
-        position: 'relative'
-      }} google={this.props.google}
-      initialCenter={initalCenterPosition}
-      clickableIcons={false}
-      bounds={this.getInitialZoom()}
-    //TODO: Center wieder einbauen wenn neue Telemetrie vorliegt
-    >
-      {this.getHomePointMarker()}
-      {this.getTakeoffMarker()}
-      {this.getLandMarker()}
-      {this.getPositionMarker()}
-      {this.getWaypointDots()}
-      {this.getCurrentWaypoint()}
-      {this.getRoute()}
-      {this.getHomePointRoute()}
-      {this.getTelemetryPath()}
-      {this.getHistoryTelemetryPositions()}
+      var northsouth = Math.abs(bounds.north - bounds.south);
+      var westeast = Math.abs(bounds.east - bounds.west);
+      var maxDistance = Math.max(northsouth, westeast);
+      var zoom = Math.round(maxDistance);
+      console.log("zoom: " + zoom);
+      return zoom > 19 ? 19 : zoom;
 
-    </Map>
     }
   }
+
   render() {
-    
+
     //console.log("initalCenterPosition: " + JSON.stringify(initalCenterPosition) + " ty: " + typeof initalCenterPosition.lat);
     // if (initalCenterPosition.lat !== "number") {
     //   console.log("ABBRUCH; ABBRUCH");
     //   return null;
     // }
-    return (<div id="map">{this.state.mapDragged===true?this.getMap(true):this.getMap(true)}</div>);
+    var initalCenterPosition = this.getCenterPosition();
+    if (initalCenterPosition.lat === 0 && initalCenterPosition.lng === 0) {
+      return "";
+    }
+    var bounds = this.getInitialZoom();
+    return (<div id="map">
+      <Map
+        mapTypeControl={true}
+        mapType="HYBRID"
+        // center={this.state.mapDragged?null:initalCenterPosition}
+        onDragend={this.mapDragged.bind(this)}
+        style={{
+          width: '100%',
+          height: '100%',
+          position: 'relative'
+        }} google={this.props.google}
+        initialCenter={initalCenterPosition}
+        zoom={this.getZoom()}
+        clickableIcons={false}
+      //bounds={bounds}
+      //TODO: Center wieder einbauen wenn neue Telemetrie vorliegt
+      >
+        {this.getHomePointMarker()}
+        {this.getTakeoffMarker()}
+        {this.getLandMarker()}
+        {this.getPositionMarker()}
+        {this.getWaypointDots()}
+        {this.getCurrentWaypoint()}
+        {this.getRoute()}
+        {this.getHomePointRoute()}
+        {this.getTelemetryPath()}
+        {this.getHistoryTelemetryPositions()}
+
+      </Map>
+    </div>);
   }
 
 }
