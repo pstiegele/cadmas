@@ -97,6 +97,8 @@ class FlightModeControlButtons extends Component {
       return <span>Are you sure you want to quit the activity? <b>Do not continue if your drone is still in the air, you will <span style={{ color: "red" }}>lose full control</span></b>. This action can not be undone.</span>;
     } else if (this.state.trigger === "start") {
       return <span>Are you sure you want to start the activity? <br /><b>Do not continue if your drone isn't ready to start.<br /><span style={{ color: "red" }}>This step activates the motors.</span></b></span>;
+    } else if (this.state.trigger === "cameraImages"){
+      return <span>Your camera images are getting combined into a zip file. This can take a certain amount of time depending on the number of shots. The download will start automatically as soon as the file is available.</span>;
     }
   }
   getModalTitle() {
@@ -106,6 +108,8 @@ class FlightModeControlButtons extends Component {
       return "STOP ACTIVITY"
     } else if (this.state.trigger === "start") {
       return "START ACTIVITY"
+    } else if (this.state.trigger === "cameraImages") {
+      return "DOWNLOAD CAMERA IMAGES"
     }
   }
   handleClose() {
@@ -131,6 +135,10 @@ class FlightModeControlButtons extends Component {
         showModal: false
       });
       CadmasWS.startActivity(this.props.activityID);
+    } else if (this.state.trigger === "cameraImages") {
+      this.setState({
+        showModal: false
+      });
     }
   }
 
@@ -139,6 +147,18 @@ class FlightModeControlButtons extends Component {
       showModal: true,
       trigger: "stop"
     })
+  }
+  handleDownloadCameraImagesClick() {
+    this.setState({
+      showModal: true,
+      trigger: "cameraImages"
+    })
+    CadmasWS.getCameraImages(this.props.activityID, function(payload){
+      this.setState({
+        showModal: false
+      });
+      window.location.href = payload.downloadURL;
+    }.bind(this));
   }
   handleStartFlightClick() {
     this.setState({
@@ -281,6 +301,13 @@ class FlightModeControlButtons extends Component {
           STOP ACTIVITY
     </Button></span>
       );
+    }else if(this.props.state === 2){
+      return <span>
+        <CustomModal show={this.state.showModal} bsStyle="success" handleClose={this.handleClose.bind(this)} handleAccept={this.handleAccept.bind(this)} acceptTitle="Close" title={this.getModalTitle()} text={this.getModalText()} />
+        <Button className="pt-1" bsStyle="primary" type="button" bsSize="small" onClick={() => this.handleDownloadCameraImagesClick()}>
+      Download camera images
+</Button>
+</span>;
     }
     return null;
   }

@@ -89,6 +89,9 @@ class CadmasWS {
           case "addMissionACK":
             that.handleCallback(msg.payload);
             break;
+          case "getCameraImagesACK":
+            that.handleCallback(msg.payload);
+            break;
           case "addActivityACK":
             that.handleCallback(msg.payload);
             break;
@@ -242,6 +245,13 @@ class CadmasWS {
     };
     this.packAndSend("getFullMission", payload, callback);
     console.log("getFullMission (" + missionID + ") transmitted");
+  }
+  getCameraImages(activityID, callback) {
+    var payload = {
+      activityID: activityID
+    };
+    this.packAndSend("getCameraImages", payload, callback);
+    console.log("getCameraImages (" + activityID + ") transmitted");
   }
   getFullActivity(activityID, callback) {
     var payload = {

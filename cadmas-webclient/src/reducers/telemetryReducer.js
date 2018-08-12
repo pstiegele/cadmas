@@ -89,6 +89,7 @@ const telemetryReducer = (state = {
 
     case "SET_CAMERAIMAGE":
       var str = "";
+      //console.log(action.payload.img[0]+action.payload.img[1]+action.payload.img[2]+action.payload.img[3]+action.payload.img[4]+action.payload.img[5]);
       for (let i = 0; i < action.payload.img.length; i++) {
         str = str.concat(String.fromCharCode(action.payload.img[i] & 0xFF));
       }

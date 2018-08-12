@@ -68,6 +68,9 @@ function getHandleMethod(method) {
     case "updateMission":
       return require('./methods/in/updateMission.js')
       break;
+    case "getCameraImages":
+      return require('./methods/in/getCameraImages.js')
+      break;
     case "removeMission":
       return require('./methods/in/removeMission.js')
       break;
