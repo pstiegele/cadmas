@@ -48,7 +48,7 @@ module.exports = function (ws, msgid, activityID, callback) {
           Body: zip.toBuffer(),
           ACL: 'public-read'
         },function (resp) {
-          console.log(arguments);
+         // console.log(arguments);
           console.log('Successfully uploaded package.');
           //send(ws, "cameraImageZip", "https://s3-eu-west-1.amazonaws.com/cadmaszips/"+key+".zip");
           var ackPayload = {
