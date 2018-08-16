@@ -22,7 +22,7 @@ module.exports = function (wss) {
       }
     }
     global.client_wss.cadmasClients[ws.userID][pos] = ws;
-    sendInitalData(ws);
+    sendInitialData(ws);
     //winston.info("clients: "+util.inspect(wss.clients));
     ws.on('message', function incoming(raw_msg) {
       winston.info("msg from client (" + ws.username + "): " + raw_msg);
@@ -129,7 +129,7 @@ function send(ws, method, payload) {
 }
 module.exports.send = send;
 
-function sendInitalData(ws) {
+function sendInitialData(ws) {
   require("./methods/out/user")(ws);
   require("./methods/out/missions")(ws);
   require("./methods/out/drones")(ws);

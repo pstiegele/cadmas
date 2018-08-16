@@ -64,7 +64,7 @@ class CadmasWS {
   initClientAPI(token, callback) {
     var that = this;
     var hostname = window.location.hostname;
-    if (window.location.hostname !== "localhost" && !window.location.hostname.startsWith("192")) {
+    if (process.env.REACT_APP_DEVELOPMENT !== "true") {
       socket = new WebSocket("wss://" + hostname + ":8081/client?token=" + token, token);
     } else {
       socket = new WebSocket("ws://" + hostname + "/client?token=" + token, token);

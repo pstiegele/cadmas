@@ -4,7 +4,8 @@ const moment = require("moment");
 const positionClient = require('../../../client-api/methods/out/position');
 
 
-module.exports = function (ws, payload, callback) {
+module.exports = function (ws, msg, callback) {
+    var payload = msg.payload;
     console.log("actAct: "+ws.activeActivity);
     if (ws.activeActivity !== undefined && ws.activeActivity !== null) {
         var db = global.db;
@@ -16,7 +17,7 @@ module.exports = function (ws, payload, callback) {
                 return;
             } 
             winston.info('position successfully inserted');
-            ack('positionACK', 0, ws, callback);
+            ack('positionACK', msg.id, ws, callback);
         });
     }
 

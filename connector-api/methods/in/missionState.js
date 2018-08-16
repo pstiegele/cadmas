@@ -5,7 +5,8 @@ const missionState = require('../../../client-api/methods/out/missionState');
 const Websocket = require('ws');
 
 
-module.exports = function (ws, payload, callback) {
+module.exports = function (ws, msg, callback) {
+    var payload = msg.payload;
     if (ws.activeActivity !== undefined && ws.activeActivity !== null) {
         var db = global.db;
         var query = "INSERT INTO MissionStateTelemetry (activityID,timestamp,currentItem) VALUES (?,?,?);";
@@ -15,7 +16,7 @@ module.exports = function (ws, payload, callback) {
                 return;
             } 
             winston.info('missionState successfully inserted');
-            ack('missionStateACK', 0, ws, callback);
+            ack('missionStateACK', msg.id, ws, callback);
         });
     }
 

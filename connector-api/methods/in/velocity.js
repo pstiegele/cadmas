@@ -6,7 +6,8 @@ const util = require('util');
 const Websocket = require('ws');
 
 
-module.exports = function (ws, payload, callback) {
+module.exports = function (ws, msg, callback) {
+    var payload = msg.payload;
     if (ws.activeActivity !== undefined && ws.activeActivity !== null) {
         var db = global.db;
         var query = "INSERT INTO VelocityTelemetry (activityID,timestamp,groundspeed,airspeed,climbrate) VALUES (?,?,?,?,?);";
@@ -16,7 +17,7 @@ module.exports = function (ws, payload, callback) {
                 return;
             }
             winston.info('velocity successfully inserted');
-            ack('velocityACK', 0, ws, callback);
+            ack('velocityACK', msg.id, ws, callback);
         });
     }
 
