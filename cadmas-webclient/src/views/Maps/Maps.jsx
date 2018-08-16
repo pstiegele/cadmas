@@ -245,14 +245,14 @@ class Maps extends Component {
 
   getZoom() {
     var bounds = this.getInitialZoom();
-    console.log("b: " + JSON.stringify(bounds["south"]));
+    //console.log("b: " + JSON.stringify(bounds.getSo));
     if (bounds != null && bounds.south != null && bounds.north != null && bounds.west != null && bounds.east != null) {
 
       var northsouth = Math.abs(bounds.north - bounds.south);
       var westeast = Math.abs(bounds.east - bounds.west);
       var maxDistance = Math.max(northsouth, westeast);
       var zoom = Math.round(maxDistance);
-      console.log("zoom: " + zoom);
+      //console.log("zoom: " + zoom);
       return zoom > 19 ? 19 : zoom;
 
     }

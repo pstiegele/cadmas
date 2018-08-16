@@ -22,12 +22,12 @@ module.exports = function (wss) {
         if (msg.method === "cameraImage") {
           winston.info('received: %s', msg.method);
         } else {
-          winston.info('received: %s', util.inspect(msg));
+          winston.info('received: ', msg);
         }
       } catch (e) {
         return console.error(e);
       }
-      getHandleMethod(msg.method)(ws, msg.payload, send);
+      getHandleMethod(msg.method)(ws, msg, send);
     });
 
     ws.on('close', function (reason) {

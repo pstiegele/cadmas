@@ -5,7 +5,8 @@ const battery = require('../../../client-api/methods/out/battery');
 const Websocket = require('ws');
 
 
-module.exports = function (ws, payload, callback) {
+module.exports = function (ws, msg, callback) {
+    var payload = msg.payload;
     if (ws.activeActivity !== undefined && ws.activeActivity !== null) {
         var db = global.db;
         var query = "INSERT INTO BatteryTelemetry (activityID,timestamp,voltage,current,percentage) VALUES (?,?,?,?,?);";
@@ -15,7 +16,7 @@ module.exports = function (ws, payload, callback) {
                 return;
             }
             winston.info('battery successfully inserted');
-            ack('batteryACK', 0, ws, callback);
+            ack('batteryACK', msg.id, ws, callback);
         });
     }
     if (global.client_wss.cadmasClients[ws.userID] !== undefined && global.client_wss.cadmasClients[ws.userID] !== null) {

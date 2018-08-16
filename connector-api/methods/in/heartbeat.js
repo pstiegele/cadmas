@@ -4,7 +4,8 @@ const moment = require("moment");
 const heartbeat = require('../../../client-api/methods/out/heartbeat');
 const Websocket = require('ws');
 
-module.exports = function (ws, payload, callback) {
+module.exports = function (ws, msg, callback) {
+    var payload = msg.payload;
     if (ws.activeActivity !== undefined && ws.activeActivity !== null) {
         var db = global.db;
         var query = "INSERT INTO HeartbeatTelemetry (activityID,timestamp,isArmed,customMode,messagesLost, cpuTemp) VALUES (?,?,?,?,?,?);";
@@ -15,7 +16,7 @@ module.exports = function (ws, payload, callback) {
                 return;
             } 
             winston.info('heartbeat(connector) successfully inserted');
-            ack('heartbeatACK', 0, ws, callback);
+            ack('heartbeatACK', msg.id, ws, callback);
         });
     }
 
