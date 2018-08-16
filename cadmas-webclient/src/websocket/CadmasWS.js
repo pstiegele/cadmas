@@ -20,7 +20,7 @@ class CadmasWS {
     var that = this;
     console.log("authenticate first! ");
     var authSocket;
-    if (window.location.hostname !== "localhost" && !window.location.hostname.startsWith("192")) {
+    if (process.env.REACT_APP_DEVELOPMENT !== "true") {
       authSocket = new WebSocket("wss://" + window.location.hostname + ":8081/auth");
     } else {
       authSocket = new WebSocket("ws://" + window.location.hostname + "/auth");
