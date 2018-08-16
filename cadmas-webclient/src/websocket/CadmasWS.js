@@ -18,9 +18,9 @@ class CadmasWS {
   }
   initAuthAPI(username, password, callback) {
     var that = this;
-    console.log("authenticate first! ");
+    console.log("authenticate first!");
     var authSocket;
-    if (process.env.REACT_APP_DEVELOPMENT !== "true") {
+    if (process.env.NODE_ENV !== "development") {
       authSocket = new WebSocket("wss://" + window.location.hostname + ":8081/auth");
     } else {
       authSocket = new WebSocket("ws://" + window.location.hostname + "/auth");
@@ -64,7 +64,7 @@ class CadmasWS {
   initClientAPI(token, callback) {
     var that = this;
     var hostname = window.location.hostname;
-    if (process.env.REACT_APP_DEVELOPMENT !== "true") {
+    if (process.env.NODE_ENV !== "development") {
       socket = new WebSocket("wss://" + hostname + ":8081/client?token=" + token, token);
     } else {
       socket = new WebSocket("ws://" + hostname + "/client?token=" + token, token);
