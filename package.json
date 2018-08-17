@@ -8,7 +8,8 @@
     "start-local-prod": "npm install && npm install --prefix cadmas-webclient && npm run build --prefix cadmas-webclient && node ./app.js",
     "webclient": "npm start --prefix cadmas-webclient",
     "debug": "nodemon ./app.js",
-    "run": "npm-run-all --parallel \"debug --inspect\" webclient  "
+    "run": "npm-run-all --parallel \"debug --inspect\" webclient  ",
+	"run-no-nodemon": "npm-run-all --parallel start webclient  "
   },
   "dependencies": {
     "adm-zip": "^0.4.11",
