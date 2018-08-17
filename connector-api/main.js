@@ -1,6 +1,7 @@
 const winston = require('../middleware/logger');
 const util = require('util');
 const Websocket = require('ws');
+const moment = require('moment');
 const drone = require('../client-api/methods/out/drone');
 
 var msgID = 0;
@@ -13,15 +14,19 @@ module.exports = function (wss) {
     delete require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol];
     winston.info("connector connected. droneID: " + ws.droneID + " name: " + ws.name);
     global.connector_wss.cadmasConnectors[ws.droneID] = ws;
-   
-    ws.on('message', function incoming(raw_msg) {
 
+    ws.on('message', function incoming(raw_msg) {
       var msg;
       try {
-        msg = JSON.parse(raw_msg);
-        if (msg.method === "cameraImage") {
-          winston.info('received: %s', msg.method);
+        if (typeof raw_msg === "object") {
+          winston.info('received cameraImage');
+          msg={};
+          msg.payload={};
+          msg.payload.img=[...raw_msg];
+          msg.method='cameraImage';
+          msg.payload.timestamp = moment();
         } else {
+          msg = JSON.parse(raw_msg);
           winston.info('received: ', msg);
         }
       } catch (e) {
