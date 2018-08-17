@@ -78,25 +78,12 @@ class CadmasWS {
     socket.onmessage = function (event) {
       var msg;
       try {
-        if (typeof event.data === "string") {
-          msg = JSON.parse(event.data);
-        } else {
-          var reader = new FileReader()
-          reader.onload = function (event) {
-            handleOnMessage(JSON.parse(event.target.result));
-          };
-          reader.readAsText(event.data);
-          return;
-        }
+        msg = JSON.parse(event.data);
       } catch (error) {
         console.log("parsing error! msg: " + event.data);
         console.log("parsing error! error: " + error);
       }
-      handleOnMessage(msg);
-    };
-    
-    function handleOnMessage(msg){
-      console.log("msg: " + msg.method);
+      //console.log("msg: " + JSON.stringify(msg));
       if (msg !== undefined && msg.hasOwnProperty("method")) {
         switch (msg.method) {
           case "addMissionACK":
