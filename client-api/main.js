@@ -112,7 +112,7 @@ function getHandleMethod(method) {
 }
 
 
-function send(ws, method, payload) {
+function send(ws, method, payload, binary) {
   var res = {
     time: require('moment')().unix(),
     id: getMsgID(),
@@ -121,7 +121,12 @@ function send(ws, method, payload) {
   }
   if (ws.readyState === Websocket.OPEN) {
     winston.info("send: " + method);
-    ws.send(JSON.stringify(res));
+    if(binary===true){
+      ws.send(Buffer.from(JSON.stringify(res)));
+    }else{
+      ws.send(JSON.stringify(res));
+    }
+    
   } else {
     winston.info("client closed connection while trying to send data (" + method + ")");
   }
