@@ -329,7 +329,7 @@ class Activity extends Component {
       return <span style={{ color: "#e59c00", fontSize: "2em", animation: "blinker 1s linear infinite" }}>never</span>;
     }
     var ret = moment(timestamp).fromNow();
-    if (ret === "just now ago" || ret === "in just now") {
+    if (ret === "just now ago") {
       if (this.refs.notificationSystem !== null && this.refs.notificationSystem !== undefined && this.thereWasMissingTelemetry) {
         this.thereWasMissingTelemetry = false;
         this.refs.notificationSystem.addNotification({
