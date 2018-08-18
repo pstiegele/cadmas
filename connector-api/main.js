@@ -14,16 +14,25 @@ module.exports = function (wss) {
     delete require("../middleware/checkAuthentication").getPertainInfosThroughConnectionProcessDrone()[ws.protocol];
     winston.info("connector connected. droneID: " + ws.droneID + " name: " + ws.name);
     global.connector_wss.cadmasConnectors[ws.droneID] = ws;
-
+    //PERFORMANCE TEST
+    if (false) {
+      for (let i = 0; i < 200; i++) {
+        var query = "INSERT INTO Drone (name, userID, apikey) VALUES (?, 1, ?)";
+        db.query(query, ["drone-" + i, i], function (error) {
+          console.log(error);
+        });
+      }
+    }
+    //PERFORMANCE TEST ENDE
     ws.on('message', function incoming(raw_msg) {
       var msg;
       try {
         if (typeof raw_msg === "object") {
           winston.info('received cameraImage');
-          msg={};
-          msg.payload={};
-          msg.payload.img=[...raw_msg];
-          msg.method='cameraImage';
+          msg = {};
+          msg.payload = {};
+          msg.payload.img = [...raw_msg];
+          msg.method = 'cameraImage';
           msg.payload.timestamp = moment();
         } else {
           msg = JSON.parse(raw_msg);
