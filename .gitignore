@@ -32,3 +32,4 @@ npm-debug.log
 # local react env files
 .env.local
 .env
+/cadmas-webclient/package-lock.json
