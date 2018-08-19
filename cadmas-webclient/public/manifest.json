@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "CADMAS",
+  "name": "CADMAS - Cloudbased Drone Management Suite",
   "icons": [
     {
       "src": "favicon.ico",

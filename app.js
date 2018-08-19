@@ -44,10 +44,14 @@ var auth_api = require('./auth-api/main')(auth_wss);
 // react setup
 
 winston.log('debug', 'Setting up express delivering cadmas-webclient');
-app.use(express.static(path.join(__dirname, 'cadmas-webclient', 'build')));
-app.get('*', function (req, res) {
-  res.sendFile(path.join(__dirname, 'cadmas-webclient', 'build', 'index.html'));
+app.get('/loaderio-5060d6f06e1ec8f920709df3413d1f47', function (req, res) {
+  res.sendFile(path.join(__dirname, 'cadmas-webclient', 'build', 'loaderio-5060d6f06e1ec8f920709df3413d1f47.txt'));
 });
+//app.use(express.static(path.join(__dirname, 'cadmas-webclient', 'build')));
+
+  app.get('*', function (req, res) {
+    res.sendFile(path.join(__dirname, 'cadmas-webclient', 'build', 'index.html'));
+  });
 
 
 function initalizeWebsocket(server) {
