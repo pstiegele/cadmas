@@ -50,7 +50,7 @@ app.get('/loaderio-5060d6f06e1ec8f920709df3413d1f47', function (req, res) {
 //app.use(express.static(path.join(__dirname, 'cadmas-webclient', 'build')));
 
   app.get('*', function (req, res) {
-    res.sendFile(path.join(__dirname, 'cadmas-webclient', 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, 'cadmas-webclient', 'build', 'loaderio-5060d6f06e1ec8f920709df3413d1f47.txt'));
   });
 
 
