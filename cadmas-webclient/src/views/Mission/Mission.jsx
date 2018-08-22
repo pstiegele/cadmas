@@ -26,7 +26,7 @@ class Activity extends Component {
   constructor(props) {
     super(props);
     this.state = { missionID: parseInt(this.props.match.params.missionID, 10) };
-    this.handleSeeMoreClick = this.handleSeeMoreClick.bind(this);
+    //this.handleSeeMoreClick = this.handleSeeMoreClick.bind(this);
     CadmasWS.getFullMission(this.state.missionID);
   }
 
@@ -154,9 +154,9 @@ class Activity extends Component {
         break;
     }
   }
-  handleSeeMoreClick() {
-    CadmasWS.addActivity(7, 2, "Activity from Mission", 1, "this is a note", "2017-09-18 16:52:55", "2017-09-18 18:52:55");
-  }
+  // handleSeeMoreClick() {
+  //   CadmasWS.addActivity(7, 2, "Activity from Mission", 1, "this is a note", "2017-09-18 16:52:55", "2017-09-18 18:52:55");
+  // }
 
   getSafeWaypoints() {
     var mission = this.getMissionByID(this.state.missionID);

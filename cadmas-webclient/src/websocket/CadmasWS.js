@@ -79,6 +79,7 @@ class CadmasWS {
       var msg;
       try {
         msg = JSON.parse(event.data);
+        console.log("cadmas msg: "+JSON.stringify(msg));
       } catch (error) {
         console.log("parsing error! msg: " + event.data);
         console.log("parsing error! error: " + error);
@@ -228,12 +229,11 @@ class CadmasWS {
     this.packAndSend("addMission", payload, callback);
     console.log("addMission (" + name + ") transmitted");
   }
-  addActivity(missionID, droneID, name, state, note, callback) {
+  addActivity(missionID, droneID, name, note, callback) {
     var payload = {
       missionID: missionID,
       droneID: droneID,
       name: name,
-      state: state,
       note: note
     };
     this.packAndSend("addActivity", payload, callback);

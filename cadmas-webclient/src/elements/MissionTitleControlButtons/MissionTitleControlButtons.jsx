@@ -94,7 +94,7 @@ class MissionTitleControlButtons extends Component {
                     droneID: this.props.drones[0].droneID
                 });
             }
-            CadmasWS.addActivity(this.props.missionID, droneID, this.state.title, 0, this.state.note, this.redirect.bind(this));
+            CadmasWS.addActivity(this.props.missionID, droneID, this.state.title, this.state.note, this.redirect.bind(this));
 
         }
     }
