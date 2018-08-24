@@ -52,7 +52,7 @@ module.exports = function (ws, msg, callback) {
       calibrate(global.connector_wss.cadmasConnectors[result[0].droneID]);
       setMission(global.connector_wss.cadmasConnectors[result[0].droneID], result[0].missionID, function () {
         var homePointQuery = "SELECT location,altitude,type FROM MissionWaypoints WHERE missionIndex=0 AND type='HOMEPOINT' AND missionID=?";
-        db.query(homePointQuery, payload.missionID, function (errorHomePoint, resultHomePoint) {
+        db.query(homePointQuery, result[0].missionID, function (errorHomePoint, resultHomePoint) {
           if (errorHomePoint || resultHomePoint.length !== 1) {
             winston.error('error in startActivity (in select homePoint) (no homePoint found: ' + errorHomePoint);
             arm(global.connector_wss.cadmasConnectors[result[0].droneID]);

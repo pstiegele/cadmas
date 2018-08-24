@@ -79,7 +79,7 @@ class CadmasWS {
       var msg;
       try {
         msg = JSON.parse(event.data);
-        console.log("cadmas msg: "+JSON.stringify(msg));
+        //console.log("cadmas msg: "+JSON.stringify(msg));
       } catch (error) {
         console.log("parsing error! msg: " + event.data);
         console.log("parsing error! error: " + error);

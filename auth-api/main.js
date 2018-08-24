@@ -38,9 +38,9 @@ function getHandleMethod(method) {
     case "renewToken":
       return require('./methods/in/renewToken.js')
       break;
-    case "newDrone":
-      return require('./methods/in/newDrone.js')
-      break;
+    // case "newDrone":
+    //   return require('./methods/in/newDrone.js')
+    //   break;
     default:
       return require('./methods/in/invaliRequest.js');
   }

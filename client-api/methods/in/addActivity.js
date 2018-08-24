@@ -7,7 +7,7 @@ const activity = require('../out/activity');
 module.exports = function (ws, msg, callback) {
   var payload = msg.payload;
   var db = global.db;
-  var query = "INSERT INTO Activity (missionID,droneID,name,note) VALUES (?,?,?,?);";
+  var query = "INSERT INTO Activity (missionID,droneID,name,note,state) VALUES (?,?,?,?,0);";
   db.query(query, [payload.missionID, payload.droneID, payload.name, payload.note], function (error, result) {
     if (error) winston.error('error in addActivity: ' + error);
     winston.info('activity successfully inserted');

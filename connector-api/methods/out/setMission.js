@@ -23,7 +23,6 @@ module.exports = function (ws, missionID, callback) {
                 payload.waypoints.push(waypoint);
             }
         }
-        winston.error("setMission: " + JSON.stringify(payload));
         send(ws, "setMission", payload);
         callback();
     });
