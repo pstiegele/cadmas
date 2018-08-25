@@ -5,7 +5,6 @@ import Activities from 'views/Activities/Activities';
 //import Icons from 'views/Icons/Icons';
 //import Maps from 'views/Maps/Maps';
 import Notifications from 'views/Notifications/Notifications';
-import Upgrade from 'views/Upgrade/Upgrade';
 import Drones from 'views/Drones/Drones';
 import Missions from 'views/Missions/Missions';
 import Mission from 'views/Mission/Mission';
@@ -83,7 +82,6 @@ const appRoutes = [
     component: Notification,
     showInSidebar: false
   },
-   { upgrade: true, path: "/upgrade", name: "Go to live activity", icon: "pe-7s-rocket", component: Upgrade },
   {
     redirect: true,
     path: "/",

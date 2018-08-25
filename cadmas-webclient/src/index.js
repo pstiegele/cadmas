@@ -20,4 +20,4 @@ ReactDOM.render(<Provider store={store}>
   </HashRouter>
 </Provider>, document.getElementById('root'));
 //TODO: include registerServiceWorker again!
-//registerServiceWorker();
+registerServiceWorker();

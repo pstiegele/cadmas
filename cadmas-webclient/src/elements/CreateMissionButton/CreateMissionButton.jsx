@@ -149,7 +149,7 @@ class CreateMissionButton extends Component {
                         placeholder="note"
                         onChange={this.setNote}
                     /><br /><br /><br /><br />
-                    <ControlLabel>Insert the content of the KML or MissionPlanner waypoint file which includes the route{this.getWaypointInfo()}</ControlLabel>
+                    <ControlLabel>Insert the content of the MissionPlanner waypoint file which includes the route{this.getWaypointInfo()}</ControlLabel>
                     <FormControl
                         componentClass="textarea"
                         type="text"
