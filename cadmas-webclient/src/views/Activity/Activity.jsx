@@ -145,7 +145,7 @@ class Activity extends Component {
     var res;
     var name = this.getSafeActivityName(activityID);
     var controlButtons = <span className="pull-right">
-      <FlightModeControlButtons activityID={activityID} droneConnected={this.getSafeDroneConnectStatus(this.getActivityByID(this.state.activityID))} state={parseInt(this.getSafeActivityState(this.state.activityID), 10)} heartbeat={this.getSafeTelemetryHeartbeat()} /></span>
+      <FlightModeControlButtons activityID={activityID} droneConnected={this.getSafeDroneConnectStatus(this.getActivityByID(this.state.activityID))} state={parseInt(this.getSafeActivityState(this.state.activityID), 10)} droneID={parseInt(this.getSafeDroneID(this.getActivityByID(this.state.activityID)), 10)} heartbeat={this.getSafeTelemetryHeartbeat()} /></span>
     res = <div>{name}{controlButtons}</div>
     return res;
   }
