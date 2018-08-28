@@ -77,6 +77,7 @@ class CadmasWS {
 
     socket.onmessage = function (event) {
       var msg;
+      //console.log("Nachricht: "+event.data);
       try {
         msg = JSON.parse(event.data);
         //console.log("cadmas msg: "+JSON.stringify(msg));

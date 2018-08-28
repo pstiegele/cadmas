@@ -123,8 +123,7 @@ class FlightModeControlButtons extends Component {
         showModal: false,
         activeFlightMode: this.getFlightModeNameToKey(this.state.changeFlightModeTo)
       });
-      //TODO set droneID
-      CadmasWS.setMode(this.state.changeFlightModeTo, 1);
+      CadmasWS.setMode(this.state.changeFlightModeTo, this.props.droneID);
     } else if (this.state.trigger === "stop") {
       this.setState({
         showModal: false
