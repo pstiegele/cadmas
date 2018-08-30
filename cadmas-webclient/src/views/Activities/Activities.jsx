@@ -30,8 +30,7 @@ class Activities extends Component {
     "distance",
     "duration",
     "drone",
-    "mission name",
-    "download"
+    "mission name"
   ];
 
   getRelativeOrAbsoluteDate(date) {
@@ -154,11 +153,11 @@ class Activities extends Component {
                       <td key={prop.activityID + "-duration"}>{this.getDuration(prop.duration)}</td>
                       <td key={prop.activityID + "-drone"}>{this.getSafeDroneName(prop.droneID)}</td>
                       <td key={prop.activityID + "-mission"}>{this.getSafeMissionName(prop.missionID)}</td>
-                      <td key={prop.activityID + "-download"}>
+                      {/* <td key={prop.activityID + "-download"}>
                         <NavLink to="/dashboard" className="nav-link" activeClassName="active">
                           <i className="fa fa-cloud-download"></i>
                         </NavLink>
-                      </td>
+                      </td> */}
 
                     </tr>)
                   })

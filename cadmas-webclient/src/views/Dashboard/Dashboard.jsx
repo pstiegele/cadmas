@@ -28,6 +28,17 @@ class Dashboard extends Component {
   getSafeDroneName(droneID) {
     return this.getSafe(() => this.getDroneByID(droneID).name, "")
   }
+  getSafeLatestActivity(){
+    var a = this.getSafe(() => this.props.activity.activities[this.props.activity.activities.length-1], null);
+    if(a!==null&&a!==undefined){
+      return a;
+    }else{
+      return this.props.activity.activities[0];
+    }
+  }
+  getSafeActivityName(activity){
+    return this.getSafe(() => activity.name,"");
+  }
   getDroneByID(droneID) {
     var result = this.props.drone.drones.filter(function (obj) {
       return obj.droneID === droneID;
@@ -155,10 +166,11 @@ class Dashboard extends Component {
     return this.props.user.cameraImagesLast30Days.toLocaleString('de');
   }
   getNumberOfNotifications() {
-    if (this.props.activity.activities[this.props.activity.activities.length-1] != null) {
+    if (this.getSafeLatestActivity() != null) {
       var not = this.props.notification.notifications.filter(notification => notification.activityID === this.props.activity.activities[this.props.activity.activities.length-1].activityID);
       return not.length;
     }
+    return 0;
   }
 
   getOverallDistance(){
@@ -180,7 +192,7 @@ class Dashboard extends Component {
             <StatsCard bigIcon={<i className="pe-7s-world text-success" > </i>} statsText="Activities this month" statsValue={this.getNumberOfActivitiesThisMonth()} statsIcon={<i className="fa fa-calendar" > </i>} statsIconText="last 30 days" />
           </Col>
           <Col lg={3} sm={6}>
-            <StatsCard bigIcon={<i className="fa  fa-exclamation text-danger" > </i>} statsText="Notifications" statsValue={this.getNumberOfNotifications()} statsIcon={<i className="fa fa-compass" > </i>} statsIconText={"on: "+this.props.activity.activities[this.props.activity.activities.length-1].name} />
+            <StatsCard bigIcon={<i className="fa  fa-exclamation text-danger" > </i>} statsText="Notifications" statsValue={this.getNumberOfNotifications()} statsIcon={<i className="fa fa-compass" > </i>} statsIconText={"on: "+this.getSafeActivityName(this.getSafeLatestActivity())} />
           </Col>
           <Col lg={3} sm={6}>
             <StatsCard bigIcon={<i className="fa fa-plane text-info" > </i>} statsText="Distance traveled" statsValue={this.getOverallDistance()} statsIcon={<i className="fa fa-refresh" > </i>} statsIconText="Updated now" />
@@ -209,7 +221,7 @@ class Dashboard extends Component {
 
         <Row>
           <Col md={4}>
-            <Card title="Latest Activity" category="a short summary" content={<div><ActivitySummary showMap={true} showSeeMoreButton={true} showActivityName={true} activityToShow={this.props.activity.activities[this.props.activity.activities.length-1]}/></div>} />
+            <Card title="Latest Activity" category="a short summary" content={<div><ActivitySummary showMap={true} showSeeMoreButton={true} showActivityName={true} activityToShow={this.getSafeLatestActivity()}/></div>} />
           </Col>
           <Col md={5}>
             <Card title="Activities" category="The latest activities of all drones" stats={this.props.activity.activities.length+" activities overall"} statsIcon="fa fa-plane" content={<div className="table-full-width" > <table className="table">

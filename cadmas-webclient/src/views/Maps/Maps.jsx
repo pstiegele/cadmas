@@ -259,7 +259,6 @@ class Maps extends Component {
   }
 
   render() {
-
     //console.log("initalCenterPosition: " + JSON.stringify(initalCenterPosition) + " ty: " + typeof initalCenterPosition.lat);
     // if (initalCenterPosition.lat !== "number") {
     //   console.log("ABBRUCH; ABBRUCH");
@@ -274,17 +273,18 @@ class Maps extends Component {
       <Map
         mapTypeControl={true}
         mapType="HYBRID"
-        // center={this.state.mapDragged?null:initalCenterPosition}
+        center={this.getCenterPosition()}
         onDragend={this.mapDragged.bind(this)}
         style={{
           width: '100%',
           height: '100%',
           position: 'relative'
-        }} google={this.props.google}
-        initialCenter={initalCenterPosition}
-        zoom={this.getZoom()}
+        }} 
+        google={this.props.google}
+        initialCenter={this.getCenterPosition()}
+        //zoom={this.getZoom()}
         clickableIcons={false}
-      //bounds={bounds}
+      bounds={this.getInitialZoom()}
       //TODO: Center wieder einbauen wenn neue Telemetrie vorliegt
       >
         {this.getHomePointMarker()}

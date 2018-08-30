@@ -11,7 +11,7 @@ class Footer extends Component {
               <a href="/">Home</a>
             </li>
             <li>
-              <a href="/assets/bachelorthesis.pdf">My bachelor thesis</a>
+              <a href="http://paul-stiegele.de/download/Entwicklung_einer_webbasierten_Drohnen_Management_Suite_zur_autonomen_Steuerung_und_Verwaltung_von_UAVs.pdf">My bachelor thesis</a>
             </li>
             <li>
               <a href="mailto:accpaul23@gmail.com">Contact me</a>

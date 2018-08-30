@@ -33,6 +33,13 @@ class Drones extends Component {
 
   }
 
+  handleRemove(){
+alert("The remove button is not implemented yet.");
+  }
+  handleSettings(){
+alert("The settings button is not implemented yet.");
+  }
+
   getDroneContent(prop) {
     return <Col md={6} key={prop.droneID + "-col"}><Card title={prop.name} category={prop.vehicleType} stats={"last flight: " + moment(this.getLastFlightDate(prop.droneID) * 1000).fromNow()} statsIcon="fa fa-clock-o" content={
       <div>
@@ -48,10 +55,10 @@ class Drones extends Component {
         <div className="row">
           {/* <div className="col-lg-10 h5">Statistics<br />5.4 GB data usage this month</div> */}
           <div className="col-lg-12 text-right">
-            <Button className="pt-1" bsStyle="info" type="button" bsSize="small" pullRight fill >
+            <Button className="pt-1" bsStyle="info" type="button" bsSize="small" pullRight fill onClick={() => this.handleSettings()}>
               Settings
           </Button>&nbsp;
-          <Button className="pt-1" bsStyle="danger" type="button" bsSize="small" pullRight fill >
+          <Button className="pt-1" bsStyle="danger" type="button" bsSize="small" pullRight fill onClick={() => this.handleRemove()}>
               Remove Drone
           </Button>
           </div>

@@ -4,6 +4,8 @@ import { NavLink } from 'react-router-dom';
 //import ConnectedDrones from 'elements/ConnectedDrones/ConnectedDrones.jsx';
 import { connect } from "react-redux";
 import { Redirect } from 'react-router';
+import { deleteUserData } from "actions/userActions";
+import store from "store";
 
 
 
@@ -50,6 +52,7 @@ class HeaderLinks extends Component {
   handleSelect(key) {
     if (key === "navItem-2") {
       localStorage.removeItem('token');
+      store.dispatch(deleteUserData());
       this.setState({
         logout: true
       });

@@ -16,6 +16,8 @@ const userReducer = (state = {
     case "SET_USER":
       state = action.payload;
       break;
+    case "DELETE_USER_DATA":
+      state = null;
     case "SET_MAP_IS_SHOWN":
       state = {
         ...state,

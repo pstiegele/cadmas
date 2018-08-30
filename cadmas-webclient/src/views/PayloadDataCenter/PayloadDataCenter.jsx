@@ -19,8 +19,7 @@ class PayloadDataCenter extends Component {
         "",
         "payload",
         "activity name",
-        "size",
-        "download"
+        "size"
     ];
 
     getLastFlightDate(droneID) {
@@ -142,11 +141,11 @@ class PayloadDataCenter extends Component {
                                                         <td key={prop.payloadID + "-payload"}>{this.getSafePayloadDeviceName(prop.payloadDeviceID)}</td>
                                                         <td key={prop.payloadID + "-activityName"}>{this.getSafeActivityName(prop.activityID)}</td>
                                                         <td key={prop.payloadID + "-size"}>{this.getReadableSize(prop.size)}</td>
-                                                        <td key={prop.payloadID + "-download"}>
+                                                        {/* <td key={prop.payloadID + "-download"}>
                                                             <NavLink to="/dashboard" className="nav-link" activeClassName="active">
                                                                 <i className="fa fa-cloud-download"></i>
                                                             </NavLink>
-                                                        </td>
+                                                        </td> */}
 
                                                     </tr>)
                                                 })
