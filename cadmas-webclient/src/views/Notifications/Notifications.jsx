@@ -146,6 +146,10 @@ class Notifications extends Component {
     this.setState({ redirect: true, redirectToNotification: that._targetInst.return.key });
   }
 
+  handleDeleteClick(event){
+    alert("this function is currently not supported");
+  }
+
   render() {
     if (this.state.redirect) {
       return <Redirect push to={"/notification/" + this.state.redirectToNotification} />;
@@ -154,7 +158,7 @@ class Notifications extends Component {
       <div className="content">
         <Grid fluid>
           <Row>
-            <Col md={8}>
+            <Col md={12}>
               <Card title="Notifications" category="That are your latest notifications" ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
                 <Table striped hover ><thead>
                   <tr>
@@ -180,10 +184,8 @@ class Notifications extends Component {
                           <td key={prop.notificationID + "-title"}>{prop.title}</td>
                           <td key={prop.notificationID + "-drone"}>{this.getSafeDroneNameByActivity(prop.activityID)}</td>
                           <td key={prop.notificationID + "-activity"}>{this.getSafeActivityName(prop.activityID)}</td>
-                          <td key={prop.notificationID + "-delete"}>
-                            <NavLink to="/dashboard" className="nav-link" activeClassName="active">
+                          <td key={prop.notificationID + "-delete"} onClick={this.handleDeleteClick}>
                               <i className="fa fa-trash" style={{ color: "#DC143C" }}></i>
-                            </NavLink>
                           </td>
 
                         </tr>)
@@ -195,22 +197,22 @@ class Notifications extends Component {
             </Col>
             <Col md={4}>
               <Row>
-                <Card title="Filter" category="filter your notifications by drone" ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
+                {/* <Card title="Filter" category="filter your notifications by drone" ctTableFullWidth="ctTableFullWidth" ctTableResponsive="ctTableResponsive" content={
                   <div className="content">
                     {this.props.drone.drones.map((prop, key) => {
                       return <div key={prop.droneID+"-droneID"}><CustomCheckbox isChecked={true} number={key} label={prop.name} inline={false} /></div>;
                     })
                     }
                   </div>
-                } />
+                } /> */}
               </Row>
               <Row>
-                <Card statsIcon="fa fa-times" title="Errors per drone" category="overall" stats={this.getErrorAmount()} content={<div id="chartPreferences" className="ct-chart ct-perfect-fourth" > <ChartistGraph data={this.getPieData()} type="Pie" />
+                {/* <Card statsIcon="fa fa-times" title="Errors per drone" category="overall" stats={this.getErrorAmount()} content={<div id="chartPreferences" className="ct-chart ct-perfect-fourth" > <ChartistGraph data={this.getPieData()} type="Pie" />
                 </div>} legend={<div className="legend" > {
                   this.getPieLegend()
                 }
                 </div>
-                } />
+                } /> */}
               </Row>
             </Col>
           </Row>

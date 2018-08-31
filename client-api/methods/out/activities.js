@@ -28,6 +28,24 @@ module.exports = function (ws) {
                 'thumbnailpath': element.thumbnailpath
             }
             );
+
+            //Anfang send full activities test
+            var query2 = "SELECT * FROM PositionTelemetry WHERE activityID=? ORDER BY timestamp";
+            db.query(query2, element.id, function (error2, results2) {
+                if (error2 || results2 === undefined) {
+                    winston.error('error in activities (fullActivity): ' + error2);
+                    return;
+                }
+                res[index].historyTelemetryPositions=[];
+                for (let i = 0; i < results2.length; i++) {
+                    const element = results2[i];
+                    res[index].historyTelemetryPositions.push({
+                        lat:element.position.x,
+                        lng:element.position.y
+                    });
+                }                
+            });
+            //Ende send full activities test
         }
         send(ws, "activities", res);
     });
