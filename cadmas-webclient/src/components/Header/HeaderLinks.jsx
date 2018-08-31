@@ -75,6 +75,9 @@ class HeaderLinks extends Component {
       return <Redirect push to="#" />
     }
     if (this.state.goToUser) {
+      this.setState({
+        goToUser: false
+      });
       return <Redirect push to="/user" />
     }
     return (<div>

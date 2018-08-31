@@ -163,7 +163,7 @@ class Dashboard extends Component {
   }
 
   getNumberOfCameraImagesThisMonth(){
-    return this.props.user.cameraImagesLast30Days.toLocaleString('de');
+    return this.getSafe(() => this.props.user.cameraImagesLast30Days.toLocaleString('de'), 0);
   }
   getNumberOfNotifications() {
     if (this.getSafeLatestActivity() != null) {
