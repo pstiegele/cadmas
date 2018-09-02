@@ -273,7 +273,7 @@ class Maps extends Component {
       <Map
         mapTypeControl={true}
         mapType="HYBRID"
-        center={this.getCenterPosition()}
+        //center={this.getCenterPosition()}
         onDragend={this.mapDragged.bind(this)}
         style={{
           width: '100%',
@@ -284,7 +284,7 @@ class Maps extends Component {
         initialCenter={this.getCenterPosition()}
         //zoom={this.getZoom()}
         clickableIcons={false}
-      bounds={this.getInitialZoom()}
+      //bounds={this.getInitialZoom()}
       //TODO: Center wieder einbauen wenn neue Telemetrie vorliegt
       >
         {this.getHomePointMarker()}
