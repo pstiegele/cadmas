@@ -1,4 +1,5 @@
-# Cadmas
+![CADMAS](https://github.com/pstiegele/cadmas/blob/master/cadmas-webclient/src/assets/img/logo.png?raw=true)  
+
 Eine webbasierte Drohnen Management Suite zur autonomen Steuerung und Verwaltung von UAVs
 
 Ein Projekt im Rahmen der Bachelorarbeit zur Erlangung des akademischen Grades Bachelor of Science, vorgelegt von Paul Stiegele.
