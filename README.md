@@ -63,7 +63,7 @@ Aufruf von npm start im Hauptordner gestartet werden.
 1. Zum klonen des Connector-Repositorys ist Git notwendig.
 git-scm.com
 2. Das Connector-Verzeichnis klonen
-git clone https://bitbucket.org/pstiegele/ardupilot-connector.git
+git clone https://github.com/pstiegele/cadmas/cadmas-connector
 3. Zum Bauen wird „Apache Ant“ benötigt. Es kann über sudo apt-get install ant
 installiert werden.
 4. Anschließend in dem Connector-Verzeichnis ant ausführen
