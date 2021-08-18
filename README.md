@@ -4,6 +4,19 @@ Eine webbasierte Drohnen Management Suite zur autonomen Steuerung und Verwaltung
 
 Ein Projekt im Rahmen der Bachelorarbeit zur Erlangung des akademischen Grades Bachelor of Science, vorgelegt von Paul Stiegele.
 
+## Walkthrough & Screenshots
+
+Walkthrough: https://www.youtube.com/watch?v=ZBB0ptOtjHM
+
+<img width="1920" alt="cadmas_live" src="https://user-images.githubusercontent.com/11317873/129966429-9a59262f-85d3-4699-b9cc-034a13b9b863.png">
+<img width="1920" alt="cadmas_live" src="https://user-images.githubusercontent.com/11317873/129963604-d800273f-c229-4627-b939-7c2f62b2bb56.png">
+<img width="1920" alt="cadmas_live" src="https://user-images.githubusercontent.com/11317873/129963577-b7426a33-80df-419a-bd17-b86344867895.png">
+<img width="1920" alt="cadmas_live" src="https://user-images.githubusercontent.com/11317873/129963587-0d75cd64-b48a-401e-8288-5f38d9c9cf84.png">
+<img width="1920" alt="cadmas_live" src="https://user-images.githubusercontent.com/11317873/129963596-1eafce2a-432c-422b-82e1-596b1f03c3a7.png">
+<img width="1920" alt="cadmas_live" src="https://user-images.githubusercontent.com/11317873/129963601-705c3c8b-749a-4d72-91ba-f53bfa19bbea.png">
+<img width="200" alt="cadmas_live" src="https://user-images.githubusercontent.com/11317873/129966118-f870eb83-dcf9-4200-8c51-a3a1cef9d20b.png">
+
+
 ## Kurzfassung
 Aktuell sind Drohnen hauptsächlich durch umstrittene Einsätze des Militärs oder waghalsige
 Manöver einiger Privatbesitzer in den Köpfen der Menschen präsent. Dass Drohnen für viele
